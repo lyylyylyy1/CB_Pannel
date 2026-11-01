@@ -338,7 +338,7 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
 </main>
 <div id="lightbox"><img alt=""><button class="lb-dl" title="下载原图">⬇ 下载原图</button></div>
 <div id="tip"></div>
-<script src="data.js?v=20261030202611011720"></script>
+<script src="data.js?v=20261030202611011745"></script>
 <script>
 /* 数据块已拆到同目录 data.js（var D 挂 window），本 script 直接用 D */
 const M={red:'#d12920',navy:'#315b7d',orange:'#e97132',gold:'#c9821b',blue:'#5592dc',green:'#2f7d6d'};
@@ -365,7 +365,22 @@ document.getElementById('ccb-stamp').innerHTML=ccbStaleWarn();
       <div class="ws-sub">${bull?'满 5 票：下周满仓中证转债':'不足 5 票：下周防御，转配 10Y 国债'}</div>
     </div>
     <div class="ws-rule">${escS(s.rule||'')}</div>
+  </div>
+  <div style="margin-top:10px;border:1px solid var(--border);background:#fff;padding:8px 10px">
+    <div style="font-size:12.5px;font-weight:700;color:var(--navy);margin:2px 0 4px">周度看多票数历史<span style="font-weight:400;color:var(--muted-foreground);margin-left:6px">每周末投票票数（线=当周看多票数，虚线=5 票多空临界，看翻多/翻空轨迹）</span></div>
+    <div id="weeksig-curve" class="chart-host" style="height:200px"></div>
   </div>`;
+  const _wh=document.getElementById('weeksig-curve');
+  const _wp=D.week_votes_history;
+  if(_wh&&_wp&&_wp.pts&&_wp.pts.length){
+    const pts=_wp.pts.map(p=>[p[0],p[1]]);
+    const dash=[{name:'5 票临界',pts:pts.map(p=>[p[0],5]),dash:true,color:M.navy}];
+    lineChart(_wh,[{name:'看多票数',pts:pts,color:M.red}].concat(dash),{legend:false,yMin:0,yMax:10});
+    _wh._c={kind:'line',series:[].concat(dash).concat([{name:'看多票数',pts:pts}])};
+    _wh._n='周度看多票数历史';
+  } else if(_wh){
+    _wh.innerHTML='<div class="miss">周度票数历史未找到</div>';
+  }
 })();
 
 const state={win:99999};
@@ -386,6 +401,8 @@ function lineChart(el,series,opts={}){
   if(!all.length){el.innerHTML='<div class="miss">无数据</div>';return;}
   const xs=all.map(p=>p[0]),ys=all.map(p=>p[1]);
   let y0=Math.min(...ys),y1=Math.max(...ys);
+  if(opts.yMin!=null)y0=Math.min(y0,opts.yMin);
+  if(opts.yMax!=null)y1=Math.max(y1,opts.yMax);
   if(opts.yPad==='zero'){y0=Math.min(y0,0);y1=Math.max(y1,0);}
   const pad=(y1-y0)*0.06||1;y0-=pad;y1+=pad;
   const x0=Math.min(...xs),x1=Math.max(...xs);
