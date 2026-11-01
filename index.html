@@ -298,18 +298,18 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
     </section>
 
     <!-- ═══ 板块2 · 基础策略 ═══ -->
-    <div class="part-banner" id="part5"><span class="no">02</span><h2>基础策略</h2><span class="en">BASIC STRATEGIES · 17 CLASSICS</span></div>
-    <p class="part-intro">17 个经典可转债基础策略（低溢价 / 低价 / 双低 / 偏股·平衡·偏债 / 动量 / 高YTM / 定价偏离 / 隐波差 / 评级等权）：分位门槛按当日全域券确定，可买过滤后等权持有，每 20 个交易日调仓、单边 10bp 成本。各卡按「周报 → 策略跟踪 → 回测汇总 → 最新截面快照」排列。</p>
+    <div class="part-banner" id="part5"><span class="no">02</span><h2>基础策略</h2><span class="en">BASIC STRATEGIES · 21 CLASSICS</span></div>
+    <p class="part-intro">21 个经典可转债基础策略（低溢价 / 低价 / 双低 / 偏股·平衡·偏债 / 动量 / 高YTM / 定价偏离 / 隐波差 / 评级等权 / 30日动量 / 180日逆势 / Gamma凸性）：分位门槛按当日全域券确定，可买过滤后等权持有，每 20 个交易日调仓、单边 10bp 成本。各卡按「周报 → 策略跟踪 → 回测汇总 → 最新截面快照」排列。</p>
     <section class="card" id="jc-weekly">
-      <div class="card-head"><div><h3>策略周报</h3><p class="note">17 组合周 / 月 / 季 / 年收益与 2018 年以来年化（基准：集思录转债等权）</p></div><span class="freq-tag">周度<small>每周一</small></span><span class="filetag" id="jc-weekly-tag"></span></div>
+      <div class="card-head"><div><h3>策略周报</h3><p class="note">21 组合周 / 月 / 季 / 年收益与 2018 年以来年化（基准：集思录转债等权）</p></div><span class="freq-tag">周度<small>每周一</small></span><span class="filetag" id="jc-weekly-tag"></span></div>
       <div class="card-body" id="jc-weekly-box"></div>
     </section>
     <section class="card" id="jc-track">
-      <div class="card-head"><div><h3>转债策略跟踪表</h3><p class="note">17 策略 + 基准的周 / 月 / 年初以来收益与风险指标</p></div><span class="freq-tag">周度<small>同周报</small></span><span class="filetag" id="jc-track-tag"></span></div>
+      <div class="card-head"><div><h3>转债策略跟踪表</h3><p class="note">21 策略 + 基准的周 / 月 / 年初以来收益与风险指标</p></div><span class="freq-tag">周度<small>同周报</small></span><span class="filetag" id="jc-track-tag"></span></div>
       <div class="card-body" id="jc-track-box"></div>
     </section>
     <section class="card" id="jc-bt">
-      <div class="card-head"><div><h3>全量回测 · 2018 年以来</h3><p class="note">17 策略全区间总体指标与分年表现（等权 · 20 交易日调仓 · 单边 10bp）</p></div><span class="freq-tag">周度<small>同周报节奏</small></span><span class="filetag" id="jc-bt-tag"></span></div>
+      <div class="card-head"><div><h3>全量回测 · 2018 年以来</h3><p class="note">21 策略全区间总体指标与分年表现（等权 · 20 交易日调仓 · 单边 10bp）</p></div><span class="freq-tag">周度<small>同周报节奏</small></span><span class="filetag" id="jc-bt-tag"></span></div>
       <div class="card-body" id="jc-bt-box"></div>
     </section>
     <section class="card" id="jc-snap">
@@ -338,7 +338,7 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
 </main>
 <div id="lightbox"><img alt=""><button class="lb-dl" title="下载原图">⬇ 下载原图</button></div>
 <div id="tip"></div>
-<script src="data.js?v=20261030202611011024"></script>
+<script src="data.js?v=20261030202611011720"></script>
 <script>
 /* 数据块已拆到同目录 data.js（var D 挂 window），本 script 直接用 D */
 const M={red:'#d12920',navy:'#315b7d',orange:'#e97132',gold:'#c9821b',blue:'#5592dc',green:'#2f7d6d'};
@@ -1016,13 +1016,31 @@ function blockTabs(boxEl,sheets,emptyMsg){
     }
     h+=`<div class="grid2 s" style="margin-top:12px"><div><h4 class="sub">回测对比（日度）</h4><div id="dcmp"></div></div>
     <div><h4 class="sub">分年表现（策略）</h4><div id="dyr"></div></div></div>`;
-    h+=`<h4 class="sub" style="margin-top:14px">最新因子分值</h4><div id="dscore"></div>`;
+    h+=`<h4 class="sub" style="margin-top:14px">因子分值时序历史</h4>`;
+    h+=`<div style="display:flex;align-items:center;gap:10px;font-size:12px;margin-bottom:6px"><span style="color:var(--muted-foreground)">选因子看历史分值与翻多/翻空（线=分值，虚线=5分多空临界）</span>`;
+    h+=`<select id="fscore-sel" style="min-width:200px;padding:3px 6px;border:1px solid var(--border);border-radius:4px;font-size:12px">${D.score_history&&D.score_history.length?D.score_history.map((s,i)=>`<option value="${i}">${s.label}</option>`).join(''):''}</select></div>`;
+    h+=`<div id="fscore-curve" class="chart-host" style="height:250px;margin-bottom:12px"></div>`;
+    h+=`<h4 class="sub">最新因子分值</h4><div id="dscore"></div>`;
     b.innerHTML=h;
     perfCards(document.getElementById('dperf'),cmpFirst(dv['回测对比']));
     if(showNav&&window.renderNav)window.renderNav();
     cmpTable(document.getElementById('dcmp'),dv['回测对比']);
     table(document.getElementById('dyr'),dv.year_table||toTable(dv['分年表现_策略']),'日度分年表现');
     table(document.getElementById('dscore'),D.scores_latest,'日度最新因子分值');
+    // 单因子分值时序：下拉切换，>5 判定线用虚线系列展示
+    const _fc=D.score_history&&D.score_history.length?D.score_history:null;
+    const _fhost=document.getElementById('fscore-curve'),_fsel=document.getElementById('fscore-sel');
+    if(_fc&&_fhost&&_fsel){
+      const _renderFsc=()=>{
+        const s=_fc[Math.min(Number(_fsel.value)||0,_fc.length-1)];
+        const pts=(s.pts||[]).map(p=>[p[0],p[1]]);
+        const dash=[{name:'多空临界 5',pts:pts.map(p=>[p[0],5]),dash:true,color:'#8a8f98'}];
+        lineChart(_fhost,[{name:s.label,pts:pts,color:PALETTE[0]}].concat(dash),{legend:false});
+        _fhost._c={kind:'line',series:[].concat(dash).concat([{name:s.label,pts:pts}])};
+        _fhost._n=(s.label||'因子分值时序');
+      };
+      _fsel.addEventListener('change',_renderFsc);_renderFsc();
+    }
   }
   const vt=document.getElementById('dvtabs');
   function show(i){
@@ -1153,7 +1171,7 @@ function renderSpBody(){
   if(J.weekly_rank&&J.weekly_rank.length)
     h+=`<h4 class="sub" id="jc-wrank-h">本周收益排名（%）</h4><div id="jc-wrank"></div>`;
   if(J.weekly_nav&&J.weekly_nav.length)
-    h+=`<h4 class="sub" id="jc-nav-h">各组合净值（2018 年以来 · 17 策略 + 集思录等权基准）</h4><div id="jc-nav" class="chart-host" style="height:300px"></div><div class="resize-handle" data-host="jc-nav" title="上下拖动调整高度"></div>`;
+    h+=`<h4 class="sub" id="jc-nav-h">各组合净值（2018 年以来 · 21 策略 + 集思录等权基准）</h4><div id="jc-nav" class="chart-host" style="height:300px"></div><div class="resize-handle" data-host="jc-nav" title="上下拖动调整高度"></div>`;
   el.innerHTML=h||'<div class="miss">未找到策略周报</div>';
   if(J.weekly_rank&&J.weekly_rank.length){
     const hh=document.getElementById('jc-wrank-h');if(hh)hh.appendChild(chartDlBtn({kind:'hbar',title:'本周收益排名(%)',items:J.weekly_rank.map(i=>({name:i.name,value:i.value}))},'本周收益排名'));
@@ -1204,7 +1222,7 @@ function renderSpBody(){
   const el=document.getElementById('jc-snap-box');
   if(!J.snap_sum&&!(J.snap_picks&&J.snap_picks.length)){el.innerHTML='<div class="miss">未找到截面快照（先跑 基础策略.py snapshot）</div>';return;}
   let h=ccbStaleWarn();
-  if(J.snap_sum)h+=`<h4 class="sub">快照汇总（17 策略过滤与入选统计）</h4><div id="jc-snap-sum"></div>`;
+  if(J.snap_sum)h+=`<h4 class="sub">快照汇总（21 策略过滤与入选统计）</h4><div id="jc-snap-sum"></div>`;
   el.innerHTML=h;
   if(J.snap_sum)table(document.getElementById('jc-snap-sum'),J.snap_sum,'快照汇总');
   if(J.snap_note){const n=document.createElement('div');n.className='signote';n.textContent=J.snap_note;el.appendChild(n);}
@@ -1272,7 +1290,7 @@ function renderSpBody(){
 /* ---------- 导航 / 窗口 / 拖拽 ---------- */
 const TITLES={part1:['每日市场跟踪','多维市场数据（含估值指标） · 行情图表 · 修正溢价率明细 · 转债日报'],
 part3:['择时策略','十因子体系 · 周频投票 / 日度打分（含十档·择券落地）/ CCB 模型检查'],
-part5:['基础策略','17 个经典基础策略 · 策略周报 / 转债策略跟踪表 / 全量回测 / 截面快照'],
+part5:['基础策略','21 个经典基础策略 · 策略周报 / 转债策略跟踪表 / 全量回测 / 截面快照'],
 part4:['研报复现','国泰二维 · 银河RSJ · 广发三视角 · 华福高估值 · 中金事件驱动']};
 document.getElementById('modnav').addEventListener('click',e=>{
   const btn=e.target.closest('.module-button');if(!btn)return;
