@@ -338,7 +338,7 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
 </main>
 <div id="lightbox"><img alt=""><button class="lb-dl" title="下载原图">⬇ 下载原图</button></div>
 <div id="tip"></div>
-<script src="data.js?v=20261030202611011745"></script>
+<script src="data.js?v=20261030202611012058"></script>
 <script>
 /* 数据块已拆到同目录 data.js（var D 挂 window），本 script 直接用 D */
 const M={red:'#d12920',navy:'#315b7d',orange:'#e97132',gold:'#c9821b',blue:'#5592dc',green:'#2f7d6d'};
@@ -357,6 +357,10 @@ document.getElementById('ccb-stamp').innerHTML=ccbStaleWarn();
   const s=D.week_signal;
   if(!s){box.outerHTML='';return;}
   const bull=!!s.bull;
+  // 选项卡数据：0 = 看多票数，其余 = 10 个因子各自动得分
+  const wfac=D.week_fac_history||[];
+  const tabs=[{label:'看多票数',pts:(D.week_votes_history&&D.week_votes_history.pts||[]).map(p=>[p[0],p[1]]),color:M.red}]
+    .concat(wfac.map(f=>({label:f.label,pts:f.pts.map(p=>[p[0],p[1]]),color:M.navy})));
   box.innerHTML=`<div class="weeksig ${bull?'bull':'bear'}">
     <div class="ws-badge">本周${bull?'看多':'看空'}</div>
     <div class="ws-main">
@@ -367,20 +371,24 @@ document.getElementById('ccb-stamp').innerHTML=ccbStaleWarn();
     <div class="ws-rule">${escS(s.rule||'')}</div>
   </div>
   <div style="margin-top:10px;border:1px solid var(--border);background:#fff;padding:8px 10px">
-    <div style="font-size:12.5px;font-weight:700;color:var(--navy);margin:2px 0 4px">周度看多票数历史<span style="font-weight:400;color:var(--muted-foreground);margin-left:6px">每周末投票票数（线=当周看多票数，虚线=5 票多空临界，看翻多/翻空轨迹）</span></div>
-    <div id="weeksig-curve" class="chart-host" style="height:200px"></div>
+    <div style="font-size:12.5px;font-weight:700;color:var(--navy);margin:2px 0 4px">周度因子分值时序历史<span style="font-weight:400;color:var(--muted-foreground);margin-left:6px">选项卡切换：看多票数 / 单因子得分（虚线=5 分多空临界，看翻多/翻空轨迹）</span></div>
+    <div class="tabs" id="wftabs">${tabs.map((t,i)=>`<button data-i="${i}" class="${i?'':'on'}">${t.label}</button>`).join('')}</div>
+    <div id="wfcurve" class="chart-host" style="height:200px"></div>
   </div>`;
-  const _wh=document.getElementById('weeksig-curve');
-  const _wp=D.week_votes_history;
-  if(_wh&&_wp&&_wp.pts&&_wp.pts.length){
-    const pts=_wp.pts.map(p=>[p[0],p[1]]);
-    const dash=[{name:'5 票临界',pts:pts.map(p=>[p[0],5]),dash:true,color:M.navy}];
-    lineChart(_wh,[{name:'看多票数',pts:pts,color:M.red}].concat(dash),{legend:false,yMin:0,yMax:10});
-    _wh._c={kind:'line',series:[].concat(dash).concat([{name:'看多票数',pts:pts}])};
-    _wh._n='周度看多票数历史';
-  } else if(_wh){
-    _wh.innerHTML='<div class="miss">周度票数历史未找到</div>';
-  }
+  const tb=document.getElementById('wftabs'), host=document.getElementById('wfcurve'), tip=document.getElementById('tip');
+  const drawCurve=i=>{
+    const t=tabs[Math.min(i,tabs.length-1)];
+    const pts=(t.pts||[]).filter(p=>p[1]!=null);
+    if(!pts.length){host.innerHTML='<div class="miss">无数据</div>';return;}
+    const dash=[{name:'5 分临界',pts:pts.map(p=>[p[0],5]),dash:true,color:M.navy}];
+    lineChart(host,[{name:t.label,pts:pts,color:t.color}].concat(dash),{legend:false,yMin:0,yMax:10});
+    host._c={kind:'line',series:[].concat(dash).concat([{name:t.label,pts:pts}])};
+    host._n=t.label+'·周度分值时序';
+  };
+  tb.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+    [...tb.children].forEach(x=>x.classList.toggle('on',x===b));
+    drawCurve(+b.dataset.i);});
+  drawCurve(0);
 })();
 
 const state={win:99999};
