@@ -272,6 +272,7 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
       <button class="module-button is-active" data-target="part1"><span class="module-icon">◷</span><span><small>TRACKING</small><strong>每日市场跟踪</strong></span></button>
       <button class="module-button" data-target="part5"><span class="module-icon">❖</span><span><small>BASIC</small><strong>基础策略</strong></span></button>
       <button class="module-button" data-target="part3"><span class="module-icon">◇</span><span><small>TIMING</small><strong>择时策略<em class="nav-hint">（内网打开）</em></strong></span></button>
+      <button class="module-button" data-target="part4"><span class="module-icon">⬡</span><span><small>REPLICAS</small><strong>研报复现</strong></span></button>
     </nav>
   </aside>
   <section class="content">
@@ -330,15 +331,17 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
     <section class="card"><div class="card-head"><div><h3>CCB 定价模型健康检查</h3><p class="note">CCB = 可转债理论定价模型：审计理论价对市价的覆盖与偏离、统计跌破情况——属模型健康度检查，与择时信号无关，单独列出</p></div><span class="freq-tag">日度<small>每个交易日</small></span></div>
       <div class="card-body" id="ccb"></div></section>
 
-    <!-- 研报复现板块已按 SHOW_REPLICAS=False 整体关闭 -->
-
+    <!-- ═══ 板块4 · 研报复现 ═══ -->
+    <div class="part-banner" id="part4"><span class="no">04</span><h2>研报复现</h2><span class="en">STRATEGY REPLICAS · ALL RESULTS</span></div>
+    <p class="part-intro">按五篇券商研报逐一复现的择时策略，用来与主系统（02 板块）交叉验证：同一市场状态，不同方法给出的信号是否一致。各卡内为该研报复现的回测结果与图表。</p>
+    <div id="repbox"></div>
   </section>
 </div>
 <footer class="site-footer"><div class="footer-brand"></div><p>坚持做长期正确的事</p></footer>
 </main>
 <div id="lightbox"><img alt=""><button class="lb-dl" title="下载原图">⬇ 下载原图</button></div>
 <div id="tip"></div>
-<script src="data.js?v=20261030202611012058"></script>
+<script src="data.js?v=20261030202611020826"></script>
 <script>
 /* 数据块已拆到同目录 data.js（var D 挂 window），本 script 直接用 D */
 const M={red:'#d12920',navy:'#315b7d',orange:'#e97132',gold:'#c9821b',blue:'#5592dc',green:'#2f7d6d'};
