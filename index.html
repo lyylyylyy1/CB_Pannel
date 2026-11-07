@@ -144,7 +144,9 @@ pre{background:#f7f7f6;border:1px solid var(--border);border-radius:6px;padding:
 .num-up{color:var(--primary)}.num-dn{color:var(--green)}
 .legend{display:flex;flex-wrap:wrap;align-items:center;gap:4px 16px;padding:2px 2px 0;flex:0 0 auto;color:var(--navy);font-size:12.5px;font-weight:700}
 .legend i{display:inline-block;width:16px;height:3px}
-.chart-host{width:100%;height:var(--plot-height);min-height:200px;display:flex;flex-direction:column}
+.chart-host{width:100%;height:var(--plot-height);min-height:200px;display:flex;flex-direction:column;position:relative}
+.chart-hint{pointer-events:none;position:absolute;right:6px;top:6px;font-size:10.5px;color:var(--muted-foreground);background:transparent;padding:1px 6px;border-radius:4px;z-index:2;transition:color .2s}
+.chart-hint.zoom-active{color:var(--primary);background:rgba(209,41,32,.06)}
 .chart-host svg{display:block;width:100%;flex:1 1 auto;min-height:0;overflow:visible}
 .resize-handle{position:relative;width:100%;height:12px;border:0;background:transparent;cursor:ns-resize;touch-action:none}
 .resize-handle::after{content:"";position:absolute;bottom:4px;left:calc(50% - 22px);width:44px;height:3px;border-radius:3px;background:var(--border)}
@@ -338,7 +340,7 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
 </main>
 <div id="lightbox"><img alt=""><button class="lb-dl" title="下载原图">⬇ 下载原图</button></div>
 <div id="tip"></div>
-<script src="data.js?v=20261105202611061750"></script>
+<script src="data.js?v=20261106202611071812"></script>
 <script>
 /* 数据块已拆到同目录 data.js（var D 挂 window），本 script 直接用 D */
 const M={red:'#d12920',navy:'#315b7d',orange:'#e97132',gold:'#c9821b',blue:'#5592dc',green:'#2f7d6d'};
@@ -408,75 +410,129 @@ function lineChart(el,series,opts={}){
   if(bars.length&&!all.length)bars.forEach(s=>s.pts.forEach(p=>{if(p[1]!=null)all.push(p)}));
   if(!all.length){el.innerHTML='<div class="miss">无数据</div>';return;}
   const xs=all.map(p=>p[0]),ys=all.map(p=>p[1]);
-  let y0=Math.min(...ys),y1=Math.max(...ys);
-  if(opts.yMin!=null)y0=Math.min(y0,opts.yMin);
-  if(opts.yMax!=null)y1=Math.max(y1,opts.yMax);
-  if(opts.yPad==='zero'){y0=Math.min(y0,0);y1=Math.max(y1,0);}
-  const pad=(y1-y0)*0.06||1;y0-=pad;y1+=pad;
-  const x0=Math.min(...xs),x1=Math.max(...xs);
-  const X=t=>P.l+(t-x0)/(x1-x0||1)*iw, Y=v=>P.t+ih-(v-y0)/(y1-y0)*ih;
-  // 右轴（bar 系列）：以 0 为基准
-  let z0=0,z1=1;
-  if(bars.length){
-    const bv=[];bars.forEach(s=>s.pts.forEach(p=>{if(p[1]!=null)bv.push(p[1])}));
-    z0=Math.min(0,...bv);z1=Math.max(0,...bv);
-    if(z1===z0){z1=z0+1;}
-    const zpad=(z1-z0)*0.08||1; if(z0<0)z0-=zpad; z1+=zpad;
-  }
-  const Z=v=>P.t+ih-(v-z0)/(z1-z0)*ih;
-  let g='';
-  for(let i=0;i<=4;i++){const y=P.t+ih*i/4;
-    g+=`<line x1="${P.l}" y1="${y}" x2="${W-P.r}" y2="${y}" stroke="#e4e5e7"/>`;
-    const val=y1-(y1-y0)*i/4;
-    if(lines.length)g+=`<text x="${P.l-6}" y="${y+3}" text-anchor="end">${opts.yPct?fmt(val*100,0)+'%':fmt(val,Math.abs(val)>100?0:1)}</text>`;
-    if(bars.length){const zv=z1-(z1-z0)*i/4;
-      g+=`<text x="${W-P.r+5}" y="${y+3}" font-size="10" fill="#8a8f98">${fmt(zv,Math.abs(zv)>100?0:1)}</text>`;}}
-  for(let i=0;i<=6;i++){const t=x0+(x1-x0)*i/6;
-    g+=`<text x="${X(t)}" y="${H-6}" text-anchor="middle">${dstr(t)}</text>`;}
-  if(opts.hair){
-    const map=new Map(opts.hair[0].pts);
-    let run=null,seg=[];
-    series[0].pts.forEach((p,i)=>{const on=map.get(p[0])===1;
-      if(on&&run===null)run=i;if(!on&&run!==null){seg.push([run,i-1]);run=null;}});
-    if(run!==null)seg.push([run,series[0].pts.length-1]);
-    seg.forEach(([a,b])=>{const xa=X(series[0].pts[a][0]),xb=X(series[0].pts[Math.max(b,a)][0]);
-      g+=`<rect x="${xa}" y="${P.t}" width="${Math.max(xb-xa,1)}" height="${ih}" fill="rgba(209,41,32,.06)"/>`;});
-  }
-  // 柱（右轴，画在线下面）
-  if(bars.length){
-    const bw=Math.max(2,Math.min(9,iw/Math.max(...bars.map(s=>s.pts.length),1)*0.35));
-    bars.forEach(s=>{s.pts.forEach(p=>{if(p[1]==null)return;
-      const v=p[1], yTop=v>=0?Z(v):Z(0), h=Math.abs(Z(v)-Z(0));
-      g+=`<rect x="${(X(p[0])-bw/2).toFixed(1)}" y="${yTop.toFixed(1)}" width="${bw.toFixed(1)}" height="${Math.max(h,0.5).toFixed(1)}" fill="${s.color}" opacity="0.55"/>`;});
+  let fy0=Math.min(...ys),fy1=Math.max(...ys);
+  if(opts.yMin!=null)fy0=Math.min(fy0,opts.yMin);
+  if(opts.yMax!=null)fy1=Math.max(fy1,opts.yMax);
+  if(opts.yPad==='zero'){fy0=Math.min(fy0,0);fy1=Math.max(fy1,0);}
+  const pad=(fy1-fy0)*0.06||1;fy0-=pad;fy1+=pad;
+  const fx0=Math.min(...xs),fx1=Math.max(...xs);
+  // 视图状态（放大/平移）：默认全量；滚轮缩放、拖拽平移、双击重置
+  let view={x0:fx0,x1:fx1,y0:fy0,y1:fy1};
+  const mxx=opts.zoomMax|| (fx1-fx0)*1e-6;
+
+  function draw(){
+    const {x0,x1,y0,y1}=view;
+    const X=t=>P.l+(t-x0)/(x1-x0||1)*iw, Y=v=>P.t+ih-(v-y0)/(y1-y0)*ih;
+    // 右轴（bar 系列）：以 0 为基准
+    let z0=0,z1=1;
+    if(bars.length){
+      const bv=[];bars.forEach(s=>s.pts.forEach(p=>{if(p[1]!=null)bv.push(p[1])}));
+      z0=Math.min(0,...bv);z1=Math.max(0,...bv);
+      if(z1===z0){z1=z0+1;}
+      const zpad=(z1-z0)*0.08||1; if(z0<0)z0-=zpad; z1+=zpad;
+    }
+    const Z=v=>P.t+ih-(v-z0)/(z1-z0)*ih;
+    let g='';
+    for(let i=0;i<=4;i++){const y=P.t+ih*i/4;
+      g+=`<line x1="${P.l}" y1="${y}" x2="${W-P.r}" y2="${y}" stroke="#e4e5e7"/>`;
+      const val=y1-(y1-y0)*i/4;
+      if(lines.length)g+=`<text x="${P.l-6}" y="${y+3}" text-anchor="end">${opts.yPct?fmt(val*100,0)+'%':fmt(val,Math.abs(val)>100?0:1)}</text>`;
+      if(bars.length){const zv=z1-(z1-z0)*i/4;
+        g+=`<text x="${W-P.r+5}" y="${y+3}" font-size="10" fill="#8a8f98">${fmt(zv,Math.abs(zv)>100?0:1)}</text>`;}}
+    for(let i=0;i<=6;i++){const t=x0+(x1-x0)*i/6;
+      g+=`<text x="${X(t)}" y="${H-6}" text-anchor="middle">${dstr(t)}</text>`;}
+    if(opts.hair){
+      const map=new Map(opts.hair[0].pts);
+      let run=null,seg=[];
+      series[0].pts.forEach((p,i)=>{const on=map.get(p[0])===1;
+        if(on&&run===null)run=i;if(!on&&run!==null){seg.push([run,i-1]);run=null;}});
+      if(run!==null)seg.push([run,series[0].pts.length-1]);
+      seg.forEach(([a,b])=>{const xa=X(series[0].pts[a][0]),xb=X(series[0].pts[Math.max(b,a)][0]);
+        g+=`<rect x="${xa}" y="${P.t}" width="${Math.max(xb-xa,1)}" height="${ih}" fill="rgba(209,41,32,.06)"/>`;});
+    }
+    // 柱（右轴，画在线下面）
+    if(bars.length){
+      const bw=Math.max(2,Math.min(9,iw/Math.max(...bars.map(s=>s.pts.length),1)*0.35));
+      bars.forEach(s=>{s.pts.forEach(p=>{if(p[1]==null)return;
+        const v=p[1], yTop=v>=0?Z(v):Z(0), h=Math.abs(Z(v)-Z(0));
+        g+=`<rect x="${(X(p[0])-bw/2).toFixed(1)}" y="${yTop.toFixed(1)}" width="${bw.toFixed(1)}" height="${Math.max(h,0.5).toFixed(1)}" fill="${s.color}" opacity="0.55"/>`;});
+      });
+    }
+    lines.forEach((s,si)=>{
+      let d='',pen=false;
+      s.pts.forEach(p=>{if(p[1]==null){pen=false;return;}
+        d+=(pen?'L':'M')+X(p[0]).toFixed(1)+','+Y(p[1]).toFixed(1);pen=true;});
+      if(opts.area&&si===0){g+=`<path d="${d}L${X(x1)},${Y(Math.max(y0,0))}L${X(x0)},${Y(Math.max(y0,0))}Z" fill="rgba(209,41,32,.07)"/>`;}
+      g+=`<path d="${d}" fill="none" stroke="${s.color}" stroke-width="${si?1.5:2.2}" stroke-linejoin="round"${s.dash?' stroke-dasharray="5 3"':''}/>`;
+    });
+    const cross=`<line class="cx" y1="${P.t}" y2="${P.t+ih}" stroke="#172132" stroke-width=".6" opacity="0"/>`;
+    const zoomed=(x1-x0)<(fx1-fx0)*0.999;
+    el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" aria-hidden="true">${g}${cross}</svg>`+
+      `<span class="chart-hint${zoomed?' zoom-active':''}">滚轮缩放 · 拖动平移 · 双击重置</span>`+
+      (opts.legend===false?'':`<div class="legend">${series.map((s,i)=>`<span><i style="background:${s.color};opacity:${s.bar?0.55:1}"></i>${s.name}</span>`).join('')}${opts.hair?`<span><i style="background:rgba(209,41,32,.4)"></i>满仓区间</span>`:''}</div>`);
+    const svg=el.querySelector('svg'),tip=document.getElementById('tip'),cx=el.querySelector('.cx');
+    svg.addEventListener('mousemove',e=>{
+      const r=svg.getBoundingClientRect();
+      const mx=(e.clientX-r.left)/r.width*W;
+      const t=x0+(mx-P.l)/iw*(x1-x0);
+      let best=null,bd=1e18;
+      series[0].pts.forEach(p=>{if(p[1]==null)return;const dd=Math.abs(p[0]-t);if(dd<bd){bd=dd;best=p[0];}});
+      if(best==null||mx<P.l||mx>W-P.r){cx.setAttribute('opacity',0);tip.style.display='none';return;}
+      cx.setAttribute('x1',X(best));cx.setAttribute('x2',X(best));cx.setAttribute('opacity',.5);
+      let html=`<b>${dstrF(best)}</b>`;
+      series.forEach(s=>{const m=new Map(s.pts);const v=m.get(best);
+        html+=`<br><i style="display:inline-block;width:8px;height:8px;background:${s.color};margin-right:4px;border-radius:2px;opacity:${s.bar?0.55:1}"></i>${s.name}: <b>${v==null?'—':(opts.yPct?fmt(v*100,1)+'%':fmt(v))}</b>`;});
+      if(opts.hair){const m=new Map(opts.hair[0].pts);html+=`<br>信号: <b>${m.get(best)?'满仓':'空仓'}</b>`;}
+      tip.innerHTML=html;tip.style.display='block';
+      tip.style.left=Math.min(e.clientX+14,innerWidth-200)+'px';tip.style.top=(e.clientY+12)+'px';
+    });
+    svg.addEventListener('mouseleave',()=>{cx.setAttribute('opacity',0);tip.style.display='none';});
+    // 滚轮缩放（到光标处 x/y 同缩，clamp 在 mxx 与全量之间）
+    let panning=false,px=0,py=0;
+    svg.addEventListener('wheel',e=>{
+      e.preventDefault();
+      const r=svg.getBoundingClientRect();
+      const mx=(e.clientX-r.left)/r.width*W, my=(e.clientY-r.top)/r.height*H;
+      const frac=Math.max(0,Math.min(1,(mx-P.l)/iw)), ffrac=Math.max(0,Math.min(1,(my-P.t)/ih));
+      const tx=x0+frac*(x1-x0), ty=y1-ffrac*(y1-y0);
+      const k=e.deltaY<0?1/1.28:1.28;                       // 上滚放大
+      let nx0=tx-(tx-x0)*k, nx1=nx0+(x1-x0)*k;
+      let ny0=ty-(ty-y0)*k, ny1=ny0+(y1-y0)*k;
+      if((nx1-nx0)<mxx){const c=(x1+x0)/2;nx0=c-mxx/2;nx1=c+mxx/2;}
+      if(nx0<fx0){nx0=fx0;nx1=nx0+(x1-x0)*k;}
+      if(nx1>fx1){nx1=fx1;nx0=nx1-(x1-x0)*k;}
+      if(ny0<fy0)ny0=fy0;
+      if(ny1>fy1)ny1=fy1;
+      view={x0:nx0,x1:nx1,y0:ny0,y1:ny1};
+      draw();
+    },{passive:false});
+    svg.addEventListener('pointerdown',e=>{
+      if(e.button!==0)return;
+      panning=true;px=e.clientX;py=e.clientY;
+      try{svg.setPointerCapture(e.pointerId);}catch(_){}
+    });
+    svg.addEventListener('pointermove',e=>{
+      if(!panning)return;
+      const dx=(px-e.clientX), dy=(py-e.clientY);
+      px=e.clientX;py=e.clientY;
+      const perPxX=(x1-x0)/iw, perPxY=(y1-y0)/ih;
+      let nx0=x0+dx*perPxX, nx1=x1+dx*perPxX;
+      let ny0=y0-dy*perPxY, ny1=y1-dy*perPxY;
+      if(nx0<fx0){nx1+=fx0-nx0;nx0=fx0;}
+      if(nx1>fx1){nx0-=nx1-fx1;nx1=fx1;}
+      if(ny0<fy0){ny0=fy0;}
+      if(ny1>fy1){ny1=fy1;}
+      view={x0:nx0,x1:nx1,y0:ny0,y1:ny1};
+      draw();
+    });
+    const up=()=>{panning=false;};
+    svg.addEventListener('pointerup',up);
+    svg.addEventListener('pointercancel',up);
+    svg.addEventListener('dblclick',e=>{
+      e.preventDefault();view={x0:fx0,x1:fx1,y0:fy0,y1:fy1};draw();
     });
   }
-  lines.forEach((s,si)=>{
-    let d='',pen=false;
-    s.pts.forEach(p=>{if(p[1]==null){pen=false;return;}
-      d+=(pen?'L':'M')+X(p[0]).toFixed(1)+','+Y(p[1]).toFixed(1);pen=true;});
-    if(opts.area&&si===0){g+=`<path d="${d}L${X(x1)},${Y(Math.max(y0,0))}L${X(x0)},${Y(Math.max(y0,0))}Z" fill="rgba(209,41,32,.07)"/>`;}
-    g+=`<path d="${d}" fill="none" stroke="${s.color}" stroke-width="${si?1.5:2.2}" stroke-linejoin="round"${s.dash?' stroke-dasharray="5 3"':''}/>`;
-  });
-  const cross=`<line class="cx" y1="${P.t}" y2="${P.t+ih}" stroke="#172132" stroke-width=".6" opacity="0"/>`;
-  el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" aria-hidden="true">${g}${cross}</svg>`+
-    (opts.legend===false?'':`<div class="legend">${series.map((s,i)=>`<span><i style="background:${s.color};opacity:${s.bar?0.55:1}"></i>${s.name}</span>`).join('')}${opts.hair?`<span><i style="background:rgba(209,41,32,.4)"></i>满仓区间</span>`:''}</div>`);
-  const svg=el.querySelector('svg'),tip=document.getElementById('tip'),cx=el.querySelector('.cx');
-  svg.addEventListener('mousemove',e=>{
-    const r=svg.getBoundingClientRect();
-    const mx=(e.clientX-r.left)/r.width*W;
-    const t=x0+(mx-P.l)/iw*(x1-x0);
-    let best=null,bd=1e18;
-    series[0].pts.forEach(p=>{if(p[1]==null)return;const dd=Math.abs(p[0]-t);if(dd<bd){bd=dd;best=p[0];}});
-    if(best==null||mx<P.l||mx>W-P.r){cx.setAttribute('opacity',0);tip.style.display='none';return;}
-    cx.setAttribute('x1',X(best));cx.setAttribute('x2',X(best));cx.setAttribute('opacity',.5);
-    let html=`<b>${dstrF(best)}</b>`;
-    series.forEach(s=>{const m=new Map(s.pts);const v=m.get(best);
-      html+=`<br><i style="display:inline-block;width:8px;height:8px;background:${s.color};margin-right:4px;border-radius:2px;opacity:${s.bar?0.55:1}"></i>${s.name}: <b>${v==null?'—':(opts.yPct?fmt(v*100,1)+'%':fmt(v))}</b>`;});
-    if(opts.hair){const m=new Map(opts.hair[0].pts);html+=`<br>信号: <b>${m.get(best)?'满仓':'空仓'}</b>`;}
-    tip.innerHTML=html;tip.style.display='block';
-    tip.style.left=Math.min(e.clientX+14,innerWidth-200)+'px';tip.style.top=(e.clientY+12)+'px';
-  });
-  svg.addEventListener('mouseleave',()=>{cx.setAttribute('opacity',0);tip.style.display='none';});
+  draw();
 }
 function hbar(el,items,opts={}){
   const max=Math.max(...items.map(i=>Math.abs(i.value)),1e-9);
