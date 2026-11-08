@@ -340,7 +340,7 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
 </main>
 <div id="lightbox"><img alt=""><button class="lb-dl" title="下载原图">⬇ 下载原图</button></div>
 <div id="tip"></div>
-<script src="data.js?v=20261106202611071827"></script>
+<script src="data.js?v=20261106202611081149"></script>
 <script>
 /* 数据块已拆到同目录 data.js（var D 挂 window），本 script 直接用 D */
 const M={red:'#d12920',navy:'#315b7d',orange:'#e97132',gold:'#c9821b',blue:'#5592dc',green:'#2f7d6d'};
@@ -1225,8 +1225,13 @@ function renderSpBody(){
 }
 (function(){
   const el=document.getElementById('ccb');
-  el.innerHTML=ccbStaleWarn()+`<h4 class="sub">CCB 偏离因子审计</h4><div id="ccb1"></div>
+  el.innerHTML=ccbStaleWarn()+`<h4 class="sub">全市场 CCB 偏离度</h4><div class="chart-host" style="height:210px" id="ccbdev"></div>
+  <h4 class="sub" style="margin-top:14px">CCB 偏离因子审计</h4><div id="ccb1"></div>
   <h4 class="sub" style="margin-top:14px">CCB 跌破统计</h4><div id="ccb2"></div>`;
+  // 每日全市场 CcbDev 时间序列（中位/均值两条线）
+  if(D.ccb_break&&D.ccb_break.series&&D.ccb_break.series.length){
+    lineChart(document.getElementById('ccbdev'),D.ccb_break.series.slice(0,2),{legend:true,h:210});
+  }
   table(document.getElementById('ccb1'),D.ccb_audit||toTable(D.ccb_audit),'CCB偏离因子审计');
   const b=document.getElementById('ccb2');
   if(D.ccb_break&&D.ccb_break.kv){
