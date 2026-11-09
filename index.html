@@ -335,7 +335,7 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
 <footer class="site-footer"><div class="footer-brand"></div><p>坚持做长期正确的事</p></footer>
 </main>
 <div id="tip"></div>
-<script src="data.js?v=20261106202611091512"></script>
+<script src="data.js?v=20261106202611091624"></script>
 <script>
 /* 数据块已拆到同目录 data.js（var D 挂 window），本 script 直接用 D */
 const M={red:'#d12920',navy:'#315b7d',orange:'#e97132',gold:'#c9821b',blue:'#5592dc',green:'#2f7d6d'};
@@ -411,9 +411,8 @@ function lineChart(el,series,opts={}){
   if(opts.yPad==='zero'){fy0=Math.min(fy0,0);fy1=Math.max(fy1,0);}
   const pad=(fy1-fy0)*0.06||1;fy0-=pad;fy1+=pad;
   const fx0=Math.min(...xs),fx1=Math.max(...xs);
-  // 视图状态（放大/平移）：默认全量；滚轮缩放、拖拽平移、双击重置
-  let view={x0:fx0,x1:fx1,y0:fy0,y1:fy1};
-  const mxx=opts.zoomMax|| (fx1-fx0)*1e-6;
+  // 原页面静态：保持全量视图，图内无任何缩放/平移交互；单击图→新标签页查看可交互完整大图
+  const view={x0:fx0,x1:fx1,y0:fy0,y1:fy1};
 
   function draw(){
     const {x0,x1,y0,y1}=view;
@@ -461,9 +460,8 @@ function lineChart(el,series,opts={}){
       g+=`<path d="${d}" fill="none" stroke="${s.color}" stroke-width="${si?1.5:2.2}" stroke-linejoin="round"${s.dash?' stroke-dasharray="5 3"':''}/>`;
     });
     const cross=`<line class="cx" y1="${P.t}" y2="${P.t+ih}" stroke="#172132" stroke-width=".6" opacity="0"/>`;
-    const zoomed=(x1-x0)<(fx1-fx0)*0.999;
-    el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" aria-hidden="true">${g}${cross}</svg>`+
-      `<span class="chart-hint${zoomed?' zoom-active':''}">滚轮缩放 · 拖动平移 · 双击重置</span>`+
+    el.innerHTML=`<svg class="cb-svg" viewBox="0 0 ${W} ${H}" aria-hidden="true">${g}${cross}</svg>`+
+      `<span class="chart-hint">点击图查看大图</span>`+
       (opts.legend===false?'':`<div class="legend">${series.map((s,i)=>`<span><i style="background:${s.color};opacity:${s.bar?0.55:1}"></i>${s.name}</span>`).join('')}${opts.hair?`<span><i style="background:rgba(209,41,32,.4)"></i>满仓区间</span>`:''}</div>`);
     const svg=el.querySelector('svg'),tip=document.getElementById('tip'),cx=el.querySelector('.cx');
     svg.addEventListener('mousemove',e=>{
@@ -482,68 +480,18 @@ function lineChart(el,series,opts={}){
       tip.style.left=Math.min(e.clientX+14,innerWidth-200)+'px';tip.style.top=(e.clientY+12)+'px';
     });
     svg.addEventListener('mouseleave',()=>{cx.setAttribute('opacity',0);tip.style.display='none';});
-    // 滚轮缩放（到光标处 x/y 同缩，clamp 在 mxx 与全量之间）
-    let panning=false,px=0,py=0,panMoved=false,lstT=0,tmr=null;
-    svg.addEventListener('wheel',e=>{
-      e.preventDefault();
-      const r=svg.getBoundingClientRect();
-      const mx=(e.clientX-r.left)/r.width*W, my=(e.clientY-r.top)/r.height*H;
-      const frac=Math.max(0,Math.min(1,(mx-P.l)/iw)), ffrac=Math.max(0,Math.min(1,(my-P.t)/ih));
-      const tx=x0+frac*(x1-x0), ty=y1-ffrac*(y1-y0);
-      const k=e.deltaY<0?1/1.28:1.28;                       // 上滚放大
-      let nx0=tx-(tx-x0)*k, nx1=nx0+(x1-x0)*k;
-      let ny0=ty-(ty-y0)*k, ny1=ny0+(y1-y0)*k;
-      if((nx1-nx0)<mxx){const c=(x1+x0)/2;nx0=c-mxx/2;nx1=c+mxx/2;}
-      if(nx0<fx0){nx0=fx0;nx1=nx0+(x1-x0)*k;}
-      if(nx1>fx1){nx1=fx1;nx0=nx1-(x1-x0)*k;}
-      if(ny0<fy0)ny0=fy0;
-      if(ny1>fy1)ny1=fy1;
-      view={x0:nx0,x1:nx1,y0:ny0,y1:ny1};
-      draw();
-    },{passive:false});
-    svg.addEventListener('pointerdown',e=>{
-      if(e.button!==0)return;
-      panning=true;px=e.clientX;py=e.clientY;panMoved=false;
-      try{svg.setPointerCapture(e.pointerId);}catch(_){}
-    });
-    svg.addEventListener('pointermove',e=>{
-      if(!panning)return;
-      if(Math.abs(e.clientX-px)+Math.abs(e.clientY-py)>3)panMoved=true;
-      const dx=(px-e.clientX), dy=(py-e.clientY);
-      px=e.clientX;py=e.clientY;
-      const perPxX=(x1-x0)/iw, perPxY=(y1-y0)/ih;
-      let nx0=x0+dx*perPxX, nx1=x1+dx*perPxX;
-      let ny0=y0-dy*perPxY, ny1=y1-dy*perPxY;
-      if(nx0<fx0){nx1+=fx0-nx0;nx0=fx0;}
-      if(nx1>fx1){nx0-=nx1-fx1;nx1=fx1;}
-      if(ny0<fy0){ny0=fy0;}
-      if(ny1>fy1){ny1=fy1;}
-      view={x0:nx0,x1:nx1,y0:ny0,y1:ny1};
-      draw();
-    });
-    const up=()=>{panning=false;};
-    svg.addEventListener('pointerup',up);
-    svg.addEventListener('pointercancel',up);
-    svg.addEventListener('dblclick',e=>{
-      e.preventDefault();view={x0:fx0,x1:fx1,y0:fy0,y1:fy1};draw();
-    });
-    // 单击图片 → 新标签页查看完整大图（SVG 无损导出为 dataURL）
-    // 拖动不触发：pointermove 已置 panMoved；双击 300ms 内连点则取消本次弹出
+    // 原页面统一静态：不做任何缩放/平移/双击交互，单击图 → 打开新标签页查看可交互完整大图
+    let lstT=0,tmr=null;
     svg.addEventListener('click',e=>{
-      if(panMoved){panMoved=false;return;}
       const now=Date.now();
-      if(now-lstT<350){lstT=now;if(tmr)clearTimeout(tmr);return;} // 双击第二击：取消
+      if(now-lstT<350){lstT=now;if(tmr)clearTimeout(tmr);return;}
       lstT=now;
       if(tmr)clearTimeout(tmr);
       tmr=setTimeout(()=>{
-        tmr=null;panMoved=false;
-        const saved=view;
-        view={x0:fx0,x1:fx1,y0:fy0,y1:fy1};
-        draw();
+        tmr=null;
         const s=el.querySelector('svg');
         let str='';
         try{str=new XMLSerializer().serializeToString(s);}catch(_){}
-        view=saved;draw();
         if(!str)return;
         const b64='data:image/svg+xml;base64,'+btoa(unescape(encodeURIComponent(str)));
         const nm=(el._chartTitle||('chart'+Math.round(fx1)))+'.svg';

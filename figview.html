@@ -3,33 +3,46 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>图片查看</title>
+<title>大图查看</title>
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
-  body{background:#111;color:#eee;font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;min-height:100vh}
-  .toolbar{position:sticky;top:0;background:rgba(17,17,17,.92);backdrop-filter:blur(6px);padding:10px 16px;display:flex;align-items:center;gap:14px;border-bottom:1px solid #2a2a2a;z-index:10;flex-wrap:wrap}
-  .toolbar h1{font-size:14px;font-weight:700;color:#9db6c9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:60vw}
-  .toolbar .hint{font-size:12px;color:#8a8a8a;white-space:nowrap}
+  html,body{width:100%;height:100%;overflow:hidden;background:#14161a;color:#eee;font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif}
+  .toolbar{position:fixed;top:0;left:0;right:0;height:50px;background:rgba(20,22,26,.95);display:flex;align-items:center;gap:10px;padding:0 16px;border-bottom:1px solid #2a2d33;z-index:20}
+  .toolbar h1{font-size:14px;font-weight:700;color:#9db6c9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:40vw;flex:none}
+  .toolbar .hint{font-size:12px;color:#7c8590;white-space:nowrap;flex:none}
   .toolbar .sp{flex:1}
-  .dl-pg{border:none;background:#315b7d;color:#fff;border-radius:7px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap}
-  .dl-pg:hover{filter:brightness(1.12)}
-  .canvas{display:flex;align-items:flex-start;justify-content:center;padding:20px;min-height:calc(100vh - 54px)}
-  .canvas img{max-width:100%;height:auto;box-shadow:0 4px 24px rgba(0,0,0,.5);background:#fff;display:block}
-  .miss{padding:40px;text-align:center;color:#999;font-size:14px}
+  .tbtn{border:1px solid #3a3f47;background:#23272e;color:#dfe4ea;border-radius:7px;padding:7px 12px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap}
+  .tbtn:hover{background:#2e343c}
+  .tbtn.pri{background:#315b7d;border-color:#315b7d;color:#fff}
+  .tbtn.pri:hover{background:#3a6a90}
+  .stage{position:fixed;top:50px;left:0;right:0;bottom:0;overflow:hidden;cursor:grab;background:#14161a;
+    background-image:radial-gradient(#1d2025 1px,transparent 1px);background-size:26px 26px}
+  .stage.drag{cursor:grabbing}
+  .wrap{position:absolute;top:0;left:0;transform-origin:0 0;will-change:transform}
+  .wrap img,.wrap svg{display:block;box-shadow:0 6px 30px rgba(0,0,0,.55);background:#fff}
+  .miss{padding:60px;text-align:center;color:#999;font-size:14px}
+  .onoff{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);z-index:30;background:rgba(20,22,26,.9);border:1px solid #2a2d33;
+    border-radius:9px;padding:8px 14px;font-size:12px;color:#aeb6c0;display:none;gap:8px;align-items:center}
+  .onoff b{color:#f0a868}
 </style>
 </head>
 <body>
 <div class="toolbar">
-  <h1 id="name">图片查看</h1>
-  <span class="hint">滚轮/捏合缩放 · 拖动平移 · 可右键/另存下载</span>
+  <h1 id="name">大图查看</h1>
+  <span class="hint">滚轮/捏合缩放 · 按住拖动平移 · 双击重置</span>
   <span class="sp"></span>
-  <button class="dl-pg" id="dl" title="下载原图">⬇ 下载原图</button>
+  <button class="tbtn" id="zout" title="缩小">−</button>
+  <button class="tbtn" id="zin"  title="放大">＋</button>
+  <button class="tbtn" id="fit"  title="适应窗口">适应</button>
+  <button class="tbtn" id="rst"  title="恢复1:1并从左上角开始">重置</button>
+  <button class="tbtn pri" id="dl" title="下载原图">⬇ 下载原图</button>
 </div>
-<div class="canvas" id="canvas"><div class="miss">加载中…</div></div>
+<div class="stage" id="stage"><div class="wrap" id="wrap"></div></div>
+<div class="onoff" id="zoomBadge"></div>
 <script>
-const el=document.getElementById('canvas'),nm=document.getElementById('name');
+const stage=document.getElementById('stage'),wrap=document.getElementById('wrap'),nm=document.getElementById('name');
 const b64=sessionStorage.getItem('fig_view_b64');
-const fname=sessionStorage.getItem('fig_view_name')||('图片_'+Date.now()+'.png');
+const fname=sessionStorage.getItem('fig_view_name')||('大图_'+Date.now()+'.png');
 nm.textContent=fname;
 function b64Mime(d){const m=/^data:([^;,]+)[;,].*$/.exec(String(d||''));return m?m[1]:'image/png';}
 function b64toBlob(d,mime){
@@ -37,20 +50,105 @@ function b64toBlob(d,mime){
   for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);
   return new Blob([u],{type:mime||b64Mime(d)});
 }
-if(!b64){
-  el.innerHTML='<div class="miss">未收到图片（可能是在新标签页直接打开的）。请回到看板页面，点击图片重新打开。</div>';
-}else{
-  const img=new Image();
-  img.onload=()=>{el.innerHTML='';el.appendChild(img);};
-  img.onerror=()=>{el.innerHTML='<div class="miss">图片加载失败：数据可能已损坏。</div>';};
-  img.src=b64;
+// ---- 视图状态：scale + translate（transform 应用于 wrap）----
+const S={k:1,tx:0,ty:0};          // k=缩放,tx/ty=平移(px)
+let realW=0,realH=0;              // 内容自然尺寸
+function render(){wrap.style.transform=`translate(${S.tx}px,${S.ty}px) scale(${S.k})`;}
+function baseW(){return stage.clientWidth;}
+
+// 初始适应窗口：内容等比放至不超出可视区，水平居中
+function fitContent(){
+  if(!realW||!realH)return;
+  const sw=stage.clientWidth,sh=stage.clientHeight-0;
+  const k=Math.min(sw/realW,sh/realH);
+  S.k=k;S.tx=(sw-realW*k)/2;S.ty=20;
+  render();updateBadge();
 }
+function zoomAt(cx,cy,f){
+  const nk=Math.min(24,Math.max(.04,S.k*f));
+  S.tx=cx-(cx-S.tx)*(nk/S.k);
+  S.ty=cy-(cy-S.ty)*(nk/S.k);
+  S.k=nk;render();updateBadge();
+}
+function updateBadge(){const b=document.getElementById('zoomBadge');b.innerHTML='放大 <b>'+(S.k*100|0)+'%</b>';b.style.display='flex';}
+
+// ---- 内容挂载 ----
+function mountEl(node){
+  wrap.innerHTML='';wrap.appendChild(node);
+  const r=node.getBoundingClientRect();realW=r.width;realH=r.height;
+  fitContent();
+}
+if(!b64){
+  stage.innerHTML='<div class="miss">未收到图片（可能是在新标签页直接打开的）。请回到看板页面，点击图片重新打开。</div>';
+}else{
+  const mime=b64Mime(b64);
+  const raw=_b64data(b64);
+  if(mime.indexOf('svg')>=0){
+    // SVG：内联渲染，矢量任意缩放不模糊
+    try{
+      const dom=new DOMParser().parseFromString((raw?atob(raw):'')||'','image/svg+xml');
+      if(!dom.querySelector('svg'))throw new Error('bad svg');
+      wrap.innerHTML=(raw?atob(raw):'');
+      const svg=wrap.querySelector('svg');
+      svg.removeAttribute('width');svg.removeAttribute('height');
+      svg.removeAttribute('style');
+      // 确保有固定 viewBox，便于 fit 缩放
+      if(!svg.getAttribute('viewBox')){
+        const vb=svg.getAttribute('viewBox')||svg.getBBox();
+        const bb=svg.getBBox?svg.getBBox():{x:0,y:0,width:300,height:150};
+        svg.setAttribute('viewBox',`${bb.x} ${bb.y} ${bb.width} ${bb.height}`);
+      }
+      // 让 SVG 以"适应屏幕"的自然尺寸显示：fitContent 用 viewBox 物理尺寸做基准
+      let vb=(svg.getAttribute('viewBox')||'').split(/\s+/).map(Number);
+      if(vb.length===4&&vb[2]>0&&vb[3]>0){realW=vb[2];realH=vb[3];svg.style.width=realW+'px';svg.style.height=realH+'px';}
+      else{const r=svg.getBoundingClientRect();realW=r.width;realH=r.height;}
+      fitContent();
+    }catch(_){
+      // 兜底：无法解析时当普通图片显示
+      realW=0;stage.innerHTML='<div class="miss">无法解析该图表 SVG。</div>';
+    }
+  }else{
+    const img=new Image();
+    img.onload=()=>{mountEl(img);};
+    img.onerror=()=>{stage.innerHTML='<div class="miss">图片加载失败：数据可能已损坏。</div>';};
+    img.src=b64;
+  }
+}
+function _b64data(d){const i=String(d||'').indexOf(',');return i>=0?String(d||'').slice(i+1):String(d||'');}
+
+// ---- 交互 ----
+let down=false,lastX=0,lastY=0;
+stage.addEventListener('wheel',e=>{
+  e.preventDefault();
+  const r=stage.getBoundingClientRect();
+  zoomAt(e.clientX-r.left,e.clientY-r.top,e.deltaY<0?1.25:1/1.25);
+},{passive:false});
+stage.addEventListener('pointerdown',e=>{
+  if(e.button!==0)return;down=true;lastX=e.clientX;lastY=e.clientY;
+  stage.classList.add('drag');try{stage.setPointerCapture(e.pointerId);}catch(_){}
+});
+stage.addEventListener('pointermove',e=>{
+  if(!down)return;S.tx+=e.clientX-lastX;S.ty+=e.clientY-lastY;lastX=e.clientX;lastY=e.clientY;render();
+});
+const end=()=>{down=false;stage.classList.remove('drag');};
+stage.addEventListener('pointerup',end);
+stage.addEventListener('pointercancel',end);
+stage.addEventListener('dblclick',e=>{
+  e.preventDefault();const r=stage.getBoundingClientRect();zoomAt(e.clientX-r.left,e.clientY-r.top,1/S.k);render();
+});
+document.getElementById('zin').addEventListener('click',()=>zoomAt(stage.clientWidth/2,stage.clientHeight/2,1.4));
+document.getElementById('zout').addEventListener('click',()=>zoomAt(stage.clientWidth/2,stage.clientHeight/2,1/1.4));
+document.getElementById('fit').addEventListener('click',fitContent);
+document.getElementById('rst').addEventListener('click',()=>{S.k=1;S.tx=0;S.ty=0;render();updateBadge();});
+window.addEventListener('resize',fitContent);
+
+// ---- 下载原图 ----
 document.getElementById('dl').addEventListener('click',()=>{
   try{
-    const mime=b64Mime(b64);
-    const ext=mime.indexOf('svg')>=0?'.svg':(fname.indexOf('.')>=0?'':'.png');
+    const m=b64Mime(b64);
+    const ext=m.indexOf('svg')>=0?'.svg':(fname.indexOf('.')>=0?'':'.png');
     const dl=fname.endsWith(ext)?fname:fname+ext;
-    const url=URL.createObjectURL(b64toBlob(b64,mime));
+    const url=URL.createObjectURL(b64toBlob(b64,m));
     const a=document.createElement('a');
     a.href=url;a.download=dl;
     document.body.appendChild(a);a.click();a.remove();
