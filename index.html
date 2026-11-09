@@ -335,7 +335,7 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
 <footer class="site-footer"><div class="footer-brand"></div><p>坚持做长期正确的事</p></footer>
 </main>
 <div id="tip"></div>
-<script src="data.js?v=20261106202611091624"></script>
+<script src="data.js?v=20261106202611091701"></script>
 <script>
 /* 数据块已拆到同目录 data.js（var D 挂 window），本 script 直接用 D */
 const M={red:'#d12920',navy:'#315b7d',orange:'#e97132',gold:'#c9821b',blue:'#5592dc',green:'#2f7d6d'};
@@ -489,13 +489,7 @@ function lineChart(el,series,opts={}){
       if(tmr)clearTimeout(tmr);
       tmr=setTimeout(()=>{
         tmr=null;
-        const s=el.querySelector('svg');
-        let str='';
-        try{str=new XMLSerializer().serializeToString(s);}catch(_){}
-        if(!str)return;
-        const b64='data:image/svg+xml;base64,'+btoa(unescape(encodeURIComponent(str)));
-        const nm=(el._chartTitle||('chart'+Math.round(fx1)))+'.svg';
-        openImgNewTab(b64,nm);
+        openChartInteractive(el,series,opts);
       },300);
     });
   }
@@ -625,6 +619,21 @@ function openImgNewTab(b64, name){
     sessionStorage.setItem('fig_view_name', (name||'图片.png').replace(/[\\/:*?"<>|]/g,'_'));
     window.open('figview.html','_blank');
   }catch(e){alert('打开图片失败：'+e.message);}
+}
+/* 点击折线图 → 打开新标签页的可交互大图（同花顺式）。
+   传入原始数据(非静态快照)，figview.html 据此 live 重绘并启动十字线/缩放/平移。 */
+function openChartInteractive(el, series, opts){
+  try{
+    const title=(el._chartTitle||(series&&series[0]?series[0].name:'图表')||'图表');
+    const data={
+      series:(series||[]).map(s=>({name:s.name,color:s.color,pts:s.pts,dash:!!s.dash,bar:!!s.bar})),
+      opts:opts||{},
+      title:title
+    };
+    sessionStorage.setItem('fig_data', JSON.stringify(data));
+    sessionStorage.removeItem('fig_view_b64');
+    window.open('figview.html','_blank');
+  }catch(e){alert('打开图表失败：'+e.message);}
 }
 /* 表格 → CSV */
 function tblCSV(t){
