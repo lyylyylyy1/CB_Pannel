@@ -335,7 +335,7 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
 <footer class="site-footer"><div class="footer-brand"></div><p>坚持做长期正确的事</p></footer>
 </main>
 <div id="tip"></div>
-<script src="data.js?v=20261106202611091412"></script>
+<script src="data.js?v=20261106202611091512"></script>
 <script>
 /* 数据块已拆到同目录 data.js（var D 挂 window），本 script 直接用 D */
 const M={red:'#d12920',navy:'#315b7d',orange:'#e97132',gold:'#c9821b',blue:'#5592dc',green:'#2f7d6d'};
@@ -483,7 +483,7 @@ function lineChart(el,series,opts={}){
     });
     svg.addEventListener('mouseleave',()=>{cx.setAttribute('opacity',0);tip.style.display='none';});
     // 滚轮缩放（到光标处 x/y 同缩，clamp 在 mxx 与全量之间）
-    let panning=false,px=0,py=0;
+    let panning=false,px=0,py=0,panMoved=false,lstT=0,tmr=null;
     svg.addEventListener('wheel',e=>{
       e.preventDefault();
       const r=svg.getBoundingClientRect();
@@ -503,11 +503,12 @@ function lineChart(el,series,opts={}){
     },{passive:false});
     svg.addEventListener('pointerdown',e=>{
       if(e.button!==0)return;
-      panning=true;px=e.clientX;py=e.clientY;
+      panning=true;px=e.clientX;py=e.clientY;panMoved=false;
       try{svg.setPointerCapture(e.pointerId);}catch(_){}
     });
     svg.addEventListener('pointermove',e=>{
       if(!panning)return;
+      if(Math.abs(e.clientX-px)+Math.abs(e.clientY-py)>3)panMoved=true;
       const dx=(px-e.clientX), dy=(py-e.clientY);
       px=e.clientX;py=e.clientY;
       const perPxX=(x1-x0)/iw, perPxY=(y1-y0)/ih;
@@ -525,6 +526,29 @@ function lineChart(el,series,opts={}){
     svg.addEventListener('pointercancel',up);
     svg.addEventListener('dblclick',e=>{
       e.preventDefault();view={x0:fx0,x1:fx1,y0:fy0,y1:fy1};draw();
+    });
+    // 单击图片 → 新标签页查看完整大图（SVG 无损导出为 dataURL）
+    // 拖动不触发：pointermove 已置 panMoved；双击 300ms 内连点则取消本次弹出
+    svg.addEventListener('click',e=>{
+      if(panMoved){panMoved=false;return;}
+      const now=Date.now();
+      if(now-lstT<350){lstT=now;if(tmr)clearTimeout(tmr);return;} // 双击第二击：取消
+      lstT=now;
+      if(tmr)clearTimeout(tmr);
+      tmr=setTimeout(()=>{
+        tmr=null;panMoved=false;
+        const saved=view;
+        view={x0:fx0,x1:fx1,y0:fy0,y1:fy1};
+        draw();
+        const s=el.querySelector('svg');
+        let str='';
+        try{str=new XMLSerializer().serializeToString(s);}catch(_){}
+        view=saved;draw();
+        if(!str)return;
+        const b64='data:image/svg+xml;base64,'+btoa(unescape(encodeURIComponent(str)));
+        const nm=(el._chartTitle||('chart'+Math.round(fx1)))+'.svg';
+        openImgNewTab(b64,nm);
+      },300);
     });
   }
   draw();

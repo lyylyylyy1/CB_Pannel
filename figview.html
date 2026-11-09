@@ -31,10 +31,11 @@ const el=document.getElementById('canvas'),nm=document.getElementById('name');
 const b64=sessionStorage.getItem('fig_view_b64');
 const fname=sessionStorage.getItem('fig_view_name')||('图片_'+Date.now()+'.png');
 nm.textContent=fname;
+function b64Mime(d){const m=/^data:([^;,]+)[;,].*$/.exec(String(d||''));return m?m[1]:'image/png';}
 function b64toBlob(d,mime){
   const b=atob(d.split(',')[1]||d),u=new Uint8Array(b.length);
   for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);
-  return new Blob([u],{type:mime||'image/png'});
+  return new Blob([u],{type:mime||b64Mime(d)});
 }
 if(!b64){
   el.innerHTML='<div class="miss">未收到图片（可能是在新标签页直接打开的）。请回到看板页面，点击图片重新打开。</div>';
@@ -46,9 +47,12 @@ if(!b64){
 }
 document.getElementById('dl').addEventListener('click',()=>{
   try{
-    const url=URL.createObjectURL(b64toBlob(b64,'image/png'));
+    const mime=b64Mime(b64);
+    const ext=mime.indexOf('svg')>=0?'.svg':(fname.indexOf('.')>=0?'':'.png');
+    const dl=fname.endsWith(ext)?fname:fname+ext;
+    const url=URL.createObjectURL(b64toBlob(b64,mime));
     const a=document.createElement('a');
-    a.href=url;a.download=fname.endsWith('.png')?fname:fname+'.png';
+    a.href=url;a.download=dl;
     document.body.appendChild(a);a.click();a.remove();
     setTimeout(()=>URL.revokeObjectURL(url),1000);
   }catch(e){alert('下载失败：'+e.message);}
