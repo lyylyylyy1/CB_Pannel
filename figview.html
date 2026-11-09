@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>图片查看</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#111;color:#eee;font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;min-height:100vh}
+  .toolbar{position:sticky;top:0;background:rgba(17,17,17,.92);backdrop-filter:blur(6px);padding:10px 16px;display:flex;align-items:center;gap:14px;border-bottom:1px solid #2a2a2a;z-index:10;flex-wrap:wrap}
+  .toolbar h1{font-size:14px;font-weight:700;color:#9db6c9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:60vw}
+  .toolbar .hint{font-size:12px;color:#8a8a8a;white-space:nowrap}
+  .toolbar .sp{flex:1}
+  .dl-pg{border:none;background:#315b7d;color:#fff;border-radius:7px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap}
+  .dl-pg:hover{filter:brightness(1.12)}
+  .canvas{display:flex;align-items:flex-start;justify-content:center;padding:20px;min-height:calc(100vh - 54px)}
+  .canvas img{max-width:100%;height:auto;box-shadow:0 4px 24px rgba(0,0,0,.5);background:#fff;display:block}
+  .miss{padding:40px;text-align:center;color:#999;font-size:14px}
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <h1 id="name">图片查看</h1>
+  <span class="hint">滚轮/捏合缩放 · 拖动平移 · 可右键/另存下载</span>
+  <span class="sp"></span>
+  <button class="dl-pg" id="dl" title="下载原图">⬇ 下载原图</button>
+</div>
+<div class="canvas" id="canvas"><div class="miss">加载中…</div></div>
+<script>
+const el=document.getElementById('canvas'),nm=document.getElementById('name');
+const b64=sessionStorage.getItem('fig_view_b64');
+const fname=sessionStorage.getItem('fig_view_name')||('图片_'+Date.now()+'.png');
+nm.textContent=fname;
+function b64toBlob(d,mime){
+  const b=atob(d.split(',')[1]||d),u=new Uint8Array(b.length);
+  for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);
+  return new Blob([u],{type:mime||'image/png'});
+}
+if(!b64){
+  el.innerHTML='<div class="miss">未收到图片（可能是在新标签页直接打开的）。请回到看板页面，点击图片重新打开。</div>';
+}else{
+  const img=new Image();
+  img.onload=()=>{el.innerHTML='';el.appendChild(img);};
+  img.onerror=()=>{el.innerHTML='<div class="miss">图片加载失败：数据可能已损坏。</div>';};
+  img.src=b64;
+}
+document.getElementById('dl').addEventListener('click',()=>{
+  try{
+    const url=URL.createObjectURL(b64toBlob(b64,'image/png'));
+    const a=document.createElement('a');
+    a.href=url;a.download=fname.endsWith('.png')?fname:fname+'.png';
+    document.body.appendChild(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),1000);
+  }catch(e){alert('下载失败：'+e.message);}
+});
+</script>
+</body>
+</html>
