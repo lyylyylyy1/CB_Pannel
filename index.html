@@ -50,7 +50,48 @@ h1{margin:1px 0 0;color:var(--navy);font-size:clamp(21px,2vw,28px);line-height:1
 .page-heading p{margin:0;color:var(--navy);font-size:17px;font-weight:700}
 .part-banner{display:flex;align-items:center;gap:12px;margin:22px 0 4px;padding:10px 4px;border-bottom:3px solid var(--primary)}
 .part-intro{font-size:12.5px;color:var(--muted-foreground);line-height:1.7;margin:-4px 0 14px;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-left:3px solid var(--primary);border-radius:8px}
-#clause-frame{width:100%;height:calc(100vh - 60px);min-height:4200px;border:1px solid var(--border);border-radius:10px;background:#fff}
+/* ── 条款看板（并入）分组 tab / KPI / 表格 ── */
+.group-tabs{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px;border-bottom:2px solid var(--border);padding-bottom:0}
+.g-tab{border:1px solid var(--border);background:#fff;color:var(--navy);padding:10px 20px;font-size:14.5px;font-weight:700;cursor:pointer;border-radius:8px 8px 0 0;margin-bottom:-2px;border-bottom:2px solid transparent}
+.g-tab:hover{background:var(--muted)}
+.g-tab.is-active{border-color:var(--border);border-bottom-color:var(--primary);color:#b5221b;background:#fff}
+.g-head{display:flex;align-items:center;gap:12px;margin:20px 0 4px;padding:10px 4px;border-bottom:3px solid var(--primary)}
+.g-head .no{font-family:Consolas,monospace;font-size:22px;font-weight:700;color:var(--primary)}
+.g-head h3{margin:0;color:var(--navy);font-size:21px}
+.g-head .en{margin-left:auto;color:var(--muted-foreground);font-size:11.5px;font-weight:700;letter-spacing:.2em}
+.g-sub{margin:26px 0 2px;padding:7px 12px;background:var(--navy);color:#fff;font-size:13.5px;font-weight:700;letter-spacing:.04em;border-radius:5px;display:inline-block}
+.g-sub-note{font-size:12px;color:var(--muted-foreground);margin:6px 0 2px}
+.kpi-strip{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:10px;margin:0 0 6px}
+.kpi{border:1px solid var(--border);background:var(--card);padding:11px 14px;border-radius:8px;border-top:3px solid var(--navy)}
+.kpi.red{border-top-color:var(--primary)}
+.kpi.green{border-top-color:#2abb75}
+.kpi .k{font-size:11px;font-weight:700;color:var(--muted-foreground);letter-spacing:.06em;white-space:nowrap}
+.kpi .v{font-size:23px;font-weight:800;color:var(--navy);font-variant-numeric:tabular-nums;line-height:1.15}
+.kpi .s{font-size:11.5px;color:var(--navy2);font-weight:600;white-space:nowrap}
+.kpi .v.red{color:var(--primary)}
+.cards .card{margin-top:12px}
+.scroll{max-height:560px;overflow:auto;border-radius:0 0 8px 8px}
+.fold{cursor:pointer;user-select:none}
+.fold .arrow{display:inline-block;transition:transform .18s;color:var(--primary);margin-right:2px}
+.fold.open .arrow{transform:rotate(90deg)}
+.fold-body{display:none}
+.fold.open + .fold-body{display:block}
+.searchbar{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--border);background:#fdfdfc}
+.searchbar input{flex:1;min-width:160px;padding:7px 12px;border:1px solid var(--border);border-radius:6px;font-size:13px;font-family:inherit;background:#fff}
+.searchbar input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 2px rgba(209,41,32,.08)}
+.searchbar .hits{font-size:12px;color:var(--muted-foreground);white-space:nowrap}
+.searchbar .ic{color:#8a8f98}
+.td-name{text-align:left;font-weight:600;color:var(--navy)}
+.td-code{text-align:left;color:var(--muted-foreground);font-family:Consolas,monospace;font-size:12px}
+.td-dt{text-align:left;color:var(--muted-foreground);font-size:12px}
+.null{color:#c9cdd3}
+.up,.pos{color:var(--primary);font-weight:600}
+.dn,.neg{color:#1f7a3d;font-weight:600}
+.pill{display:inline-block;padding:1px 8px;border-radius:10px;font-size:11px;font-weight:700}
+.pill.red{background:var(--accent);color:#b5221b}
+.pill.navy{background:#e7eef5;color:var(--navy2)}
+.pill.green{background:#e4f2e8;color:#1f7a3d}
+.pill.gray{background:var(--muted);color:#596573}
 .part-banner .no{font-family:Consolas,monospace;font-size:26px;font-weight:700;color:var(--primary)}
 .part-banner h2{margin:0;color:var(--navy);font-size:24px}
 .part-banner .en{margin-left:auto;color:var(--muted-foreground);font-size:12px;font-weight:700;letter-spacing:.2em}
@@ -336,13 +377,40 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
     <!-- ═══ 板块5 · 条款看板（下修/赎回）═══ -->
     <div class="part-banner" id="part6"><span class="no">05</span><h2>条款看板</h2><span class="en">CLAUSE TRACKING · 下修 / 赎回</span></div>
     <p class="part-intro">分区跟踪两种转债条款：<b>下修</b>（转股价修正，按实施中 / 累计 / 承诺期 / 非承诺期分层）与<b>赎回</b>（强赎触发，按累计天数 / 承诺期 / 非承诺期分层）。含核心跟踪、历史公告统计检索、按年/月的事件计数分布。</p>
-    <iframe id="clause-frame" src="条款.html" title="条款看板 · 下修 / 赎回" loading="lazy"></iframe>
+    <div class="group-tabs" id="clauseTabs">
+      <button class="g-tab is-active" data-group="xiu">下修 · 转股价修正</button>
+      <button class="g-tab" data-group="shu">赎回 · 强赎触发</button>
+    </div>
+    <div class="group-pane" id="clause_xiu">
+      <div class="g-head"><span class="no">01</span><h3>下修 · 转股价修正</h3><span class="en">PRICE ADJUSTMENT</span></div>
+      <div class="kpi-strip" id="clauseKpiX"></div>
+      <div class="g-sub">核心跟踪</div>
+      <div class="cards" id="clauseCardsX"></div>
+      <div class="g-sub">历史公告统计</div>
+      <p class="g-sub-note">长期下修 / 不下修 / 预计下修公告留痕，按代码 / 名称 / 日期检索，点击展开。</p>
+      <div class="cards" id="clauseStatsX"></div>
+      <div class="g-sub">历史统计 · 按年/月事件计数</div>
+      <p class="g-sub-note">下修/赎回事件的公告日期明细，按事件发生年份/月份计数，时间倒序（最近在前）。仅含年度/月度事件统计；事件后收益、监测信号需外部价格库/平台台账，不计。</p>
+      <div class="cards" id="clauseSnapX"></div>
+    </div>
+    <div class="group-pane" id="clause_shu" style="display:none">
+      <div class="g-head"><span class="no">02</span><h3>赎回 · 强赎触发</h3><span class="en">REDEMPTION TRACKING</span></div>
+      <div class="kpi-strip" id="clauseKpiS"></div>
+      <div class="g-sub">核心跟踪</div>
+      <div class="cards" id="clauseCardsS"></div>
+      <div class="g-sub">历史公告统计</div>
+      <p class="g-sub-note">长期赎回 / 不赎回公告留痕，按代码 / 名称 / 日期检索，点击展开。</p>
+      <div class="cards" id="clauseStatsS"></div>
+      <div class="g-sub">历史统计 · 按年/月事件计数</div>
+      <p class="g-sub-note">下修/赎回事件的公告日期明细，按事件发生年份/月份计数，时间倒序（最近在前）。仅含年度/月度事件统计；事件后收益、监测信号需外部价格库/平台台账，不计。</p>
+      <div class="cards" id="clauseSnapS"></div>
+    </div>
   </section>
 </div>
 <footer class="site-footer"><div class="footer-brand"></div><p>坚持做长期正确的事</p></footer>
 </main>
 <div id="tip"></div>
-<script src="data.js?v=20261110202611111026"></script>
+<script src="data.js?v=20261110202611111128"></script>
 <script>
 /* 数据块已拆到同目录 data.js（var D 挂 window），本 script 直接用 D */
 const M={red:'#d12920',navy:'#315b7d',orange:'#e97132',gold:'#c9821b',blue:'#5592dc',green:'#2f7d6d'};
@@ -1400,6 +1468,213 @@ let rz;
 new ResizeObserver(()=>{cancelAnimationFrame(rz);rz=requestAnimationFrame(()=>{window.renderNav();});})
   .observe(document.querySelector('.content'));
 window.renderNav();
+/* ═══════════ 板块5 · 条款看板（下修/赎回）═══════════ */
+(function(){
+  const CD=D.clause||{};
+  /* 工具：cfmt(带小数位,null→—) / cnum(整数友好) */
+  function _cesc(s){return s===null||s===undefined||s===''?'':escS(String(s));}
+  function cfmt(v,dec){
+    if(v===null||v===undefined||v==='')return '<span class="null">—</span>';
+    const n=Number(v);
+    if(isNaN(n))return _cesc(v);
+    return n.toLocaleString('zh-CN',{maximumFractionDigits:dec===undefined?2:dec,minimumFractionDigits:dec===undefined?2:dec});
+  }
+  function cnum(v){if(v===null||v===undefined||v==='')return '<span class="null">—</span>';const n=Number(v);if(isNaN(n))return _cesc(v);return n.toLocaleString('zh-CN',{maximumFractionDigits:2});}
+  function ckpi(label,val,sub,cls){return `<div class="kpi ${cls||''}"><div class="k">${escS(label)}</div><div class="v ${cls||''}">${val}</div><div class="s">${escS(sub||'')}</div></div>`;}
+
+  const CORE_X=[
+   {file:'下修_实施下修中',title:'实施下修中',tag:'日度 · 核心','tagCls':'hot',pill:'red',pillTxt:'核心',
+    note:'已过/正在董事会 — 股东大会，待实施或实施中',
+    cols:[
+      {h:'代码',k:'转债代码',c:'td-code'},{h:'转债',k:'转债名称',c:'td-name'},
+      {h:'董事会提议',k:'董事会提议公告时间',c:'td-dt'},{h:'股东大会',k:'股东大会决议时间',c:'td-dt'},
+      {h:'修正前价',k:'修正前转股价'},{h:'修正后价',k:'修正后转股价'},
+      {h:'理论底价',k:'理论下修底价'},{h:'下修到底平价',k:'下修到底对应平价'},{h:'稀释率%',k:'转股稀释率'}]},
+   {file:'下修_当前累计',title:'当前具有累计天数',tag:'日度 · 观察','tagCls':'',pill:'navy',pillTxt:'可下修',
+    note:'承诺已到期，天数重新累计，随时可下修',
+    cols:[
+      {h:'代码',k:'转债代码',c:'td-code'},{h:'转债',k:'转债名称',c:'td-name'},{h:'累计天数',k:'目前天数累计'},
+      {h:'不下修公告',k:'不下修公告日',c:'td-dt'},{h:'承诺期至',k:'承诺何日之前不行使',c:'td-dt'},
+      {h:'转股价',k:'转股价'},{h:'理论底价',k:'理论下修底价'},{h:'下修到底平价',k:'下修到底对应平价'}]},
+   {file:'下修_承诺期内',title:'当前不下修承诺期内',tag:'日度 · 保护','tagCls':'mt',pill:'green',pillTxt:'限下修',
+    note:'公司在承诺期内不得下修',
+    cols:[
+      {h:'代码',k:'转债代码',c:'td-code'},{h:'转债',k:'转债名称',c:'td-name'},{h:'累计天数',k:'目前天数累计'},
+      {h:'不下修公告',k:'不下修公告日',c:'td-dt'},{h:'承诺期至',k:'承诺何日之前不行使',c:'td-dt'},
+      {h:'转股价',k:'转股价'},{h:'理论底价',k:'理论下修底价'}]},
+   {file:'下修_非承诺期',title:'非承诺期 · 无累计天数',tag:'日度 · 观察','tagCls':'',pill:'gray',pillTxt:'可下修',
+    note:'处于可下修窗口，尚无累计天数',
+    cols:[
+      {h:'代码',k:'转债代码',c:'td-code'},{h:'转债',k:'转债名称',c:'td-name'},
+      {h:'不下修公告',k:'不下修公告日',c:'td-dt'},{h:'承诺期至',k:'承诺何日之前不行使',c:'td-dt'},
+      {h:'转股价',k:'转股价'},{h:'理论底价',k:'理论下修底价'},{h:'下修到底平价',k:'下修到底对应平价'}]},
+  ];
+  const CORE_S=[
+   {file:'赎回_累计触发',title:'赎回累计触发天数',tag:'日度 · 核心','tagCls':'hot',pill:'red',pillTxt:'强赎',
+    note:'已达 15/30 计入，越接近 15 触发概率越高',
+    cols:[
+      {h:'代码',k:'代码',c:'td-code'},{h:'转债',k:'转债简称',c:'td-name'},{h:'评级',k:'债项评级'},
+      {h:'累计天数',k:'赎回累计触发天数',f:'hl'},{h:'未转股%',k:'未转股比例'},{h:'稀释%',k:'对流通股本稀释'},
+      {h:'转债价',k:'转债价格'},{h:'平价',k:'平价'},{h:'溢价率%',k:'转股溢价率'},{h:'承诺期至',k:'承诺何日之前不行使',c:'td-dt'}]},
+   {file:'赎回_承诺期内',title:'当前不强赎承诺期内',tag:'日度 · 保护','tagCls':'mt',pill:'green',pillTxt:'不强赎',
+    note:'承诺期内除外，暂不强赎',
+    cols:[
+      {h:'代码',k:'代码',c:'td-code'},{h:'转债',k:'转债简称',c:'td-name'},{h:'评级',k:'债项评级'},
+      {h:'累计天数',k:'赎回累计触发天数'},{h:'承诺期至',k:'承诺何日之前不行使',c:'td-dt'},
+      {h:'转债价',k:'转债价格'},{h:'溢价率%',k:'转股溢价率'}]},
+   {file:'赎回_非承诺期',title:'非承诺期 · 无累计天数',tag:'日度 · 观察','tagCls':'',pill:'gray',pillTxt:'随时赎回',
+    note:'非承诺期，公司随时可公告赎回',
+    cols:[
+      {h:'代码',k:'代码',c:'td-code'},{h:'转债',k:'转债简称',c:'td-name'},{h:'评级',k:'债项评级'},
+      {h:'累计天数',k:'赎回累计触发天数'},{h:'承诺期至',k:'承诺何日之前不行使',c:'td-dt'},
+      {h:'转债价',k:'转债价格'},{h:'溢价率%',k:'转股溢价率'}]},
+   {file:'赎回_到期摘牌',title:'到期将摘牌转债',tag:'日度 · 临期','tagCls':'hot',pill:'red',pillTxt:'临期',
+    note:'临近到期的个券，关注清算节奏',
+    cols:[
+      {h:'代码',k:'代码',c:'td-code'},{h:'转债',k:'转债简称',c:'td-name'},
+      {h:'到期日',k:'到期日期',c:'td-dt'},{h:'最后交易',k:'最后交易日',c:'td-dt'},{h:'摘牌',k:'摘牌日期',c:'td-dt'},
+      {h:'剩余天数',k:'剩余天数'},{h:'到期赎回价',k:'到期赎回价'},{h:'转债价',k:'转债价格'},
+      {h:'溢价率%',k:'转股溢价率'},{h:'YTM',k:'YTM'}]},
+  ];
+  function renderCore(CORE,hostId){
+    const host=document.getElementById(hostId); if(!host)return;
+    CORE.forEach(cfg=>{
+      const rows=CD[cfg.file]||[];
+      const th=cfg.cols.map(c=>`<th>${escS(c.h)}</th>`).join('');
+      const tr=rows.map(r=>'<tr>'+cfg.cols.map(c=>{
+        let v=r[c.k]; let cell;
+        if(c.f==='hl'){const n=Number(v);const hot=(!isNaN(n)&&n>=10);cell=`<b class="${hot?'pos':'null'}">${n>0?n:'<span class="null">—</span>'}</b>`;}
+        else cell=cfmt(v);
+        return `<td class="${c.c||''}">${cell}</td>`;
+      }).join('')+'</tr>').join('');
+      host.insertAdjacentHTML('beforeend',`
+        <section class="card">
+          <div class="card-head"><div><h3><span class="pill ${cfg.pill}">${escS(cfg.pillTxt)}</span> ${escS(cfg.title)}</h3>
+            <p class="note">${escS(cfg.note)} · 共 <b>${rows.length}</b> 只</p></div>
+            <span class="freq-tag ${cfg.tagCls}">${escS((cfg.tag||'').split(' · ')[0])}<small>${escS((cfg.tag||'').split(' · ')[1]||'')}</small></span>
+          </div>
+          <div class="card-body"><div class="scroll"><table><thead><tr>${th}</tr></thead>
+            <tbody>${tr||'<tr><td class="null" colspan="99">暂无数据</td></tr>'}</tbody></table></div></div>
+        </section>`);
+    });
+  }
+  const STAT_X=[
+   {file:'下修统计_下修',title:'下修公告',pill:'red',pillTxt:'下修',
+    headers:['转债代码','转债名称','董事会发布日期','向下修正发布日期','转股价变动日期','修正前转股价','修正后转股价']},
+   {file:'下修统计_不下修',title:'不下修公告',pill:'green',pillTxt:'不下修',headers:['转债代码','转债简称','公告时间','承诺何日之前不行使']},
+   {file:'下修统计_预计下修',title:'预计下修公告',pill:'navy',pillTxt:'预计',headers:['转债代码','转债简称','公告时间']},
+  ];
+  const STAT_S=[
+   {file:'赎回应统计_赎回',title:'赎回公告',pill:'red',pillTxt:'赎回',
+    headers:['转债代码','转债简称','公告时间','最后交易日','最后转股日','赎回登记日','摘牌日期']},
+   {file:'赎回应统计_不赎回',title:'不赎回公告',pill:'green',pillTxt:'不赎回',headers:['转债代码','转债简称','公告时间','承诺何日之前不行使']},
+  ];
+  const STAT_ALL=[...STAT_X,...STAT_S];
+  function cdoStat(id,init){
+    const _id=id.replace(/^st_clauseStats[XY]_/,'');
+    const cfg=STAT_ALL.find(c=>c.file===_id); if(!cfg)return;
+    const rows=CD[cfg.file]||[];
+    const q=(document.getElementById(id+'_q').value||'').toLowerCase().trim();
+    let hit;
+    if(init)hit=rows;
+    else if(q)hit=rows.filter(r=>r.some(c=>c!==undefined&&c!==null&&String(c).toLowerCase().includes(q)));
+    else hit=rows;
+    const shown=hit.slice(0,200);
+    const tr=shown.map(r=>'<tr>'+cfg.headers.map((h,i)=>{
+      const v=r[i]; const isName=i===1; const isCode=i===0;
+      const cls=(isCode?'td-code':isName?'td-name':String(h).includes('时间')||String(h).includes('日期')?'td-dt':'');
+      return `<td class="${cls}">${cfmt(v)}</td>`;
+    }).join('')+'</tr>').join('');
+    document.getElementById(id+'_tb').innerHTML=tr||'<tr><td class="null" colspan="99">无匹配</td></tr>';
+    document.getElementById(id+'_hits').textContent=init?`共 ${rows.length} 条`:`匹配 ${hit.length} / ${rows.length}`;
+  }
+  window.cdoStat=function(id){cdoStat(id,false);};
+  function renderStat(list,hostId){
+    const host=document.getElementById(hostId); if(!host)return;
+    list.forEach(cfg=>{
+      const rows=CD[cfg.file]||[]; const id='st_'+hostId+'_'+cfg.file;
+      host.insertAdjacentHTML('beforeend',`
+        <section class="card">
+          <div class="card-head fold" id="${id}_fold">
+            <div><h3>${escS(cfg.title)} <span class="pill ${cfg.pill}">${escS(cfg.pillTxt)}</span></h3>
+              <p class="note">共 <b>${rows.length}</b> 条 · 展开查询</p></div>
+            <span class="arrow">▸</span>
+          </div>
+          <div class="fold-body">
+            <div class="searchbar"><span class="ic">⌕</span>
+              <input id="${id}_q" placeholder="搜索 代码 / 名称 / 日期..." oninput="window.cdoStat('${id}')">
+              <span class="hits" id="${id}_hits">匹配 0 / ${rows.length}</span>
+            </div>
+            <div class="scroll"><table>
+              <thead><tr>${cfg.headers.map(h=>`<th>${escS(h)}</th>`).join('')}</tr></thead>
+              <tbody id="${id}_tb"></tbody>
+            </table></div>
+          </div>
+        </section>`);
+      cdoStat(id,true);
+    });
+  }
+  function renderHist(list,hostId){
+    const host=document.getElementById(hostId); if(!host)return;
+    list.forEach(cfg=>{
+      const rows=cfg.rows.slice().reverse();
+      const th=cfg.headers.map(h=>`<th>${escS(h)}</th>`).join('');
+      const tr=rows.map(r=>'<tr>'+r.map((v,ci)=>{
+        const cls=ci===0?'td-dt':'';
+        let cell=escS(String(v));
+        const n=Number(v);
+        if(!isNaN(n)&&String(v).trim()!=='')cell=(Number.isInteger(n)?n:n.toLocaleString('zh-CN',{maximumFractionDigits:2,minimumFractionDigits:0}));
+        return `<td class="${cls}">${cell}</td>`;
+      }).join('')+'</tr>').join('');
+      host.insertAdjacentHTML('beforeend',`
+        <section class="card">
+          <div class="card-head"><div><h3>${escS(cfg.title)}</h3><p class="note">${escS(cfg.note)}</p></div></div>
+          <div class="card-body"><div class="scroll"><table><thead><tr>${th}</tr></thead>
+            <tbody>${tr||'<tr><td class="null" colspan="99">暂无数据</td></tr>'}</tbody></table></div></div>
+        </section>`);
+    });
+  }
+  /* KPI */
+  document.getElementById('clauseKpiX').innerHTML=[
+    ckpi('实施下修中',(CD['下修_实施下修中']||[]).length,'走近大会 / 实施','red'),
+    ckpi('当前累计',(CD['下修_当前累计']||[]).length,'承诺已过 · 天数复累计',''),
+    ckpi('承诺期内',(CD['下修_承诺期内']||[]).length,'限下修','green'),
+  ].join('');
+  document.getElementById('clauseKpiS').innerHTML=[
+    ckpi('赎回 · 累计触发',(CD['赎回_累计触发']||[]).length,'越近 15 越危险','red'),
+    ckpi('赎回 · 承诺期内',(CD['赎回_承诺期内']||[]).length,'不强赎','green'),
+    ckpi('非承诺期 · 可赎回',(CD['赎回_非承诺期']||[]).length,'随时可公告',''),
+    ckpi('到期将摘牌',(CD['赎回_到期摘牌']||[]).length,'临期清偿','red'),
+  ].join('');
+  renderCore(CORE_X,'clauseCardsX');
+  renderCore(CORE_S,'clauseCardsS');
+  renderStat(STAT_X,'clauseStatsX');
+  renderStat(STAT_S,'clauseStatsS');
+  renderHist([
+    {title:'年度统计 · 下修',note:'按年份下修 / 提议 / 不下修事件计数',headers:['年份','下修','提议下修','不下修'],rows:[[2013,1,0,0],[2014,1,0,0],[2018,26,0,0],[2019,19,0,0],[2020,12,0,0],[2021,32,0,20],[2022,46,175,254],[2023,65,541,473],[2024,203,1140,913],[2025,69,588,517],[2026,81,400,307]]},
+    {title:'月度统计 · 下修',note:'按月下修 / 提议 / 不下修事件计数',headers:['月份','下修','提议下修','不下修'],rows:[["2013-01",1,0,0],["2014-06",1,0,0],["2018-03",1,0,0],["2018-04",3,0,0],["2018-06",2,0,0],["2018-07",7,0,0],["2018-08",4,0,0],["2018-09",2,0,0],["2018-10",2,0,0],["2018-11",3,0,0],["2018-12",2,0,0],["2019-01",2,0,0],["2019-02",1,0,0],["2019-03",6,0,0],["2019-04",1,0,0],["2019-07",1,0,0],["2019-08",1,0,0],["2019-09",2,0,0],["2019-10",3,0,0],["2019-11",1,0,0],["2019-12",1,0,0],["2020-02",3,0,0],["2020-04",1,0,0],["2020-06",4,0,0],["2020-07",1,0,0],["2020-08",1,0,0],["2020-12",2,0,0],["2021-01",2,0,3],["2021-02",5,0,0],["2021-03",6,0,1],["2021-04",5,0,0],["2021-05",2,0,2],["2021-06",1,0,2],["2021-07",2,0,0],["2021-08",2,0,4],["2021-09",1,0,2],["2021-10",0,0,1],["2021-11",4,0,3],["2021-12",2,0,2],["2022-01",2,0,0],["2022-02",2,0,1],["2022-03",1,0,7],["2022-04",6,0,5],["2022-05",6,0,15],["2022-06",2,0,3],["2022-07",4,0,6],["2022-08",5,27,90],["2022-09",4,46,32],["2022-10",5,31,40],["2022-11",2,37,26],["2022-12",7,34,29],["2023-01",2,22,24],["2023-02",1,23,18],["2023-03",3,46,48],["2023-04",3,33,29],["2023-05",6,55,49],["2023-06",10,43,41],["2023-07",7,40,30],["2023-08",6,57,43],["2023-09",2,59,57],["2023-10",11,66,53],["2023-11",7,37,36],["2023-12",7,60,45],["2024-01",10,86,63],["2024-02",26,157,112],["2024-03",12,82,86],["2024-04",19,90,48],["2024-05",19,98,98],["2024-06",24,93,53],["2024-07",26,116,98],["2024-08",17,113,100],["2024-09",12,116,98],["2024-10",17,74,60],["2024-11",12,48,34],["2024-12",9,67,63],["2025-01",6,80,71],["2025-02",13,62,46],["2025-03",4,49,41],["2025-04",10,93,82],["2025-05",2,44,46],["2025-06",7,49,36],["2025-07",6,47,43],["2025-08",5,33,27],["2025-09",5,27,25],["2025-10",3,32,28],["2025-11",3,32,32],["2025-12",5,40,40],["2026-01",5,26,20],["2026-02",4,15,10],["2026-03",5,21,17],["2026-04",6,34,26],["2026-05",5,28,27],["2026-06",13,61,44],["2026-07",13,82,63],["2026-08",8,29,28],["2026-09",6,28,18],["2026-10",11,58,43],["2026-11",5,18,11]]},
+  ],'clauseSnapX');
+  renderHist([
+    {title:'年度统计 · 赎回',note:'按年份强赎 / 不赎回事件计数',headers:['年份','强赎','不赎回'],rows:[[2015,25,0],[2017,3,0],[2018,2,0],[2019,21,9],[2020,73,113],[2021,67,201],[2022,53,141],[2023,42,94],[2024,56,76],[2025,131,147],[2026,86,115]]},
+    {title:'月度统计 · 赎回',note:'按月强赎 / 不赎回事件计数',headers:['月份','强赎','不赎回'],rows:[["2015-01",7,0],["2015-02",3,0],["2015-03",1,0],["2015-04",7,0],["2015-05",6,0],["2015-06",1,0],["2017-05",2,0],["2017-07",1,0],["2018-06",1,0],["2018-07",1,0],["2019-01",1,0],["2019-02",1,0],["2019-03",2,1],["2019-04",3,0],["2019-05",0,1],["2019-06",1,1],["2019-07",2,0],["2019-08",3,1],["2019-09",3,1],["2019-10",1,0],["2019-11",2,2],["2019-12",2,2],["2020-01",3,2],["2020-02",9,2],["2020-03",9,4],["2020-04",2,0],["2020-05",2,2],["2020-06",3,5],["2020-07",10,13],["2020-08",13,22],["2020-09",3,17],["2020-10",5,10],["2020-11",11,18],["2020-12",3,18],["2021-01",14,12],["2021-02",3,8],["2021-03",5,10],["2021-04",1,13],["2021-05",1,9],["2021-06",7,11],["2021-07",8,20],["2021-08",6,36],["2021-09",7,25],["2021-10",4,13],["2021-11",6,22],["2021-12",5,22],["2022-01",10,29],["2022-02",2,14],["2022-03",4,11],["2022-04",0,7],["2022-05",3,8],["2022-06",4,13],["2022-07",7,18],["2022-08",8,12],["2022-09",4,7],["2022-10",2,7],["2022-11",6,7],["2022-12",3,8],["2023-01",1,12],["2023-02",4,11],["2023-03",7,12],["2023-04",3,5],["2023-05",5,5],["2023-06",1,3],["2023-07",4,13],["2023-08",0,5],["2023-09",3,4],["2023-10",6,8],["2023-11",2,13],["2023-12",6,3],["2024-01",2,4],["2024-02",0,3],["2024-03",7,7],["2024-04",2,5],["2024-05",3,8],["2024-06",3,3],["2024-07",1,3],["2024-09",1,3],["2024-10",7,11],["2024-11",21,17],["2024-12",9,12],["2025-01",2,0],["2025-02",5,13],["2025-03",15,18],["2025-04",5,9],["2025-05",4,10],["2025-06",6,12],["2025-07",21,19],["2025-08",24,20],["2025-09",16,11],["2025-10",9,18],["2025-11",12,8],["2025-12",12,9],["2026-01",13,14],["2026-02",12,20],["2026-03",15,10],["2026-04",13,14],["2026-05",14,16],["2026-06",5,9],["2026-07",8,7],["2026-08",4,6],["2026-09",2,7],["2026-10",0,11],["2026-11",0,1]]},
+  ],'clauseSnapS');
+  /* 下修/赎回 分组切换 */
+  const clauseTabs=document.getElementById('clauseTabs');
+  if(clauseTabs)clauseTabs.addEventListener('click',e=>{
+    const b=e.target.closest('.g-tab'); if(!b)return;
+    document.querySelectorAll('#clauseTabs .g-tab').forEach(x=>x.classList.toggle('is-active',x===b));
+    document.getElementById('clause_xiu').style.display=b.dataset.group==='xiu'?'block':'none';
+    document.getElementById('clause_shu').style.display=b.dataset.group==='shu'?'block':'none';
+  });
+  /* 折叠开关（事件委托捕获，排除输入框） */
+  document.addEventListener('click',function(e){
+    const el=e.target.closest('.fold');
+    if(!el||e.target.closest('input'))return;
+    el.classList.toggle('open');
+    const inp=document.getElementById(el.id.replace('_fold','')+'_q');
+    if(inp&&!el.classList.contains('open'))inp.value='';
+  });
+})();
 </script>
 </body>
 </html>
