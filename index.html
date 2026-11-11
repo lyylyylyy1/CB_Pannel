@@ -50,6 +50,7 @@ h1{margin:1px 0 0;color:var(--navy);font-size:clamp(21px,2vw,28px);line-height:1
 .page-heading p{margin:0;color:var(--navy);font-size:17px;font-weight:700}
 .part-banner{display:flex;align-items:center;gap:12px;margin:22px 0 4px;padding:10px 4px;border-bottom:3px solid var(--primary)}
 .part-intro{font-size:12.5px;color:var(--muted-foreground);line-height:1.7;margin:-4px 0 14px;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-left:3px solid var(--primary);border-radius:8px}
+#clause-frame{width:100%;height:calc(100vh - 60px);min-height:4200px;border:1px solid var(--border);border-radius:10px;background:#fff}
 .part-banner .no{font-family:Consolas,monospace;font-size:26px;font-weight:700;color:var(--primary)}
 .part-banner h2{margin:0;color:var(--navy);font-size:24px}
 .part-banner .en{margin-left:auto;color:var(--muted-foreground);font-size:12px;font-weight:700;letter-spacing:.2em}
@@ -270,6 +271,7 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
       <button class="module-button is-active" data-target="part1"><span class="module-icon">◷</span><span><small>TRACKING</small><strong>每日市场跟踪</strong></span></button>
       <button class="module-button" data-target="part5"><span class="module-icon">❖</span><span><small>BASIC</small><strong>基础策略</strong></span></button>
       <button class="module-button" data-target="part3"><span class="module-icon">◇</span><span><small>TIMING</small><strong>择时策略<em class="nav-hint">（内网打开）</em></strong></span></button>
+      <button class="module-button" data-target="part6"><span class="module-icon">⚖</span><span><small>CLAUSE</small><strong>条款看板</strong></span></button>
     </nav>
   </aside>
   <section class="content">
@@ -330,12 +332,17 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
 
     <!-- 研报复现板块已按 SHOW_REPLICAS=False 整体关闭 -->
 
+
+    <!-- ═══ 板块5 · 条款看板（下修/赎回）═══ -->
+    <div class="part-banner" id="part6"><span class="no">05</span><h2>条款看板</h2><span class="en">CLAUSE TRACKING · 下修 / 赎回</span></div>
+    <p class="part-intro">分区跟踪两种转债条款：<b>下修</b>（转股价修正，按实施中 / 累计 / 承诺期 / 非承诺期分层）与<b>赎回</b>（强赎触发，按累计天数 / 承诺期 / 非承诺期分层）。含核心跟踪、历史公告统计检索、按年/月的事件计数分布。</p>
+    <iframe id="clause-frame" src="条款.html" title="条款看板 · 下修 / 赎回" loading="lazy"></iframe>
   </section>
 </div>
 <footer class="site-footer"><div class="footer-brand"></div><p>坚持做长期正确的事</p></footer>
 </main>
 <div id="tip"></div>
-<script src="data.js?v=20261110202611101838"></script>
+<script src="data.js?v=20261110202611111026"></script>
 <script>
 /* 数据块已拆到同目录 data.js（var D 挂 window），本 script 直接用 D */
 const M={red:'#d12920',navy:'#315b7d',orange:'#e97132',gold:'#c9821b',blue:'#5592dc',green:'#2f7d6d'};
@@ -1341,7 +1348,8 @@ function renderSpBody(){
 const TITLES={part1:['每日市场跟踪','多维市场数据（含估值指标） · 行情图表 · 修正溢价率明细 · 转债日报'],
 part3:['择时策略','十因子体系 · 周频投票 / 日度打分（含十档·择券落地）/ CCB 模型检查'],
 part5:['基础策略','21 个经典基础策略 · 策略周报 / 转债策略跟踪表 / 全量回测 / 截面快照'],
-part4:['研报复现','国泰二维 · 银河RSJ · 广发三视角 · 华福高估值 · 中金事件驱动']};
+part4:['研报复现','国泰二维 · 银河RSJ · 广发三视角 · 华福高估值 · 中金事件驱动'],
+part6:['条款看板','下修 / 赎回 条款跟踪 · 核心跟踪 / 历史公告统计 / 按年·月事件计数分布']};
 document.getElementById('modnav').addEventListener('click',e=>{
   const btn=e.target.closest('.module-button');if(!btn)return;
   document.querySelectorAll('#modnav .module-button').forEach(b=>b.classList.toggle('is-active',b===btn));
@@ -1353,7 +1361,7 @@ document.getElementById('modnav').addEventListener('click',e=>{
 });
 // 滚动联动：当前可见的板块高亮左侧导航，并同步标题
 (function(){
-  const parts=['part1','part5','part3','part4'].filter(id=>document.getElementById(id));
+  const parts=['part1','part5','part3','part4','part6'].filter(id=>document.getElementById(id));
   const btns=new Map([...document.querySelectorAll('#modnav .module-button')].map(b=>[b.dataset.target,b]));
   let ticking=false;
   const update=()=>{ticking=false;
