@@ -1,6 +1,0 @@
-name = "cb-pannel"
-compatibility_date = "2026-11-11"  # 建议使用今天的日期
-
-[assets]
-directory = "./"  # 如果你的 index.html 在仓库根目录
-# 如果 index.html 在子文件夹（如 public），则改为 directory = "./public"
