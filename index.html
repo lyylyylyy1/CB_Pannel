@@ -409,7 +409,7 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
 <footer class="site-footer"><p>坚持做长期正确的事</p></footer>
 </main>
 <div id="tip"></div>
-<script src="data.js?v=20261116202611161648"></script>
+<script src="data.js?v=20261116202611161739"></script>
 <script>
 /* 数据块已拆到同目录 data.js（var D 挂 window），本 script 直接用 D */
 const M={red:'#d12920',navy:'#315b7d',orange:'#e97132',gold:'#c9821b',blue:'#5592dc',green:'#2f7d6d'};
@@ -994,7 +994,7 @@ function blockTabs(boxEl,sheets,emptyMsg){
   el.innerHTML=h;
   mc.forEach((c,i)=>{const host=el.querySelector('#mktchart'+i);const card=host?host.parentElement:null;const cb=card?card.querySelector('.chart-dl'):null;if(cb){cb._c=c;cb._n=String(c.title||'行情图');}});
   mc.forEach((c,i)=>lineChart(document.getElementById('mktchart'+i),
-    c.series.map((s,si)=>({name:s.name,pts:slicePts(s.pts),color:PALETTE[si%6],dash:s.dash,bar:s.bar})),
+    c.series.map((s,si)=>({name:s.name,pts:slicePts(s.pts),color:s.color||PALETTE[si%6],dash:s.dash,bar:s.bar})),
     {yPct:!!c.yPct,area:false}));
   if(c.figs&&c.figs.length){
     const h4=document.createElement('h4');h4.className='sub';
