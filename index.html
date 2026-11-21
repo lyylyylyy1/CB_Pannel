@@ -315,7 +315,7 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
       <button class="module-button" data-target="part3"><span class="module-icon">◇</span><span><small>TIMING</small><strong>择时策略</strong></span></button>
       <button class="module-button" data-target="part6"><span class="module-icon">⚖</span><span><small>CLAUSE</small><strong>条款看板</strong></span></button>
       <button class="module-button" data-target="part7"><span class="module-icon">☰</span><span><small>HOTSPOT</small><strong>权益热点</strong></span></button>
-      <button class="module-button" data-target="part8"><span class="module-icon">⛁</span><span><small>CB PLATFORM</small><strong>转债平台</strong></span></button>
+      <button class="module-button" data-target="part8"><span class="module-icon">⛁</span><span><small>CB TOPICS</small><strong>转债专题</strong></span></button>
     </nav>
   </aside>
   <section class="content">
@@ -339,6 +339,10 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
     <section class="card" id="daily-yh">
       <div class="card-head"><div><h3>转债日报</h3></div><span class="freq-tag">日度<small>每个交易日</small></span><span class="filetag" id="yh-tag"></span></div>
       <div class="card-body" id="yh-box"></div>
+    </section>
+    <section class="card">
+      <div class="card-head"><div><h3>转债日度数据库</h3></div><span class="freq-tag">日度<small>来自转债平台</small></span></div>
+      <div class="card-body"><iframe class="cb-cat" data-cat="转债日度数据库" src="平台/转债平台/index.html" loading="lazy" title="转债日度数据库" style="width:100%;height:calc(100vh - 220px);min-height:560px;border:0;display:block;background:#fff"></iframe></div>
     </section>
 
     <!-- ═══ 板块2 · 基础策略 ═══ -->
@@ -417,18 +421,31 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
       <iframe src="平台/权益热点.html" title="权益市场热点跟踪" loading="lazy" style="width:100%;height:calc(100vh - 140px);min-height:880px;border:0;display:block;background:#fff"></iframe>
     </section>
 
-    <!-- ═══ 板块7 · 转债平台复现（独立平台 iframe 隔离）═══ -->
-    <div class="part-banner" id="part8"><span class="no">07</span><h2>转债平台复现</h2><span class="en">CB PLATFORM REPRO</span></div>
-    <p class="part-intro">转债平台复现：转债日度数据库 / 月度投资人结构 / 转债次新券策略 / 分行业转债梳理 / 产业链图谱（11 主题）。以 iframe 隔离嵌入，平台内导航与产业链页相对链接均在其目录内部。</p>
-    <section class="iframe-flush">
-      <iframe id="cbplat-frame" src="平台/转债平台/index.html" title="转债平台复现" loading="lazy" style="width:100%;height:calc(100vh - 96px);min-height:820px;border:0;display:block;background:#fff"></iframe>
+    <!-- ═══ 板块7 · 转债专题（按分类拆分，同源 iframe 复用同一平台）═══ -->
+    <div class="part-banner" id="part8"><span class="no">07</span><h2>转债专题</h2><span class="en">CB SPECIAL TOPICS</span></div>
+    <p class="part-intro">转债专题按分类拆分：月度投资人结构 / 转债次新券策略 / 分行业转债梳理 / 产业链图谱（11 主题）。各分类以同源 iframe 复用同一份平台页面、仅展示对应分类；「转债日度数据库」已并入「01 每日市场跟踪」。</p>
+    <section class="card">
+      <div class="card-head"><div><h3>月度投资人结构</h3></div><span class="freq-tag">月度</span></div>
+      <div class="card-body"><iframe class="cb-cat" data-cat="月度投资人结构" src="平台/转债平台/index.html" loading="lazy" title="月度投资人结构" style="width:100%;height:calc(100vh - 220px);min-height:560px;border:0;display:block;background:#fff"></iframe></div>
+    </section>
+    <section class="card">
+      <div class="card-head"><div><h3>转债次新券策略</h3></div><span class="freq-tag">专题</span></div>
+      <div class="card-body"><iframe class="cb-cat" data-cat="转债次新券策略" src="平台/转债平台/index.html" loading="lazy" title="转债次新券策略" style="width:100%;height:calc(100vh - 220px);min-height:560px;border:0;display:block;background:#fff"></iframe></div>
+    </section>
+    <section class="card">
+      <div class="card-head"><div><h3>分行业转债梳理</h3></div><span class="freq-tag">专题</span></div>
+      <div class="card-body"><iframe class="cb-cat" data-cat="分行业转债梳理" src="平台/转债平台/index.html" loading="lazy" title="分行业转债梳理" style="width:100%;height:calc(100vh - 220px);min-height:560px;border:0;display:block;background:#fff"></iframe></div>
+    </section>
+    <section class="card">
+      <div class="card-head"><div><h3>产业链图谱</h3></div><span class="freq-tag">专题<small>11 主题</small></span></div>
+      <div class="card-body"><iframe class="cb-cat" data-cat="产业链图谱" src="平台/转债平台/index.html" loading="lazy" title="产业链图谱" style="width:100%;height:calc(100vh - 220px);min-height:560px;border:0;display:block;background:#fff"></iframe></div>
     </section>
   </section>
 </div>
 <footer class="site-footer"><p>坚持做长期正确的事</p></footer>
 </main>
 <div id="tip"></div>
-<script src="data.js?v=20261119202611212222"></script>
+<script src="data.js?v=20261119202611212320"></script>
 <script>
 /* 数据块已拆到同目录 data.js（var D 挂 window），本 script 直接用 D */
 const M={red:'#d12920',navy:'#315b7d',orange:'#e97132',gold:'#c9821b',blue:'#5592dc',green:'#2f7d6d'};
@@ -1437,32 +1454,21 @@ part5:['基础策略','21 个经典基础策略 · 策略周报 / 转债策略�
 part4:['研报复现','国泰二维 · 银河RSJ · 广发三视角 · 华福高估值 · 中金事件驱动'],
 part6:['条款看板','下修 / 赎回 条款跟踪 · 核心跟踪 / 历史公告统计 / 按年·月事件计数分布'],
 part7:['权益热点','市场温度 / 核心指数 / 行业轮动 / 概念热点 / 北向·港股通 / 转债概览 / 龙虎榜净买'],
-part8:['转债平台','转债日度数据库 / 月度投资人结构 / 次新券策略 / 分行业梳理 / 产业链图谱']};
-/* 转债平台 iframe 去嵌套：同源注入样式，剥掉内层平台自带页头/页脚/左侧导航外壳，
-   把它的 5 个模块按钮从左侧栏压成顶部横向标签，使 07 板块单层展示，不再“站点套站点”。
-   file:// 本地直开跨域被拦则静默跳过（平台单独打开仍保留完整导航）。 */
+part8:['转债专题','月度投资人结构 / 次新券策略 / 分行业梳理 / 产业链图谱；日度库见 01']};
+/* 转债专题·分类拆分：各 iframe 复用同一份平台页面(同 src 缓存一次)，父页按 data-cat 注入样式，剥掉平台外壳并只显示对应分类。*/
 (function(){
-  var f=document.getElementById('cbplat-frame'); if(!f) return;
-  var CSS=[
-    '.site-header,.page-heading,.site-footer,.sidebar-heading,.sidebar-foot{display:none!important}',
-    '.dashboard-shell{min-height:auto!important}',
-    '.workspace{display:block!important;grid-template-columns:none!important;padding:10px 14px 18px!important;gap:0!important;max-width:none!important}',
-    '.sidebar{position:static!important;top:auto!important;border:0!important;background:transparent!important;padding:0 0 10px!important;margin:0 0 10px!important}',
-    '.module-nav{display:flex!important;flex-wrap:wrap!important;gap:8px!important}',
-    '.module-button{width:auto!important;border:1px solid var(--border)!important;border-left:1px solid var(--border)!important;border-radius:8px!important;padding:8px 14px!important;background:var(--card)!important;text-align:center!important}',
-    '.module-button.is-active{border-color:var(--primary)!important;background:#fbefee!important;color:#b5221b!important}',
-    '.module-button small,.module-button .module-icon{display:none!important}',
-    '.content{min-width:0!important}'
-  ].join('\n');
-  function flatten(){
-    try{
-      var d=f.contentDocument; if(!d||!d.head) return;
-      if(d.getElementById('cbplat-flatten')) return;
-      var s=d.createElement('style'); s.id='cbplat-flatten'; s.textContent=CSS; d.head.appendChild(s);
-    }catch(e){/* 跨域或尚未加载，忽略 */}
-  }
-  f.addEventListener('load',flatten);
-  flatten();
+  function styleFor(cat){return [
+    '.site-header,.page-heading,.site-footer,.sidebar,.sidebar-heading,.sidebar-foot{display:none!important}',
+    '.workspace{display:block!important;grid-template-columns:none!important;padding:12px 16px 22px!important;gap:0!important;max-width:none!important}',
+    '.panel{display:none!important}',
+    '.panel[data-panel="'+cat+'"]{display:block!important}'
+  ].join('\n');}
+  function apply(f){try{var d=f.contentDocument;if(!d||!d.head)return;
+    var cat=f.getAttribute('data-cat')||'';var id='cbcat-'+cat;if(d.getElementById(id))return;
+    var st=d.createElement('style');st.id=id;st.textContent=styleFor(cat);d.head.appendChild(st);
+  }catch(e){}}
+  var fs=[].slice.call(document.querySelectorAll('iframe.cb-cat'));
+  fs.forEach(function(f){ f.addEventListener("load",function(){apply(f);}); apply(f); });
 })();
 document.getElementById('modnav').addEventListener('click',e=>{
   const btn=e.target.closest('.module-button');if(!btn)return;
