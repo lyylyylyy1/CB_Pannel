@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>鸡肉 · 产业链图谱（复现）</title>
+<style>
+  :root{--red:#d12920;--navy:#0e2841;--navy2:#315b7d;--gold:#c9821b;--muted:#d3d9de;--bg:#f6f6f4;--line:#e3e2dd}
+  *{box-sizing:border-box} body{margin:0;font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:#1d2733}
+  header{background:linear-gradient(120deg,var(--navy),var(--navy2));color:#fff;padding:20px 30px}
+  header h1{margin:0;font-size:21px} header p{margin:6px 0 0;font-size:12px;opacity:.82}
+  .wrap{max-width:1320px;margin:0 auto;padding:18px 20px 70px}
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:16px 0 20px}
+  .stat{background:#fff;border:1px solid var(--line);border-left:4px solid var(--red);border-radius:8px;padding:12px 16px}
+  .stat b{font-size:26px;color:var(--navy);display:block;font-variant-numeric:tabular-nums}
+  .stat span{font-size:12px;color:#596573}
+  .graph-card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px;margin:0 0 26px}
+  .graph-card .fh{display:flex;align-items:baseline;justify-content:space-between;margin:2px 4px 10px}
+  .graph-card .fh h2{margin:0;font-size:16px;color:var(--navy)} .graph-card .fh .cap{font-size:11.5px;color:#8a939c}
+  .legend{display:flex;gap:16px;font-size:11.5px;color:#5b6570;margin:0 4px 10px}
+  .legend i{font-style:normal;margin-right:4px}
+  .graph{border:1px solid var(--line);border-radius:8px;overflow:auto}
+  /* ── 赛道细节 ── */
+  .sec{margin:0 0 26px}
+  .sec-head{display:flex;align-items:baseline;gap:12px;background:var(--navy);color:#fff;border-radius:8px 8px 0 0;padding:10px 16px}
+  .sec-tag{font-size:11px;font-weight:700;color:#cfe0ef;letter-spacing:.06em;flex:none}
+  .sec-head h3{margin:0;font-size:15.5px} .sec-desc{margin:0 0 0 auto;font-size:12px;opacity:.85;max-width:720px;text-align:right}
+  .seg-detail{border:1px solid var(--line);border-top:0}
+  .seg-bar{display:flex;align-items:baseline;gap:10px;background:#faf9f6;border-bottom:1px solid var(--line);padding:8px 16px}
+  .seg-name{font-size:14px;font-weight:700;color:var(--navy)}
+  .seg-count{font-size:11px;color:var(--red);font-weight:700} .seg-meta{font-size:11.5px;color:#8a939c}
+  .dettbl{width:100%;border-collapse:collapse;font-size:12.5px;background:#fff}
+  .dettbl th,.dettbl td{border-bottom:1px solid var(--line);padding:6px 12px;text-align:left}
+  .dettbl th{color:#596573;font-weight:600;background:#f7f8f6;white-space:nowrap}
+  .dettbl td.nm{font-weight:700;color:var(--navy)}
+  .dettbl td.cidx{color:#8a939c;font-size:11.5px}
+  .dettbl .tdot{font-size:9px;margin-right:4px;vertical-align:1px}
+  .dettbl .empty{color:#9aa3ad;text-align:center;padding:14px}
+  .back{color:#3a6ea5;text-decoration:none;font-size:13px}
+  .note{font-size:11.5px;color:#8a939c;margin-top:14px;line-height:1.8}
+</style></head><body>
+<header><h1>鸡肉 · 转债产业链图谱</h1><p>数据截至 2026-11-13 ｜ 本地公开口径：中信三级分类 ＋ 评级快照 ＋ 正股市值；业务定位来自公开券商研报（中金）｜ 环节旁白来自公开产业共识</p></header>
+<div class="wrap">
+  <p><a class="back" href="index.html">← 返回首页</a></p>
+  <div class="stats"><div class="stat"><b>7</b><span>转债标的</span></div><div class="stat"><b>7</b><span>已归环节（100%）</span></div><div class="stat"><b>2</b><span>高热度环节标的</span></div><div class="stat"><b>3</b><span>高置信度</span></div></div>
+  <div class="graph-card">
+    <div class="fh"><h2>五层产业链布局</h2><span class="cap">上游 → 中游 → 下游 · 点击环节跳到下方明细</span></div>
+    <div class="legend"><span><i style="color:#d12920">■</i>高热度（交投活跃：当日成交≥主题中位1.5×）</span><span><i style="color:#e97132">■</i>中热度</span><span><i style="color:#8a939c">■</i>低热度</span></div>
+    <div class="graph"><svg viewBox="0 0 1280 532" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;font-family:inherit" role="img">
+<defs><marker id="arr" .../></defs>
+<rect x="0" y="0" width="1280" height="532" fill="#fcfbf9"/>
+<g transform="translate(6,0)"><rect x="0" y="0" width="160" height="92" rx="8" fill="#0e2841"/><text x="80.0" y="26" text-anchor="middle" fill="#fff" font-size="13" font-weight="700">上游</text><text x="80.0" y="44" text-anchor="middle" fill="#cfe0ef" font-size="10">L1</text><text x="80.0" y="64" text-anchor="middle" fill="#9fbdd6" font-size="9.5">0环节</text></g><g transform="translate(6,106)"><rect x="0" y="0" width="160" height="92" rx="8" fill="#0e2841"/><text x="80.0" y="26" text-anchor="middle" fill="#fff" font-size="13" font-weight="700">饲料与养殖</text><text x="80.0" y="44" text-anchor="middle" fill="#cfe0ef" font-size="10">L2</text><text x="80.0" y="64" text-anchor="middle" fill="#9fbdd6" font-size="9.5">2环节</text></g><g transform="translate(160.0,106)" class="segbox" data-seg="饲料加工"><a href="#seg-饲料加工" style="cursor:pointer"><rect x="0" y="0" width="554" height="92" rx="9" fill="#fdf1e6" stroke="#e97132" stroke-width="1.6"/><text x="277" y="24" text-anchor="middle" fill="#e97132" font-size="11.5" font-weight="700">饲料加工</text><text x="277" y="40" text-anchor="middle" fill="#e97132" font-size="9.5" opacity=".85">1只</text><text x="277" y="72" text-anchor="middle" fill="#e97132" font-size="9" opacity="1">禾丰</text></a></g><g transform="translate(726.0,106)" class="segbox" data-seg="畜禽养殖"><a href="#seg-畜禽养殖" style="cursor:pointer"><rect x="0" y="0" width="554" height="92" rx="9" fill="#fdf1e6" stroke="#e97132" stroke-width="1.6"/><text x="277" y="24" text-anchor="middle" fill="#e97132" font-size="11.5" font-weight="700">畜禽养殖</text><text x="277" y="40" text-anchor="middle" fill="#e97132" font-size="9.5" opacity=".85">6只</text><text x="277" y="72" text-anchor="middle" fill="#e97132" font-size="9" opacity="1">晓鸣、温氏、希望转2</text></a></g><g transform="translate(6,212)"><rect x="0" y="0" width="160" height="92" rx="8" fill="#0e2841"/><text x="80.0" y="26" text-anchor="middle" fill="#fff" font-size="13" font-weight="700">中游</text><text x="80.0" y="44" text-anchor="middle" fill="#cfe0ef" font-size="10">L3</text><text x="80.0" y="64" text-anchor="middle" fill="#9fbdd6" font-size="9.5">0环节</text></g><g transform="translate(6,318)"><rect x="0" y="0" width="160" height="92" rx="8" fill="#0e2841"/><text x="80.0" y="26" text-anchor="middle" fill="#fff" font-size="13" font-weight="700">设备材料</text><text x="80.0" y="44" text-anchor="middle" fill="#cfe0ef" font-size="10">L4</text><text x="80.0" y="64" text-anchor="middle" fill="#9fbdd6" font-size="9.5">0环节</text></g><g transform="translate(6,424)"><rect x="0" y="0" width="160" height="92" rx="8" fill="#0e2841"/><text x="80.0" y="26" text-anchor="middle" fill="#fff" font-size="13" font-weight="700">下游</text><text x="80.0" y="44" text-anchor="middle" fill="#cfe0ef" font-size="10">L5</text><text x="80.0" y="64" text-anchor="middle" fill="#9fbdd6" font-size="9.5">0环节</text></g>
+</svg></div>
+  </div>
+  <h2 style="color:var(--navy);font-size:17px;border-left:4px solid var(--red);padding-left:10px">赛道细节 · 逐环节转债明细</h2>
+  <div class="sec"><div class="sec-head" id="seg-种源与投入品"><span class="sec-tag">上游·L1</span><h3>种源与投入品</h3><p class="sec-desc">祖代/父母代种鸡繁育、雏鸡孵化,及饲料粮、动保等生产投入品</p></div></div><div class="sec"><div class="sec-head" id="seg-饲料加工与商品代养殖"><span class="sec-tag">饲料与养殖·L2</span><h3>饲料加工与商品代养殖</h3><p class="sec-desc">饲料生产加工,以及父母代/商品代肉鸡规模化养殖</p></div><section class="seg-detail" id="seg-饲料加工"><div class="seg-bar"><span class="seg-name">饲料加工</span><span class="seg-count">1 只</span></div><table class="dettbl"><thead><tr><th>转债</th><th>热度</th><th>置信度</th><th>转债代码</th><th>正股</th><th>评级机构</th><th>正股市值</th><th>业务/中信三级</th></tr></thead><tbody><tr><td class="nm">禾丰转债</td><td><span class="tdot" style="color:#8a939c">○</span>低</td><td><span class="tdot" style="color:#c9821b">●</span>中</td><td>113647.SH</td><td>603609.SH</td><td>3家</td><td>16.9亿</td><td class="mcap">16.9亿</td><td class="cidx">饲料加工</td></tr></tbody></table></section><section class="seg-detail" id="seg-畜禽养殖"><div class="seg-bar"><span class="seg-name">畜禽养殖</span><span class="seg-count">6 只</span></div><table class="dettbl"><thead><tr><th>转债</th><th>热度</th><th>置信度</th><th>转债代码</th><th>正股</th><th>评级机构</th><th>正股市值</th><th>业务/中信三级</th></tr></thead><tbody><tr><td class="nm">牧原转债</td><td><span class="tdot" style="color:#d12920">●</span>高</td><td><span class="tdot" style="color:#d12920">●</span>高</td><td>127045.SZ</td><td>002714.SZ</td><td>23家</td><td>112.3亿</td><td class="mcap">112.3亿</td><td class="cidx">畜牧养殖</td></tr><tr><td class="nm">温氏转债</td><td><span class="tdot" style="color:#d12920">●</span>高</td><td><span class="tdot" style="color:#d12920">●</span>高</td><td>123107.SZ</td><td>300498.SZ</td><td>18家</td><td>88.0亿</td><td class="mcap">88.0亿</td><td class="cidx">畜牧养殖</td></tr><tr><td class="nm">希望转2</td><td><span class="tdot" style="color:#e97132">◆</span>中</td><td><span class="tdot" style="color:#c9821b">●</span>中</td><td>127049.SZ</td><td>000876.SZ</td><td>2家</td><td>86.8亿</td><td class="mcap">86.8亿</td><td class="cidx">畜牧养殖</td></tr><tr><td class="nm">巨星转债</td><td><span class="tdot" style="color:#e97132">◆</span>中</td><td><span class="tdot" style="color:#d12920">●</span>高</td><td>113648.SH</td><td>603477.SH</td><td>16家</td><td>10.1亿</td><td class="mcap">10.1亿</td><td class="cidx">畜牧养殖</td></tr><tr><td class="nm">湘佳转债</td><td><span class="tdot" style="color:#e97132">◆</span>中</td><td><span class="tdot" style="color:#8a939c">●</span>低</td><td>127060.SZ</td><td>002982.SZ</td><td>—</td><td>7.9亿</td><td class="mcap">7.9亿</td><td class="cidx">畜牧养殖</td></tr><tr><td class="nm">晓鸣转债</td><td><span class="tdot" style="color:#e97132">◆</span>中</td><td><span class="tdot" style="color:#8a939c">●</span>低</td><td>123189.SZ</td><td>300967.SZ</td><td>—</td><td>4.3亿</td><td class="mcap">4.3亿</td><td class="cidx">畜牧养殖</td></tr></tbody></table></section></div><div class="sec"><div class="sec-head" id="seg-屠宰与分割加工"><span class="sec-tag">中游·L3</span><h3>屠宰与分割加工</h3><p class="sec-desc">肉鸡屠宰、分割、冷鲜/冻品初加工</p></div></div><div class="sec"><div class="sec-head" id="seg-养殖与加工设备材料"><span class="sec-tag">设备材料·L4</span><h3>养殖与加工设备材料</h3><p class="sec-desc">养殖设备、屠宰加工设备与冷链物流设施等</p></div></div><div class="sec"><div class="sec-head" id="seg-食品加工与渠道消费"><span class="sec-tag">下游·L5</span><h3>食品加工与渠道消费</h3><p class="sec-desc">鸡肉熟食加工、预制菜、休闲食品及餐饮零售渠道</p></div></div>
+  <div class="note">注：① 热度 = 转债当日成交额（≤数据日前最新行情日）相对本主题中位数的交投活跃度：≥1.5×中位=高、0.5×–1.5×=中、<0.5×或停牌=低；② 置信度 = 本地评级快照覆盖机构数（≥4家高 / 2-3家中 / 0-1家低），借正股市值≥40亿作无评级补偿；③ 环节归属 = 中信三级字典 ＋ 人工校正（依据公开研报/本地投研知识库主营核实）＋ 关键词兜底；④ 边缘/未归类标的（概念沾边或非该主题主业）不展示，仅出现在本地校验日志。</div>
+</div></body></html>

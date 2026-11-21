@@ -312,6 +312,8 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
       <button class="module-button" data-target="part5"><span class="module-icon">❖</span><span><small>BASIC</small><strong>基础策略</strong></span></button>
       <button class="module-button" data-target="part3"><span class="module-icon">◇</span><span><small>TIMING</small><strong>择时策略</strong></span></button>
       <button class="module-button" data-target="part6"><span class="module-icon">⚖</span><span><small>CLAUSE</small><strong>条款看板</strong></span></button>
+      <button class="module-button" data-target="part7"><span class="module-icon">☰</span><span><small>HOTSPOT</small><strong>权益热点</strong></span></button>
+      <button class="module-button" data-target="part8"><span class="module-icon">⛁</span><span><small>CB PLATFORM</small><strong>转债平台</strong></span></button>
     </nav>
   </aside>
   <section class="content">
@@ -404,12 +406,28 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
       <p class="g-sub-note">下修/赎回事件的公告日期明细，按事件发生年份/月份计数，时间倒序（最近在前）。仅含年度/月度事件统计；事件后收益、监测信号需外部价格库/平台台账，不计。</p>
       <div class="cards" id="clauseSnapS"></div>
     </div>
+
+    <!-- ═══ 板块6 · 权益市场热点跟踪（独立平台 iframe 隔离）═══ -->
+    <div class="part-banner" id="part7"><span class="no">06</span><h2>权益市场热点跟踪</h2><span class="en">EQUITY HOTSPOT</span></div>
+    <p class="part-intro">权益市场热点独立平台：市场温度 / 核心指数 / 行业轮动·领涨·领跌 / 概念热点 TOP8 / 北向资金·港股通 / 转债概览与领涨领跌 / 龙虎榜净买。以 iframe 隔离嵌入，保持平台自身样式。</p>
+    <section class="card">
+      <div class="card-head"><div><h3>权益市场热点跟踪</h3></div><span class="freq-tag">日度<small>每个交易日</small></span></div>
+      <iframe src="平台/权益热点.html" title="权益市场热点跟踪" loading="lazy" style="width:100%;height:calc(100vh - 140px);min-height:880px;border:0;display:block;background:#fff"></iframe>
+    </section>
+
+    <!-- ═══ 板块7 · 转债平台复现（独立平台 iframe 隔离）═══ -->
+    <div class="part-banner" id="part8"><span class="no">07</span><h2>转债平台复现</h2><span class="en">CB PLATFORM REPRO</span></div>
+    <p class="part-intro">转债平台复现：转债日度数据库 / 月度投资人结构 / 转债次新券策略 / 分行业转债梳理 / 产业链图谱（11 主题）。以 iframe 隔离嵌入，平台内导航与产业链页相对链接均在其目录内部。</p>
+    <section class="card">
+      <div class="card-head"><div><h3>转债平台复现</h3></div><span class="freq-tag">周度<small>随平台更新</small></span></div>
+      <iframe src="平台/转债平台/index.html" title="转债平台复现" loading="lazy" style="width:100%;height:calc(100vh - 140px);min-height:880px;border:0;display:block;background:#fff"></iframe>
+    </section>
   </section>
 </div>
 <footer class="site-footer"><p>坚持做长期正确的事</p></footer>
 </main>
 <div id="tip"></div>
-<script src="data.js?v=20261119202611192228"></script>
+<script src="data.js?v=20261119202611211629"></script>
 <script>
 /* 数据块已拆到同目录 data.js（var D 挂 window），本 script 直接用 D */
 const M={red:'#d12920',navy:'#315b7d',orange:'#e97132',gold:'#c9821b',blue:'#5592dc',green:'#2f7d6d'};
@@ -1416,7 +1434,9 @@ const TITLES={part1:['每日市场跟踪','多维市场数据（含估值指标�
 part3:['择时策略','十因子体系 · 周频投票 / 日度打分（含十档·择券落地）/ CCB 模型检查'],
 part5:['基础策略','21 个经典基础策略 · 策略周报 / 转债策略跟踪表 / 全量回测 / 截面快照'],
 part4:['研报复现','国泰二维 · 银河RSJ · 广发三视角 · 华福高估值 · 中金事件驱动'],
-part6:['条款看板','下修 / 赎回 条款跟踪 · 核心跟踪 / 历史公告统计 / 按年·月事件计数分布']};
+part6:['条款看板','下修 / 赎回 条款跟踪 · 核心跟踪 / 历史公告统计 / 按年·月事件计数分布'],
+part7:['权益热点','市场温度 / 核心指数 / 行业轮动 / 概念热点 / 北向·港股通 / 转债概览 / 龙虎榜净买'],
+part8:['转债平台','转债日度数据库 / 月度投资人结构 / 次新券策略 / 分行业梳理 / 产业链图谱']};
 document.getElementById('modnav').addEventListener('click',e=>{
   const btn=e.target.closest('.module-button');if(!btn)return;
   document.querySelectorAll('#modnav .module-button').forEach(b=>b.classList.toggle('is-active',b===btn));
@@ -1428,7 +1448,7 @@ document.getElementById('modnav').addEventListener('click',e=>{
 });
 // 滚动联动：当前可见的板块高亮左侧导航，并同步标题
 (function(){
-  const parts=['part1','part5','part3','part4','part6'].filter(id=>document.getElementById(id));
+  const parts=['part1','part5','part3','part4','part6','part7','part8'].filter(id=>document.getElementById(id));
   const btns=new Map([...document.querySelectorAll('#modnav .module-button')].map(b=>[b.dataset.target,b]));
   let ticking=false;
   const update=()=>{ticking=false;
