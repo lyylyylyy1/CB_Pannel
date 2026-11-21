@@ -115,6 +115,8 @@ h1{margin:1px 0 0;color:var(--navy);font-size:clamp(21px,2vw,28px);line-height:1
 .card-head .freq-tag{flex:none;align-self:center;border:1px solid #d5dee6;background:#f2f6f9;color:#5a7387;padding:3px 9px;font-size:11px;font-weight:600;border-radius:2px;letter-spacing:.3px}
 .card-head .freq-tag small{font-weight:400;opacity:.75;margin-left:2px}
 .card-body{padding:12px 16px 16px}
+.iframe-flush{border:1px solid var(--border);background:var(--card);margin-top:12px;overflow:hidden}
+.iframe-flush>iframe{display:block}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 .grid2.s{grid-template-columns:1fr}
 .grid2>div{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 12px;box-shadow:0 1px 2px rgba(14,40,65,.04)}
@@ -418,16 +420,15 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
     <!-- ═══ 板块7 · 转债平台复现（独立平台 iframe 隔离）═══ -->
     <div class="part-banner" id="part8"><span class="no">07</span><h2>转债平台复现</h2><span class="en">CB PLATFORM REPRO</span></div>
     <p class="part-intro">转债平台复现：转债日度数据库 / 月度投资人结构 / 转债次新券策略 / 分行业转债梳理 / 产业链图谱（11 主题）。以 iframe 隔离嵌入，平台内导航与产业链页相对链接均在其目录内部。</p>
-    <section class="card">
-      <div class="card-head"><div><h3>转债平台复现</h3></div><span class="freq-tag">周度<small>随平台更新</small></span></div>
-      <iframe src="平台/转债平台/index.html" title="转债平台复现" loading="lazy" style="width:100%;height:calc(100vh - 140px);min-height:880px;border:0;display:block;background:#fff"></iframe>
+    <section class="iframe-flush">
+      <iframe id="cbplat-frame" src="平台/转债平台/index.html" title="转债平台复现" loading="lazy" style="width:100%;height:calc(100vh - 96px);min-height:820px;border:0;display:block;background:#fff"></iframe>
     </section>
   </section>
 </div>
 <footer class="site-footer"><p>坚持做长期正确的事</p></footer>
 </main>
 <div id="tip"></div>
-<script src="data.js?v=20261119202611211651"></script>
+<script src="data.js?v=20261119202611212222"></script>
 <script>
 /* 数据块已拆到同目录 data.js（var D 挂 window），本 script 直接用 D */
 const M={red:'#d12920',navy:'#315b7d',orange:'#e97132',gold:'#c9821b',blue:'#5592dc',green:'#2f7d6d'};
@@ -1437,6 +1438,32 @@ part4:['研报复现','国泰二维 · 银河RSJ · 广发三视角 · 华福高
 part6:['条款看板','下修 / 赎回 条款跟踪 · 核心跟踪 / 历史公告统计 / 按年·月事件计数分布'],
 part7:['权益热点','市场温度 / 核心指数 / 行业轮动 / 概念热点 / 北向·港股通 / 转债概览 / 龙虎榜净买'],
 part8:['转债平台','转债日度数据库 / 月度投资人结构 / 次新券策略 / 分行业梳理 / 产业链图谱']};
+/* 转债平台 iframe 去嵌套：同源注入样式，剥掉内层平台自带页头/页脚/左侧导航外壳，
+   把它的 5 个模块按钮从左侧栏压成顶部横向标签，使 07 板块单层展示，不再“站点套站点”。
+   file:// 本地直开跨域被拦则静默跳过（平台单独打开仍保留完整导航）。 */
+(function(){
+  var f=document.getElementById('cbplat-frame'); if(!f) return;
+  var CSS=[
+    '.site-header,.page-heading,.site-footer,.sidebar-heading,.sidebar-foot{display:none!important}',
+    '.dashboard-shell{min-height:auto!important}',
+    '.workspace{display:block!important;grid-template-columns:none!important;padding:10px 14px 18px!important;gap:0!important;max-width:none!important}',
+    '.sidebar{position:static!important;top:auto!important;border:0!important;background:transparent!important;padding:0 0 10px!important;margin:0 0 10px!important}',
+    '.module-nav{display:flex!important;flex-wrap:wrap!important;gap:8px!important}',
+    '.module-button{width:auto!important;border:1px solid var(--border)!important;border-left:1px solid var(--border)!important;border-radius:8px!important;padding:8px 14px!important;background:var(--card)!important;text-align:center!important}',
+    '.module-button.is-active{border-color:var(--primary)!important;background:#fbefee!important;color:#b5221b!important}',
+    '.module-button small,.module-button .module-icon{display:none!important}',
+    '.content{min-width:0!important}'
+  ].join('\n');
+  function flatten(){
+    try{
+      var d=f.contentDocument; if(!d||!d.head) return;
+      if(d.getElementById('cbplat-flatten')) return;
+      var s=d.createElement('style'); s.id='cbplat-flatten'; s.textContent=CSS; d.head.appendChild(s);
+    }catch(e){/* 跨域或尚未加载，忽略 */}
+  }
+  f.addEventListener('load',flatten);
+  flatten();
+})();
 document.getElementById('modnav').addEventListener('click',e=>{
   const btn=e.target.closest('.module-button');if(!btn)return;
   document.querySelectorAll('#modnav .module-button').forEach(b=>b.classList.toggle('is-active',b===btn));
