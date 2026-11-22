@@ -459,7 +459,7 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
 <footer class="site-footer"><p>坚持做长期正确的事</p></footer>
 </main>
 <div id="tip"></div>
-<script src="data.js?v=20261119202611221626"></script>
+<script src="data.js?v=20261119202611221629"></script>
 <script>
 /* 数据块已拆到同目录 data.js（var D 挂 window），本 script 直接用 D */
 const M={red:'#d12920',navy:'#315b7d',orange:'#e97132',gold:'#c9821b',blue:'#5592dc',green:'#2f7d6d'};
@@ -1628,7 +1628,7 @@ document.getElementById('modnav').addEventListener('click',e=>{
 });
 // 滚动联动：当前可见的板块高亮左侧导航，并同步标题
 (function(){
-  const parts=['part1','part5','part3','part4','part6','part7','part8'].filter(id=>document.getElementById(id));
+  const parts=['part1','part5','part3','part4','part6','part7'].filter(id=>document.getElementById(id));
   const btns=new Map([...document.querySelectorAll('#modnav .module-button')].map(b=>[b.dataset.target,b]));
   let ticking=false;
   const update=()=>{ticking=false;
