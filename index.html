@@ -315,7 +315,6 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
       <button class="module-button" data-target="part3"><span class="module-icon">◇</span><span><small>TIMING</small><strong>择时策略</strong></span></button>
       <button class="module-button" data-target="part6"><span class="module-icon">⚖</span><span><small>CLAUSE</small><strong>条款看板</strong></span></button>
       <button class="module-button" data-target="part7"><span class="module-icon">☰</span><span><small>HOTSPOT</small><strong>权益热点</strong></span></button>
-      <button class="module-button" data-target="part8"><span class="module-icon">⛁</span><span><small>CB TOPICS</small><strong>转债专题</strong></span></button>
     </nav>
   </aside>
   <section class="content">
@@ -328,58 +327,7 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
       <div class="card-head"><div><h3>多维市场数据</h3></div><span class="freq-tag">日度<small>每个交易日</small></span><span class="filetag" id="waifa-tag"></span></div>
       <div class="card-body">
         <div id="waifa-box"></div>
-        <!-- 转债日度数据库 · 核心看板（原生表格） -->
-        <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
-          <h4 style="margin:0 0 12px;color:var(--navy);font-size:15px">转债日度数据库 · 市场切分</h4>
-          <div class="grid" style="margin-bottom:14px">
-            <div class="core"><div class="k">在市转债数量 (只)</div><div class="v">312</div></div>
-            <div class="core"><div class="k">余额规模 (亿元)</div><div class="v">4723.2</div></div>
-            <div class="core"><div class="k">剩余期限中位数 (年)</div><div class="v">2.66</div></div>
-          </div>
-          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px">
-            <div><h5 style="margin:0 0 6px;color:var(--navy);font-size:13px">分评级</h5>
-              <table class="tbl"><thead><tr><th>评级组</th><th>只数</th><th>余额 (亿)</th></tr></thead><tbody>
-                <tr><td>A-至 A+</td><td>67</td><td>251.7</td></tr>
-                <tr><td>AA-至 AA+</td><td>225</td><td>3011.8</td></tr>
-                <tr><td>AAA-以上</td><td>19</td><td>1409.7</td></tr>
-              </tbody></table>
-            </div>
-            <div><h5 style="margin:0 0 6px;color:var(--navy);font-size:13px">分余额</h5>
-              <table class="tbl"><thead><tr><th>余额组</th><th>只数</th><th>余额 (亿)</th></tr></thead><tbody>
-                <tr><td>20 亿以上</td><td>47</td><td>2697.6</td></tr>
-                <tr><td>5 亿到 20 亿</td><td>172</td><td>1709.2</td></tr>
-                <tr><td>低于 5 亿</td><td>93</td><td>316.4</td></tr>
-              </tbody></table>
-            </div>
-            <div><h5 style="margin:0 0 6px;color:var(--navy);font-size:13px">分平价</h5>
-              <table class="tbl"><thead><tr><th>平价组</th><th>只数</th><th>规模 (亿)</th><th>平均转股溢价率</th></tr></thead><tbody>
-                <tr><td>平价 100-120</td><td>36</td><td>702.8</td><td>24.7</td></tr>
-                <tr><td>平价 120-130</td><td>7</td><td>214.5</td><td>8.9</td></tr>
-                <tr><td>平价 80-100</td><td>93</td><td>1500.5</td><td>42.5</td></tr>
-                <tr><td>平价&lt;80</td><td>144</td><td>2000.6</td><td>107.8</td></tr>
-                <tr><td>平价&gt;130</td><td>32</td><td>304.7</td><td>14.9</td></tr>
-              </tbody></table>
-              <div class="note" style="font-size:11px;color:var(--muted-foreground);margin-top:4px">注：平价由 10-21 基线×正股涨跌递推，未计入窗口内下修。</div>
-            </div>
-            <div><h5 style="margin:0 0 6px;color:var(--navy);font-size:13px">分风格</h5>
-              <table class="tbl"><thead><tr><th>风格组</th><th>只数</th><th>规模 (亿)</th><th>平均平底溢价率</th></tr></thead><tbody>
-                <tr><td>偏股 (平底&gt;20%)</td><td>147</td><td>1380.6</td><td>56.6</td></tr>
-                <tr><td>平衡 (-20%~20%)</td><td>165</td><td>3342.6</td><td>6.9</td></tr>
-              </tbody></table>
-              <div class="note" style="font-size:11px;color:var(--muted-foreground);margin-top:4px">风格按平底溢价率（万得口径=纯债溢价率）分：&lt;-20% 偏债、-20%~20% 平衡、&gt;20% 偏股。</div>
-            </div>
-            <div><h5 style="margin:0 0 6px;color:var(--navy);font-size:13px">分剩余期限</h5>
-              <table class="tbl"><thead><tr><th>期限组</th><th>只数</th><th>规模 (亿)</th><th>平均转股溢价率</th></tr></thead><tbody>
-                <tr><td>1-2 年</td><td>68</td><td>1436.1</td><td>72.7</td></tr>
-                <tr><td>2-3 年</td><td>74</td><td>825.5</td><td>64.4</td></tr>
-                <tr><td>3-5 年</td><td>52</td><td>615.7</td><td>49.7</td></tr>
-                <tr><td>5-5.5 年</td><td>22</td><td>168.7</td><td>77.0</td></tr>
-                <tr><td>&lt;1 年</td><td>43</td><td>1030.2</td><td>47.9</td></tr>
-                <tr><td>&gt;5.5 年</td><td>53</td><td>646.9</td><td>91.6</td></tr>
-              </tbody></table>
-            </div>
-          </div>
-        </div>
+
       </div>
     </section>
     <section class="card" id="daily-charts">
@@ -393,6 +341,10 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
     <section class="card" id="daily-yh">
       <div class="card-head"><div><h3>转债日报</h3></div><span class="freq-tag">日度<small>每个交易日</small></span><span class="filetag" id="yh-tag"></span></div>
       <div class="card-body" id="yh-box"></div>
+    </section>
+    <section class="card">
+      <div class="card-head"><div><h3>月度投资人结构</h3></div><span class="freq-tag">月度</span></div>
+      <div class="card-body"><iframe class="cb-cat" data-cat="月度投资人结构" src="平台/转债平台/index.html" loading="lazy" title="月度投资人结构" style="width:100%;height:calc(100vh - 220px);min-height:560px;border:0;display:block;background:#fff"></iframe></div>
     </section>
 
 
@@ -414,6 +366,11 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
     <section class="card" id="jc-snap">
       <div class="card-head"><div><h3>最新截面快照 · 入选券</h3><p class="note">最近一个交易日各策略的入选券明细与过滤统计</p></div><span class="freq-tag">日度<small>每个交易日</small></span><span class="filetag" id="jc-snap-tag"></span></div>
       <div class="card-body" id="jc-snap-box"></div>
+    </section>
+
+    <section class="card">
+      <div class="card-head"><div><h3>转债次新券策略</h3></div><span class="freq-tag">专题</span></div>
+      <div class="card-body"><iframe class="cb-cat" data-cat="转债次新券策略" src="平台/转债平台/index.html" loading="lazy" title="转债次新券策略" style="width:100%;height:calc(100vh - 220px);min-height:560px;border:0;display:block;background:#fff"></iframe></div>
     </section>
 
     <!-- ═══ 板块3 · 择时主系统 ═══ -->
@@ -464,26 +421,28 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
       <div class="cards" id="clauseSnapS"></div>
     </div>
 
-    <!-- ═══ 板块6 · 权益市场热点跟踪（独立平台 iframe 隔离）═══ -->
+    <!-- ═══ 板块6 · 权益市场热点跟踪（原生渲染 + 分行业/产业链iframe）═══ -->
     <div class="part-banner" id="part7"><span class="no">06</span><h2>权益市场热点跟踪</h2><span class="en">EQUITY HOTSPOT</span></div>
-    <p class="part-intro">权益市场热点独立平台：市场温度 / 核心指数 / 行业轮动·领涨·领跌 / 概念热点 TOP8 / 北向资金·港股通 / 转债概览与领涨领跌 / 龙虎榜净买。以 iframe 嵌入，高度自适应，无内层滚动条。</p>
+    <p class="part-intro">权益市场热点：市场温度 / 核心指数 / 行业轮动·领涨·领跌 / 概念热点 TOP8 / 北向资金·港股通 / 转债概览与领涨领跌 / 龙虎榜净买；并含分行业转债梳理与产业链图谱。</p>
     <section class="card">
-      <div class="card-head"><div><h3>权益市场热点跟踪</h3></div><span class="freq-tag">日度<small>每个交易日</small></span></div>
-      <div class="card-body">
-        <iframe class="cb-cat" data-cat="权益热点" src="平台/权益热点.html" title="权益市场热点跟踪" loading="lazy" style="width:100%;height:calc(100vh - 140px);min-height:880px;border:0;display:block;background:#fff"></iframe>
-      </div>
-    </section>
-
-    <!-- ═══ 板块7 · 转债专题（按分类拆分，同源 iframe 复用同一平台）═══ -->
-    <div class="part-banner" id="part8"><span class="no">07</span><h2>转债专题</h2><span class="en">CB SPECIAL TOPICS</span></div>
-    <p class="part-intro">转债专题按分类拆分：月度投资人结构 / 转债次新券策略 / 分行业转债梳理 / 产业链图谱（11 主题）。各分类以同源 iframe 复用同一份平台页面、仅展示对应分类；「转债日度数据库」已并入「01 每日市场跟踪」的「多维市场数据」卡片。</p>
-    <section class="card">
-      <div class="card-head"><div><h3>月度投资人结构</h3></div><span class="freq-tag">月度</span></div>
-      <div class="card-body"><iframe class="cb-cat" data-cat="月度投资人结构" src="平台/转债平台/index.html" loading="lazy" title="月度投资人结构" style="width:100%;height:calc(100vh - 220px);min-height:560px;border:0;display:block;background:#fff"></iframe></div>
+      <div class="card-head"><div><h3>市场温度 &amp; 情绪</h3></div><span class="freq-tag">日度<small>每个交易日</small></span><span class="filetag" id="hs-stamp"></span></div>
+      <div class="card-body" id="hs-temp-box"></div>
     </section>
     <section class="card">
-      <div class="card-head"><div><h3>转债次新券策略</h3></div><span class="freq-tag">专题</span></div>
-      <div class="card-body"><iframe class="cb-cat" data-cat="转债次新券策略" src="平台/转债平台/index.html" loading="lazy" title="转债次新券策略" style="width:100%;height:calc(100vh - 220px);min-height:560px;border:0;display:block;background:#fff"></iframe></div>
+      <div class="card-head"><div><h3>核心指数</h3></div><span class="freq-tag">日度</span></div>
+      <div class="card-body" id="hs-idx-box"></div>
+    </section>
+    <section class="card">
+      <div class="card-head"><div><h3>行业轮动·领涨领跌 &amp; 概念热点</h3></div><span class="freq-tag">日度</span></div>
+      <div class="card-body" id="hs-ind-box"></div>
+    </section>
+    <section class="card">
+      <div class="card-head"><div><h3>北向资金·港股通·龙虎榜</h3></div><span class="freq-tag">日度</span></div>
+      <div class="card-body" id="hs-flow-box"></div>
+    </section>
+    <section class="card">
+      <div class="card-head"><div><h3>转债概览·领涨领跌</h3></div><span class="freq-tag">日度</span></div>
+      <div class="card-body" id="hs-cb-box"></div>
     </section>
     <section class="card">
       <div class="card-head"><div><h3>分行业转债梳理</h3></div><span class="freq-tag">专题</span></div>
@@ -493,12 +452,14 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
       <div class="card-head"><div><h3>产业链图谱</h3></div><span class="freq-tag">专题<small>11 主题</small></span></div>
       <div class="card-body"><iframe class="cb-cat" data-cat="产业链图谱" src="平台/转债平台/index.html" loading="lazy" title="产业链图谱" style="width:100%;height:calc(100vh - 220px);min-height:560px;border:0;display:block;background:#fff"></iframe></div>
     </section>
+
+
   </section>
 </div>
 <footer class="site-footer"><p>坚持做长期正确的事</p></footer>
 </main>
 <div id="tip"></div>
-<script src="data.js?v=20261119202611221603"></script>
+<script src="data.js?v=20261119202611221626"></script>
 <script>
 /* 数据块已拆到同目录 data.js（var D 挂 window），本 script 直接用 D */
 const M={red:'#d12920',navy:'#315b7d',orange:'#e97132',gold:'#c9821b',blue:'#5592dc',green:'#2f7d6d'};
@@ -1053,6 +1014,7 @@ function blockTabs(boxEl,sheets,emptyMsg){
   boxEl.appendChild(bar);boxEl.appendChild(body);
   function render(i){
     [...bar.children].forEach((b,j)=>b.classList.toggle('on',j===i));
+    if(sheets[i].html){body.innerHTML=sheets[i].html;return;}
     const t=sheets[i].table;let h='';
     (t.imgs||[]).forEach(b64=>{if(b64)h+=`<figure data-b64="${b64}" data-name="${(sheets[i].name||'图片')}.png"><img src="${b64}" alt=""></figure>`;});
     body.innerHTML=h?'<div class="figgrid">'+h+'</div>':'';
@@ -1518,14 +1480,121 @@ function renderSpBody(){
   });
 })();
 
+/* ---------- 板块6 · 权益热点原生渲染 ---------- */
+(function(){
+  var hs=D.hotspot; if(!hs){return;}
+  var sec=hs['板块']||{};
+  var stamp=document.getElementById('hs-stamp');
+  if(stamp)stamp.textContent=(hs['抓取时间']||'').slice(0,10);
+
+  /* 市场温度 */
+  var temp=sec['市场温度']||{};
+  var el1=document.getElementById('hs-temp-box');
+  if(el1&&Object.keys(temp).length){
+    var mood=temp['情绪']||'--';
+    var moodCls=mood==='偏强'?'num-up':(mood==='偏弱'?'num-dn':'');
+    el1.innerHTML='<div class="grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:8px">'
+      +[['上涨',temp['上涨'],'num-up'],['下跌',temp['下跌'],'num-dn'],
+         ['涨停',temp['涨停'],'num-up'],['跌停',temp['跌停'],'num-dn'],
+         ['上涨占比',temp['上涨占比%']==null?'—':(temp['上涨占比%']+'%'),''],
+         ['情绪',mood,moodCls]]
+        .map(function(a){return '<div class="core"><div class="k">'+a[0]+'</div><div class="v '+a[2]+'">'+a[1]+'</div></div>';})
+        .join('')+'</div>';
+  }
+
+  /* 核心指数 */
+  var idx=sec['核心指数']||[];
+  var el2=document.getElementById('hs-idx-box');
+  if(el2&&idx.length){
+    el2.innerHTML='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px">'
+      +idx.map(function(r){
+        var pct=r['涨跌幅'], pcls=pct==null?'':(+pct>=0?'num-up':'num-dn');
+        return '<div class="core"><div class="k">'+(r['名称']||r['指数名称']||'')+'</div>'
+          +'<div class="v '+(pcls)+'">'+(r['最新点位']==null?'—':(+r['最新点位']).toFixed(2))+'</div>'
+          +'<div class="s '+pcls+'">'+(pct==null?'':((+pct>=0?'+':'')+pct+'%'))+'</div></div>';
+      }).join('')+'</div>';
+  }
+
+  /* 行业/概念 */
+  function rankTbl(rows,nameKey){
+    if(!rows||!rows.length)return '';
+    return '<table class="tbl"><thead><tr><th style="width:28px">#</th><th>名称</th><th style="text-align:right">涨跌幅</th></tr></thead><tbody>'
+      +rows.slice(0,8).map(function(r,i){
+        var pct=r['涨跌幅'];
+        return '<tr><td style="color:#999;font-size:11px">'+(i+1)+'</td><td>'+(r[nameKey]||'')+'</td>'
+          +'<td style="text-align:right" class="'+(pct==null?'':(+pct>=0?'num-up':'num-dn'))+'">'
+          +(pct==null?'—':((+pct>=0?'+':'')+(+pct).toFixed(2)+'%'))+'</td></tr>';
+      }).join('')+'</tbody></table>';
+  }
+  var el3=document.getElementById('hs-ind-box');
+  if(el3){
+    var up=sec['行业龙头TOP5']||[], dn=sec['行业垫底TOP5']||[], concept=sec['概念龙头TOP8']||[];
+    var h3='<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:12px">'
+      +'<div><h5 style="margin:0 0 6px;color:var(--navy);font-size:13px">行业领涨</h5>'+rankTbl(up,'板块')+'</div>'
+      +'<div><h5 style="margin:0 0 6px;color:var(--navy);font-size:13px">行业领跌</h5>'+rankTbl(dn,'板块')+'</div></div>';
+    if(concept.length)h3+='<h5 style="margin:0 0 6px;color:var(--navy);font-size:13px">概念热点 TOP8</h5>'+rankTbl(concept,'板块');
+    el3.innerHTML=h3||'<div class="miss">无行业/概念数据</div>';
+  }
+
+  /* 北向/港股通/龙虎榜 */
+  var el4=document.getElementById('hs-flow-box');
+  if(el4){
+    var flow=sec['北向资金']||[], lhb=sec['龙虎榜净买TOP']||[], hsgt=sec['北向十大成交股']||[];
+    var h4='';
+    if(flow.length){
+      h4+='<h5 style="margin:0 0 6px;color:var(--navy);font-size:13px">北向资金 / 港股通</h5><div style="margin-bottom:12px">'
+        +flow.map(function(r){
+          var amt=parseFloat(r['净买入额(亿)']||r['净买入额']||0);
+          var ac=isNaN(amt)?'':(amt>=0?'num-up':'num-dn');
+          return '<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:13px">'
+            +'<span>'+(r['名称']||'')+'</span><span class="'+ac+'">'+(isNaN(amt)?'—':((amt>=0?'+':'')+amt.toFixed(2)+'亿'))+'</span></div>';
+        }).join('')+'</div>';
+    }
+    if(lhb.length){
+      h4+='<h5 style="margin:0 0 6px;color:var(--navy);font-size:13px">龙虎榜 · 净买 TOP8</h5>'
+        +'<table class="tbl"><thead><tr><th style="width:28px">#</th><th>股票</th><th style="text-align:right">涨跌幅</th><th style="text-align:right">净买额</th></tr></thead><tbody>'
+        +lhb.slice(0,8).map(function(r,i){
+          var pct=r['涨跌幅'], amt=parseFloat(r['净买入额(亿)']||0);
+          return '<tr><td style="color:#999;font-size:11px">'+(i+1)+'</td><td>'+((r['股票']||r['名称']||'')+'('+(r['代码']||'')+')')+'</td>'
+            +'<td class="'+(pct==null?'':(+pct>=0?'num-up':'num-dn'))+'" style="text-align:right">'
+            +(pct==null?'—':((+pct>=0?'+':'')+pct.toFixed(2)+'%'))+'</td>'
+            +'<td class="'+(amt>=0?'num-up':'num-dn')+'" style="text-align:right">'
+            +(isNaN(amt)?'—':((amt>=0?'+':'')+amt.toFixed(2)+'亿'))+'</td></tr>';
+        }).join('')+'</tbody></table>';
+    }
+    el4.innerHTML=h4||'<div class="miss">无北向/龙虎榜数据</div>';
+  }
+
+  /* 转债概览+领涨领跌 */
+  var el5=document.getElementById('hs-cb-box');
+  if(el5){
+    var ov=sec['转债概览']||{}, rup=sec['转债领涨TOP8']||[], rdn=sec['转债领跌TOP5']||[];
+    var h5='';
+    if(Object.keys(ov).length){
+      h5+='<div class="grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:12px">'
+        +[['转债有效',ov['转债有效']||ov['有效'],['']],
+           ['上涨',ov['上涨'],'num-up'],['下跌',ov['下跌'],'num-dn'],
+           ['上涨占比',ov['上涨占比%']==null?'—':(ov['上涨占比%']+'%'),''],
+           ['平均涨跌幅',ov['平均涨跌幅%']==null?'—':(ov['平均涨跌幅%']+'%'),'']]
+        .map(function(a){return '<div class="core"><div class="k">'+a[0]+'</div><div class="v '+a[2]+'">'+a[1]+'</div></div>';})
+        .join('')+'</div>';
+    }
+    if(rup.length||rdn.length){
+      h5+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">'
+        +'<div><h5 style="margin:0 0 6px;color:var(--navy);font-size:13px">转债领涨 TOP8</h5>'+rankTbl(rup,'转债')+'</div>'
+        +'<div><h5 style="margin:0 0 6px;color:var(--navy);font-size:13px">转债领跌 TOP5</h5>'+rankTbl(rdn,'转债')+'</div></div>';
+    }
+    el5.innerHTML=h5||'<div class="miss">无转债热点数据</div>';
+  }
+})();
+
 /* ---------- 导航 / 窗口 / 拖拽 ---------- */
-const TITLES={part1:['每日市场跟踪','多维市场数据（含估值指标） · 行情图表 · 修正溢价率明细 · 转债日报'],
+const TITLES={part1:['每日市场跟踪','多维市场数据（含估值指标） · 行情图表 · 修正溢价率明细 · 转债日报 · 月度投资人结构'],
 part3:['择时策略','十因子体系 · 周频投票 / 日度打分（含十档·择券落地）/ CCB 模型检查'],
-part5:['基础策略','21 个经典基础策略 · 策略周报 / 转债策略跟踪表 / 全量回测 / 截面快照'],
+part5:['基础策略','21 个经典基础策略 · 策略周报 / 转债策略跟踪表 / 全量回测 / 截面快照 · 转债次新券策略'],
 part4:['研报复现','国泰二维 · 银河RSJ · 广发三视角 · 华福高估值 · 中金事件驱动'],
 part6:['条款看板','下修 / 赎回 条款跟踪 · 核心跟踪 / 历史公告统计 / 按年·月事件计数分布'],
-part7:['权益热点','市场温度 / 核心指数 / 行业轮动 / 概念热点 / 北向·港股通 / 转债概览 / 龙虎榜净买'],
-part8:['转债专题','月度投资人结构 / 次新券策略 / 分行业梳理 / 产业链图谱；日度库见 01']};
+part7:['权益热点','市场温度 / 核心指数 / 行业轮动 / 概念热点 / 北向·港股通 / 转债概览 / 龙虎榜净买 / 分行业转债梳理 / 产业链图谱']};
 /* 转债专题·分类拆分：各 iframe 复用同一份平台页面(同 src 缓存一次)，父页按 data-cat 注入样式，剥掉平台外壳并只显示对应分类。*/
 (function(){
   function styleFor(cat){return [
