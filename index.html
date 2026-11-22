@@ -445,7 +445,7 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
 <footer class="site-footer"><p>坚持做长期正确的事</p></footer>
 </main>
 <div id="tip"></div>
-<script src="data.js?v=20261119202611212320"></script>
+<script src="data.js?v=20261119202611220931"></script>
 <script>
 /* 数据块已拆到同目录 data.js（var D 挂 window），本 script 直接用 D */
 const M={red:'#d12920',navy:'#315b7d',orange:'#e97132',gold:'#c9821b',blue:'#5592dc',green:'#2f7d6d'};
@@ -1463,12 +1463,18 @@ part8:['转债专题','月度投资人结构 / 次新券策略 / 分行业梳理
     '.panel{display:none!important}',
     '.panel[data-panel="'+cat+'"]{display:block!important}'
   ].join('\n');}
-  function apply(f){try{var d=f.contentDocument;if(!d||!d.head)return;
-    var cat=f.getAttribute('data-cat')||'';var id='cbcat-'+cat;if(d.getElementById(id))return;
-    var st=d.createElement('style');st.id=id;st.textContent=styleFor(cat);d.head.appendChild(st);
+  function setup(f){try{var d=f.contentDocument;if(!d||!d.head)return;
+    var cat=f.getAttribute('data-cat')||'';var id='cbcat-'+cat;
+    if(!d.getElementById(id)){var st=d.createElement('style');st.id=id;st.textContent=styleFor(cat);d.head.appendChild(st);}
+    var p=d.querySelector('.panel[data-panel="'+cat+'"]');if(!p)return;
+    [].slice.call(p.querySelectorAll('.scroll, [style*="max-height"]')).forEach(function(e){e.style.maxHeight='none';e.style.overflow='visible';});
+    f.style.minHeight='0';
+    var fit=function(){var h=p.scrollHeight||p.offsetHeight||0;if(h)f.style.height=Math.max(h+8,240)+'px';};
+    fit();setTimeout(fit,300);setTimeout(fit,1200);
+    if(window.ResizeObserver){new ResizeObserver(fit).observe(p);}
   }catch(e){}}
   var fs=[].slice.call(document.querySelectorAll('iframe.cb-cat'));
-  fs.forEach(function(f){ f.addEventListener("load",function(){apply(f);}); apply(f); });
+  fs.forEach(function(f){ f.addEventListener("load",function(){setup(f);}); setup(f); });
 })();
 document.getElementById('modnav').addEventListener('click',e=>{
   const btn=e.target.closest('.module-button');if(!btn)return;
