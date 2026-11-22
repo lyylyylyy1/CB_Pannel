@@ -415,10 +415,12 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
 
     <!-- ═══ 板块6 · 权益市场热点跟踪（独立平台 iframe 隔离）═══ -->
     <div class="part-banner" id="part7"><span class="no">06</span><h2>权益市场热点跟踪</h2><span class="en">EQUITY HOTSPOT</span></div>
-    <p class="part-intro">权益市场热点独立平台：市场温度 / 核心指数 / 行业轮动·领涨·领跌 / 概念热点 TOP8 / 北向资金·港股通 / 转债概览与领涨领跌 / 龙虎榜净买。以 iframe 隔离嵌入，保持平台自身样式。</p>
+    <p class="part-intro">权益市场热点独立平台：市场温度 / 核心指数 / 行业轮动·领涨·领跌 / 概念热点 TOP8 / 北向资金·港股通 / 转债概览与领涨领跌 / 龙虎榜净买。以 iframe 嵌入，高度自适应，无内层滚动条。</p>
     <section class="card">
       <div class="card-head"><div><h3>权益市场热点跟踪</h3></div><span class="freq-tag">日度<small>每个交易日</small></span></div>
-      <iframe src="平台/权益热点.html" title="权益市场热点跟踪" loading="lazy" style="width:100%;height:calc(100vh - 140px);min-height:880px;border:0;display:block;background:#fff"></iframe>
+      <div class="card-body">
+        <iframe class="cb-cat" data-cat="权益热点" src="平台/权益热点.html" title="权益市场热点跟踪" loading="lazy" style="width:100%;height:calc(100vh - 140px);min-height:880px;border:0;display:block;background:#fff"></iframe>
+      </div>
     </section>
 
     <!-- ═══ 板块7 · 转债专题（按分类拆分，同源 iframe 复用同一平台）═══ -->
@@ -445,7 +447,7 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
 <footer class="site-footer"><p>坚持做长期正确的事</p></footer>
 </main>
 <div id="tip"></div>
-<script src="data.js?v=20261119202611221019"></script>
+<script src="data.js?v=20261119202611221022"></script>
 <script>
 /* 数据块已拆到同目录 data.js（var D 挂 window），本 script 直接用 D */
 const M={red:'#d12920',navy:'#315b7d',orange:'#e97132',gold:'#c9821b',blue:'#5592dc',green:'#2f7d6d'};
@@ -1466,7 +1468,8 @@ part8:['转债专题','月度投资人结构 / 次新券策略 / 分行业梳理
   function setup(f){try{var d=f.contentDocument;if(!d||!d.head)return;
     var cat=f.getAttribute('data-cat')||'';var id='cbcat-'+cat;
     if(!d.getElementById(id)){var st=d.createElement('style');st.id=id;st.textContent=styleFor(cat);d.head.appendChild(st);}
-    var p=d.querySelector('.panel[data-panel="'+cat+'"]');if(!p)return;
+    var p=d.querySelector('.panel[data-panel="'+cat+'"]');
+    if(!p){p=d.body;}
     [].slice.call(p.querySelectorAll('.scroll, [style*="max-height"]')).forEach(function(e){e.style.maxHeight='none';e.style.overflow='visible';});
     f.style.minHeight='0';
     var fit=function(){var h=p.scrollHeight||p.offsetHeight||0;if(h)f.style.height=Math.max(h+8,240)+'px';};
