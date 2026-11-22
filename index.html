@@ -498,7 +498,7 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
 <footer class="site-footer"><p>坚持做长期正确的事</p></footer>
 </main>
 <div id="tip"></div>
-<script src="data.js.gz?v=20261119202611221120"></script>
+<script src="data.js?v=20261119202611221603"></script>
 <script>
 /* 数据块已拆到同目录 data.js（var D 挂 window），本 script 直接用 D */
 const M={red:'#d12920',navy:'#315b7d',orange:'#e97132',gold:'#c9821b',blue:'#5592dc',green:'#2f7d6d'};
@@ -1067,10 +1067,26 @@ function blockTabs(boxEl,sheets,emptyMsg){
   bar.addEventListener('click',e=>{if(e.target.tagName!=='BUTTON')return;render(+e.target.dataset.i);});
   render(0);
 }
+/* _patch_split: 懒加载辅助 */
+function _lazyLoad(boxId,extFile,varName,onData){
+  var box=document.getElementById(boxId);if(!box)return;
+  var done=false;
+  function fire(){if(done)return;done=true;
+    var s=document.createElement('script');s.src=extFile;
+    s.onload=function(){onData(window[varName]||[]);window[varName]=null;};
+    document.body.appendChild(s);}
+  if('IntersectionObserver' in window){
+    var obs=new IntersectionObserver(function(en){
+      if(en.some(function(e){return e.isIntersecting;})){obs.disconnect();fire();}
+    },{threshold:0.05});
+    obs.observe(box);
+  }else{fire();}
+}
 (function(){
-  const w=D.daily_waifa||{};
+  var w=D.daily_waifa||{};
   document.getElementById('waifa-tag').textContent=w.name||'未找到';
-  blockTabs(document.getElementById('waifa-box'),w.sheets,'工作簿无表格');
+  if(w.sheets&&w.sheets.length){blockTabs(document.getElementById('waifa-box'),w.sheets,'工作簿无表格');}
+  else{_lazyLoad('waifa-box','data_waifa.js','_extWaifa',function(sh){blockTabs(document.getElementById('waifa-box'),sh,'工作簿无表格');});}
 })();
 (function(){
   const c=D.daily_charts||{};
@@ -1095,9 +1111,10 @@ function blockTabs(boxEl,sheets,emptyMsg){
   if(!mc.length&&!(c.figs&&c.figs.length))el.innerHTML='<div class="miss">未找到行情图表</div>';
 })();
 (function(){
-  const p=D.daily_prem||{};
+  var p=D.daily_prem||{};
   document.getElementById('prem-tag').textContent=p.name||'未找到';
-  blockTabs(document.getElementById('prem-box'),p.sheets,'无表格');
+  if(p.sheets&&p.sheets.length){blockTabs(document.getElementById('prem-box'),p.sheets,'无表格');}
+  else{_lazyLoad('prem-box','data_prem.js','_extPrem',function(sh){blockTabs(document.getElementById('prem-box'),sh,'无表格');});}
 })();
 (function(){
   const y=D.daily_yh||{};
@@ -1106,7 +1123,8 @@ function blockTabs(boxEl,sheets,emptyMsg){
   document.getElementById('yh-tag').textContent=(m?('20'+m[1]):(y.name||'未找到'));
   const el=document.getElementById('yh-box');
   if(y.dailyfig){
-    el.innerHTML='<a href="'+y.dailyfig.b64+'" target="_blank"><img src="'+y.dailyfig.b64+'" style="width:100%;display:block;border:1px solid var(--border);border-radius:8px" alt="日报图"></a>';
+    var _src=y.dailyfig.url||y.dailyfig.b64;
+    el.innerHTML='<a href="'+_src+'" target="_blank"><img src="'+_src+'" style="width:100%;display:block;border:1px solid var(--border);border-radius:8px" alt="日报图" loading="lazy"></a>';
   } else {
     el.innerHTML='<div class="miss">未找到转债日报</div>';
   }
