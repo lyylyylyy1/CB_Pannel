@@ -459,7 +459,7 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
 <footer class="site-footer"><p>坚持做长期正确的事</p></footer>
 </main>
 <div id="tip"></div>
-<script src="data.js?v=20261119202611221629"></script>
+<script src="data.js?v=20261119202611221632"></script>
 <script>
 /* 数据块已拆到同目录 data.js（var D 挂 window），本 script 直接用 D */
 const M={red:'#d12920',navy:'#315b7d',orange:'#e97132',gold:'#c9821b',blue:'#5592dc',green:'#2f7d6d'};
@@ -1595,7 +1595,7 @@ part5:['基础策略','21 个经典基础策略 · 策略周报 / 转债策略�
 part4:['研报复现','国泰二维 · 银河RSJ · 广发三视角 · 华福高估值 · 中金事件驱动'],
 part6:['条款看板','下修 / 赎回 条款跟踪 · 核心跟踪 / 历史公告统计 / 按年·月事件计数分布'],
 part7:['权益热点','市场温度 / 核心指数 / 行业轮动 / 概念热点 / 北向·港股通 / 转债概览 / 龙虎榜净买 / 分行业转债梳理 / 产业链图谱']};
-/* 转债专题·分类拆分：各 iframe 复用同一份平台页面(同 src 缓存一次)，父页按 data-cat 注入样式，剥掉平台外壳并只显示对应分类。*/
+/* 平台分类·iframe 拆分：各 iframe 复用同一份平台页面(同 src 缓存一次)，父页按 data-cat 注入样式，剥掉平台外壳并只显示对应分类。*/
 (function(){
   function styleFor(cat){return [
     '.site-header,.page-heading,.site-footer,.sidebar,.sidebar-heading,.sidebar-foot{display:none!important}',
