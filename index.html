@@ -326,7 +326,10 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
     <div class="part-banner" id="part1"><span class="no">01</span><h2>每日市场跟踪</h2><span class="en">DAILY MARKET TRACKING</span></div>
     <section class="card" id="daily-waifa">
       <div class="card-head"><div><h3>多维市场数据</h3></div><span class="freq-tag">日度<small>每个交易日</small></span><span class="filetag" id="waifa-tag"></span></div>
-      <div class="card-body" id="waifa-box"></div>
+      <div class="card-body">
+        <div id="waifa-box"></div>
+        <iframe class="cb-cat" data-cat="转债日度数据库" src="平台/转债平台/index.html" loading="lazy" title="转债日度数据库" style="width:100%;height:calc(100vh - 220px);min-height:560px;border:0;display:block;background:#fff"></iframe>
+      </div>
     </section>
     <section class="card" id="daily-charts">
       <div class="card-head"><div><h3>行情图表</h3></div><span class="freq-tag">日度<small>每个交易日</small></span><span class="filetag" id="charts-tag"></span></div>
@@ -340,10 +343,7 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
       <div class="card-head"><div><h3>转债日报</h3></div><span class="freq-tag">日度<small>每个交易日</small></span><span class="filetag" id="yh-tag"></span></div>
       <div class="card-body" id="yh-box"></div>
     </section>
-    <section class="card">
-      <div class="card-head"><div><h3>转债日度数据库</h3></div><span class="freq-tag">日度<small>来自转债平台</small></span></div>
-      <div class="card-body"><iframe class="cb-cat" data-cat="转债日度数据库" src="平台/转债平台/index.html" loading="lazy" title="转债日度数据库" style="width:100%;height:calc(100vh - 220px);min-height:560px;border:0;display:block;background:#fff"></iframe></div>
-    </section>
+
 
     <!-- ═══ 板块2 · 基础策略 ═══ -->
     <div class="part-banner" id="part5"><span class="no">02</span><h2>基础策略</h2><span class="en">BASIC STRATEGIES · 21 CLASSICS</span></div>
@@ -423,7 +423,7 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
 
     <!-- ═══ 板块7 · 转债专题（按分类拆分，同源 iframe 复用同一平台）═══ -->
     <div class="part-banner" id="part8"><span class="no">07</span><h2>转债专题</h2><span class="en">CB SPECIAL TOPICS</span></div>
-    <p class="part-intro">转债专题按分类拆分：月度投资人结构 / 转债次新券策略 / 分行业转债梳理 / 产业链图谱（11 主题）。各分类以同源 iframe 复用同一份平台页面、仅展示对应分类；「转债日度数据库」已并入「01 每日市场跟踪」。</p>
+    <p class="part-intro">转债专题按分类拆分：月度投资人结构 / 转债次新券策略 / 分行业转债梳理 / 产业链图谱（11 主题）。各分类以同源 iframe 复用同一份平台页面、仅展示对应分类；「转债日度数据库」已并入「01 每日市场跟踪」的「多维市场数据」卡片。</p>
     <section class="card">
       <div class="card-head"><div><h3>月度投资人结构</h3></div><span class="freq-tag">月度</span></div>
       <div class="card-body"><iframe class="cb-cat" data-cat="月度投资人结构" src="平台/转债平台/index.html" loading="lazy" title="月度投资人结构" style="width:100%;height:calc(100vh - 220px);min-height:560px;border:0;display:block;background:#fff"></iframe></div>
@@ -445,7 +445,7 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
 <footer class="site-footer"><p>坚持做长期正确的事</p></footer>
 </main>
 <div id="tip"></div>
-<script src="data.js?v=20261119202611220931"></script>
+<script src="data.js?v=20261119202611221019"></script>
 <script>
 /* 数据块已拆到同目录 data.js（var D 挂 window），本 script 直接用 D */
 const M={red:'#d12920',navy:'#315b7d',orange:'#e97132',gold:'#c9821b',blue:'#5592dc',green:'#2f7d6d'};
