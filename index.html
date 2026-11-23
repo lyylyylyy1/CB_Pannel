@@ -319,7 +319,7 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
   </aside>
   <section class="content">
     <div id="weeksig-box"></div>
-    <div class="page-heading"><h2 id="module-title">每日市场跟踪</h2><p id="section-title">多维市场数据（含估值指标） · 行情图表 · 转债日报</p></div>
+    <div class="page-heading"><h2 id="module-title">每日市场跟踪</h2><p id="section-title">多维市场数据（含估值指标与市场分域） · 行情图表 · 转债日报 · 转债投资人结构（月度）</p></div>
 
     <!-- ═══ 板块1 · 每日市场跟踪 ═══ -->
     <div class="part-banner" id="part1"><span class="no">01</span><h2>每日市场跟踪</h2><span class="en">DAILY MARKET TRACKING</span></div>
@@ -329,7 +329,6 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
         <div id="mktseg-kpi"></div>
         <div id="waifa-box"></div>
         <div id="prem-box"></div>
-        <div id="newcb-box"></div>
       </div>
     </section>
     <!-- 市场分域已并入上方「多维市场数据」卡：总览 KPI 在卡 body 首行，5 张分组表作为页签拼在外发数据页签之后 -->
@@ -342,8 +341,16 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
       <div class="card-head"><div><h3>转债日报</h3></div><span class="freq-tag">日度<small>每个交易日</small></span><span class="filetag" id="yh-tag"></span></div>
       <div class="card-body" id="yh-box"></div>
     </section>
-    <!-- 月度投资人结构：去 iframe 嵌套，总览 + 3 张表各自一卡 -->
-    <div id="holder-box"></div>
+    <!-- 次新券一览：紧凑标题 + blockTabs -->
+    <section class="card" id="daily-newcb">
+      <div class="card-head"><div><h3>次新券一览</h3><p class="note" style="font-size:11px">上市≤365天 · 近3月/年内发行、估值、成交</p></div><span class="freq-tag">日度</span></div>
+      <div class="card-body" id="newcb-box"></div>
+    </section>
+    <!-- 转债投资人结构（月度）：独立卡，页签切换 -->
+    <section class="card" id="daily-holder">
+      <div class="card-head"><div><h3>转债投资人结构（月度）· 总览</h3><p class="note">上交所（面值）+ 深交所（市值）投资者持有结构</p></div><span class="freq-tag">月度</span></div>
+      <div class="card-body" id="holder-box"></div>
+    </section>
 
 
     <!-- ═══ 板块2 · 基础策略 ═══ -->
@@ -420,7 +427,7 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
 <footer class="site-footer"><p>坚持做长期正确的事</p></footer>
 </main>
 <div id="tip"></div>
-<script src="data.js?v=20261120202611231922"></script>
+<script src="data.js?v=20261120202611232104"></script>
 <script>
 /* 数据块已拆到同目录 data.js（var D 挂 window），本 script 直接用 D */
 const M={red:'#d12920',navy:'#315b7d',orange:'#e97132',gold:'#c9821b',blue:'#5592dc',green:'#2f7d6d'};
@@ -1354,22 +1361,12 @@ function renderSpBody(){
       hbar(host,J.weekly_rank.map(i=>({...i,display:fmtPct(i.value),color:i.value>=0?M.red:M.green})),{sign:true});
     }});
   }
-  // 页签 2：跟踪数据（跟踪表 + 周报总览并集）
+  // 页签 2：跟踪数据（策略跟踪表+周报总览已合并为一张表）
   {
-    const hasTrack=t&&t.rows&&t.rows.length;
     const hasSheets=weekly.sheets&&weekly.sheets.length;
-    if(hasTrack||hasSheets){
+    if(hasSheets){
       panels.push({name:'跟踪数据',render:function(b){
-        if(hasTrack){
-          b.innerHTML='<h4 class="sub">策略跟踪表（含风险指标）</h4><div id="_trk"></div>';
-          table(b.querySelector('#_trk'),t,'策略跟踪表');
-        }
-        if(hasSheets){
-          const h4w=document.createElement('h4');h4w.className='sub';h4w.textContent='周报总览';h4w.style.marginTop='16px';b.appendChild(h4w);
-          const wd=document.createElement('div');b.appendChild(wd);
-          tabs(wd,weekly.sheets,true);
-        }
-        if(!hasTrack)b.innerHTML='<div class="miss">暂无跟踪数据</div>';
+        tabs(b,weekly.sheets,true);
       }});
     }
   }
@@ -1404,16 +1401,8 @@ function renderSpBody(){
   const parts=[];
   if(J.overall&&J.overall.table&&J.overall.table.rows&&J.overall.table.rows.length)
     parts.push({name:'总体指标（全区间）',table:J.overall.table});
-  if(J.yearly_strategy&&J.yearly_strategy.length)
-    parts.push({name:'分年表现',render:function(b){
-      var ss=J.yearly_strategy.map(function(s){return{name:s.name,pts:s.pts.map(function(p){return[Date.UTC(p[0],0,1),p[1]];}),color:''};});
-      cardTabs(b,ss.map(function(s,idx){
-        return{name:s.name,render:function(host){
-          host.innerHTML='<div class="chart-host" style="height:300px" id="_ys'+idx+'"></div>';
-          var c=host.querySelector('#_ys'+idx);
-          lineChart(c,[{name:s.name,pts:s.pts,color:PALETTE[idx%PALETTE.length]}],{area:false});
-        }}}));
-    }});
+  if(J.yearly&&J.yearly.table&&J.yearly.table.rows&&J.yearly.table.rows.length)
+    parts.push({name:'分年表现',table:J.yearly.table});
   document.getElementById('jc-bt-tag').textContent=[J.overall&&J.overall.name,J.yearly&&J.yearly.name].filter(Boolean).join(' · ')||'未找到';
   const bt=document.getElementById('jc-bt-box');
   if(parts.length)tabs(bt,parts,false);
@@ -1531,35 +1520,28 @@ function _mktSegSheets(){
   if(ms.kpis&&ms.kpis.length)cardKpi(el,ms.kpis);   // 在市只数 / 余额规模 / 剩余期限中位数
 })();
 
-/* ---------- 月度投资人结构（总览 + 沪/深/趋势，一表一卡） ---------- */
+/* ---------- 投资人结构（月度）：独立卡 + blockTabs ---------- */
 (function(){
   var hd=D.holder, host=document.getElementById('holder-box');
   if(!hd||!host)return;
-  var b=mkCard(host,'月度投资人结构 · 总览',hd.desc||'上交所（面值）+ 深交所（市值）投资者持有结构。','月度');
-  if(b){cardKpi(b,hd.kpis);cardNote(b,hd.note);}
-  (hd.tables||[]).forEach(function(t){
-    var bd=mkCard(host,t.name,'','月度');
-    if(!bd)return;
-    cardTable(bd,t,t.name);
-    cardNote(bd,t.note);
-  });
+  if(hd.kpis&&hd.kpis.length)cardKpi(host,hd.kpis);
+  if(hd.tables&&hd.tables.length){
+    blockTabs(host,hd.tables.map(function(t){return{name:t.name,table:{cols:t.cols,rows:t.rows},note:t.note||''};}),'数据未找到');
+  }
+  if(hd.note)cardNote(host,hd.note);
 })();
 
-/* ---------- 转债次新券策略（并入多维市场数据卡内联渲染） ---------- */
+/* ---------- 转债次新券策略：独立卡 + blockTabs ---------- */
 (function(){
   var nc=D.newcb, host=document.getElementById('newcb-box');
   if(!nc||!host)return;
-  if(nc.desc){var dd=document.createElement('div');dd.className='note';dd.style.marginBottom='8px';dd.textContent=nc.desc;host.appendChild(dd);}
-  if(nc.kpis&&nc.kpis.length){
-    var ks=document.createElement('div');ks.className='kpi-strip';
-    ks.innerHTML=nc.kpis.map(function(a){return '<div class="kpi"><div class="k">'+esc1(a[0])+'</div><div class="v">'+esc1(a[1]==null?'\u2014':a[1])+'</div>'+(a[2]?'<div class="s">'+esc1(a[2])+'</div>':'')+'</div>';}).join('');
-    host.appendChild(ks);
+  if(nc.kpis&&nc.kpis.length)cardKpi(host,nc.kpis);
+  if(nc.tables&&nc.tables.length){
+    blockTabs(host,nc.tables.map(function(t){return{name:t.name,table:{cols:t.cols,rows:t.rows},note:t.note||''};}),'数据未找到');
+  } else {
+    host.innerHTML='<div class="miss">数据未找到</div>';
   }
-  (nc.tables||[]).forEach(function(t){
-    var w=document.createElement('div');w.style.marginTop='12px';host.appendChild(w);
-    table(w,t,t.name);
-    if(t.note){var n=document.createElement('div');n.className='note';n.style.marginTop='4px';n.textContent=t.note;w.appendChild(n);}
-  });
+  if(nc.note)cardNote(host,nc.note);
 })();
 
 /* ---------- 分行业转债梳理（原生页签，替代 iframe） ---------- */
@@ -1696,7 +1678,7 @@ function _mktSegSheets(){
   cardNote(body,t.note);
 })();
 /* ---------- 导航 / 窗口 / 拖拽 ---------- */
-const TITLES={part1:['每日市场跟踪','多维市场数据（含估值指标与市场分域） · 行情图表 · 转债日报 · 月度投资人结构'],
+const TITLES={part1:['每日市场跟踪','多维市场数据（含估值指标与市场分域） · 行情图表 · 转债日报 · 转债投资人结构（月度）'],
 part3:['择时策略','十因子体系 · 周频投票 / 日度打分（含十档·择券落地）/ CCB 模型检查'],
 part5:['基础策略','17 个经典基础策略 · 策略周报（含跟踪表 / 回测 / 截面快照） · 转债次新券策略（总览 + 明细）'],
 part4:['研报复现','国泰二维 · 银河RSJ · 广发三视角 · 华福高估值 · 中金事件驱动'],
