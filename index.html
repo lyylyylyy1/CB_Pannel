@@ -324,14 +324,14 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
     <!-- ═══ 板块1 · 每日市场跟踪 ═══ -->
     <div class="part-banner" id="part1"><span class="no">01</span><h2>每日市场跟踪</h2><span class="en">DAILY MARKET TRACKING</span></div>
     <section class="card" id="daily-waifa">
-      <div class="card-head"><div><h3>多维市场数据</h3></div><span class="freq-tag">日度<small>每个交易日</small></span><span class="filetag" id="waifa-tag"></span></div>
+      <div class="card-head"><div><h3>多维市场数据</h3><p class="note">日度多维指标与结构切分：估值 / 溢价率 / 分位数等时序、日度明细，以及分评级·余额·平价·风格·期限的市场切分（都在下方页签里切换）；顶部三项为在市转债总览。</p></div><span class="freq-tag">日度<small>每个交易日</small></span><span class="filetag" id="waifa-tag"></span></div>
       <div class="card-body">
+        <div id="mktseg-kpi"></div>
         <div id="waifa-box"></div>
 
       </div>
     </section>
-    <!-- 市场切分：总览 KPI + 5 张分组表，与其他页面一样一表一卡（前端 mkCard 生成同构卡片） -->
-    <div id="mktseg-box"></div>
+    <!-- 市场切分已并入上方「多维市场数据」卡：总览 KPI 在卡 body 首行，5 张分组表作为页签拼在外发数据页签之后 -->
     <section class="card" id="daily-charts">
       <div class="card-head"><div><h3>行情图表</h3></div><span class="freq-tag">日度<small>每个交易日</small></span><span class="filetag" id="charts-tag"></span></div>
       <div class="card-body" id="charts-box"></div>
@@ -419,9 +419,9 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
       <div class="cards" id="clauseSnapS"></div>
     </div>
 
-    <!-- ═══ 板块6 · 权益市场热点跟踪（一表一卡，无嵌套）═══ -->
+    <!-- ═══ 板块6 · 权益市场热点跟踪（三张主题卡，卡内页签切换）═══ -->
     <div class="part-banner" id="part7"><span class="no">06</span><h2>权益市场热点跟踪</h2><span class="en">EQUITY HOTSPOT</span></div>
-    <p class="part-intro">权益市场热点：市场温度 / 核心指数 / 行业领涨与领跌 / 概念热点 / 北向资金·港股通 / 北向十大成交股 / 龙虎榜净买 / 转债概览与领涨领跌；并含分行业转债梳理与产业链图谱。每张表单独一卡，卡内不再并列或嵌套子页。</p>
+    <p class="part-intro">权益市场热点按主题收成三张卡，卡内页签切换：<b>市场温度与板块结构</b>（温度 / 核心指数 / 行业领涨·领跌 / 概念热点）、<b>资金流向与龙虎榜</b>（北向·港股通 / 北向十大成交股 / 龙虎榜净买）、<b>转债涨跌表现</b>（概览 / 领涨·领跌）；另有分行业转债梳理与产业链图谱。数据源当日缺失的页签自动隐藏。</p>
     <div id="hotspot-box"></div>
     <!-- 分行业转债梳理 / 产业链图谱：去 iframe 嵌套，改原生卡片 -->
     <div id="indcb-box"></div>
@@ -433,7 +433,7 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
 <footer class="site-footer"><p>坚持做长期正确的事</p></footer>
 </main>
 <div id="tip"></div>
-<script src="data.js?v=20261120202611231321"></script>
+<script src="data.js?v=20261120202611231357"></script>
 <script>
 /* 数据块已拆到同目录 data.js（var D 挂 window），本 script 直接用 D */
 const M={red:'#d12920',navy:'#315b7d',orange:'#e97132',gold:'#c9821b',blue:'#5592dc',green:'#2f7d6d'};
@@ -981,6 +981,7 @@ function cleanJson(v){
 
 /* ---------- 板块1 · 每日市场跟踪 ---------- */
 function blockTabs(boxEl,sheets,emptyMsg){
+  boxEl.innerHTML='';                     // 先清空：同一容器重渲染（如外发大表懒加载后补上切分页签）不能叠出两条页签栏
   if(!sheets||!sheets.length){boxEl.innerHTML='<div class="miss">'+(emptyMsg||'数据未找到')+'</div>';return;}
   const bar=document.createElement('div');bar.className='tabs';
   bar.innerHTML=sheets.map((s,i)=>`<button data-i="${i}" class="${i?'':'on'}">${s.name}</button>`).join('');
@@ -994,11 +995,27 @@ function blockTabs(boxEl,sheets,emptyMsg){
     body.innerHTML=h?'<div class="figgrid">'+h+'</div>':'';
     const tb=document.createElement('div');body.appendChild(tb);
     table(tb,t,sheets[i].name);
+    if(sheets[i].note)cardNote(body,sheets[i].note);
     if(h){
       body.onclick=e=>{const fg=e.target.closest('figure');if(!fg)return;
         openImgNewTab(fg.dataset.b64, fg.dataset.name||('图片.png'));
       };
     } else body.onclick=null;
+  }
+  bar.addEventListener('click',e=>{if(e.target.tagName!=='BUTTON')return;render(+e.target.dataset.i);});
+  render(0);
+}
+/* 卡内页签切换（面板可为 KPI / 表格 / 任意渲染）：tabs() 只能装表格，这里补足 */
+function cardTabs(el,panels){
+  panels=(panels||[]).filter(Boolean);
+  if(!panels.length){el.innerHTML='<div class="miss">数据未找到</div>';return;}
+  const bar=document.createElement('div');bar.className='tabs';
+  bar.innerHTML=panels.map((p,i)=>`<button data-i="${i}" class="${i?'':'on'}">${esc1(p.name)}</button>`).join('');
+  const body=document.createElement('div');
+  el.appendChild(bar);el.appendChild(body);
+  function render(i){
+    [...bar.children].forEach((b,j)=>b.classList.toggle('on',j===i));
+    body.innerHTML='';panels[i].render(body);
   }
   bar.addEventListener('click',e=>{if(e.target.tagName!=='BUTTON')return;render(+e.target.dataset.i);});
   render(0);
@@ -1019,10 +1036,12 @@ function _lazyLoad(boxId,extFile,varName,onData){
   }else{fire();}
 }
 (function(){
-  var w=D.daily_waifa||{};
+  var w=D.daily_waifa||{},seg=_mktSegSheets();
   document.getElementById('waifa-tag').textContent=w.name||'未找到';
-  if(w.sheets&&w.sheets.length){blockTabs(document.getElementById('waifa-box'),w.sheets,'工作簿无表格');}
-  else{_lazyLoad('waifa-box','data_waifa.js','_extWaifa',function(sh){blockTabs(document.getElementById('waifa-box'),sh,'工作簿无表格');});}
+  // 市场切分并入同一组页签（切分数据在主 data.js，外发大表即使懒加载也能拼在后面）
+  function put(sh){blockTabs(document.getElementById('waifa-box'),(sh||[]).concat(seg),'工作簿无表格');}
+  if(w.sheets&&w.sheets.length){put(w.sheets);}
+  else{_lazyLoad('waifa-box','data_waifa.js','_extWaifa',put);}
 })();
 (function(){
   const c=D.daily_charts||{};
@@ -1495,18 +1514,19 @@ function pickTbl(rows,cols){
 }
 function num(v){return v==null||v===''?null:Number(v);}
 
-/* ---------- 板块1 · 市场切分（总览 + 5 张分组表，一表一卡） ---------- */
-(function(){
-  var ms=D.mkt_seg, host=document.getElementById('mktseg-box');
-  if(!ms||!host)return;
-  var b=mkCard(host,'转债市场总览','在市转债只数 / 余额规模 / 剩余期限中位数，取转债日度数据库最新交易日。','日度');
-  if(b){cardKpi(b,ms.kpis);cardNote(b,ms.note);}
-  (ms.tables||[]).forEach(function(t){
-    var bd=mkCard(host,'市场切分 · '+t.name,'','日度');
-    if(!bd)return;
-    cardTable(bd,t,'市场切分 · '+t.name);
-    cardNote(bd,t.note);
+/* ---------- 板块1 · 市场切分 → 并入「多维市场数据」（总览 KPI + 5 个页签，不再纵向铺卡） ---------- */
+function _mktSegSheets(){
+  var ms=D.mkt_seg;
+  if(!ms)return [];
+  return (ms.tables||[]).map(function(t){
+    return {name:'切分·'+t.name, table:{cols:t.cols,rows:t.rows},
+            note:[ms.note,t.note].filter(Boolean).join(' ')};
   });
+}
+(function(){
+  var ms=D.mkt_seg, el=document.getElementById('mktseg-kpi');
+  if(!ms||!el)return;
+  if(ms.kpis&&ms.kpis.length)cardKpi(el,ms.kpis);   // 在市只数 / 余额规模 / 剩余期限中位数
 })();
 
 /* ---------- 月度投资人结构（总览 + 沪/深/趋势，一表一卡） ---------- */
@@ -1562,7 +1582,7 @@ function num(v){return v==null||v===''?null:Number(v);}
   cardNote(bd,ch.note);
 })();
 
-/* ---------- 板块6 · 权益热点（一表一卡，取快照真实字段名） ---------- */
+/* ---------- 板块6 · 权益热点（三张主题卡，卡内页签切换，取快照真实字段名） ---------- */
 (function(){
   var hs=D.hotspot, host=document.getElementById('hotspot-box');
   if(!hs||!host)return;
@@ -1572,93 +1592,90 @@ function num(v){return v==null||v===''?null:Number(v);}
   var tip=document.createElement('p');
   tip.className='g-sub-note';
   tip.textContent='权益热点快照抓取时间：'+(stamp||'—')
-    +(errs.length?'（当日部分数据源不可用，对应卡片暂不展示：'+errs.join(' / ')+'）':'');
+    +(errs.length?'（当日部分数据源不可用，对应页签暂不展示：'+errs.join(' / ')+'）':'');
   host.appendChild(tip);
 
-  /* 1 市场温度 */
+  function kpiPanel(name,rows){return {name:name,render:function(b){cardKpi(b,rows);}};}
+  function tblPanel(name,t){
+    return (t&&t.rows&&t.rows.length)?{name:name,render:function(b){cardTable(b,t,name);}}:null;
+  }
+  function addCard(title,note,panels){
+    panels=(panels||[]).filter(Boolean);
+    if(!panels.length)return;                       // 整组都缺源就不建卡
+    var b=mkCard(host,title,note,'日度');
+    if(b)cardTabs(b,panels);
+  }
+  /* 卡1 · 市场温度与板块结构 */
   var temp=sec['市场温度']||{};
-  if(Object.keys(temp).length){
-    var b1=mkCard(host,'市场温度 & 情绪','涨跌家数 / 涨停跌停 / 情绪判定','日度');
-    if(b1)cardKpi(b1,[['上涨',temp['上涨'],''],['下跌',temp['下跌'],''],
-                      ['涨停',temp['涨停'],''],['跌停',temp['跌停'],''],
-                      ['上涨占比%',temp['上涨占比%']==null?'—':(temp['上涨占比%']+'%'),''],
-                      ['情绪',temp['情绪'],'']]);
+  var pTemp=Object.keys(temp).length?kpiPanel('市场温度',[
+      ['上涨',temp['上涨'],''],['下跌',temp['下跌'],''],
+      ['涨停',temp['涨停'],''],['跌停',temp['跌停'],''],
+      ['上涨占比%',temp['上涨占比%']==null?'—':(temp['上涨占比%']+'%'),''],
+      ['情绪',temp['情绪'],'']]):null;
+  function tblOf(rows,cols){
+    return pickTbl(rows||[],cols);
   }
-  /* 2 核心指数 */
-  var idx=sec['核心指数']||[];
-  if(idx.length){
-    var b2=mkCard(host,'核心指数','宽基与转债指数最新点位与涨跌幅。','日度');
-    if(b2)cardTable(b2,pickTbl(idx,[['指数',function(r){return r['指数']||r['名称'];}],
-                                   ['最新点位',function(r){return num(r['最新']==null?r['最新点位']:r['最新']);}],
-                                   ['涨跌幅%',function(r){return num(r['涨跌幅%']==null?r['涨跌幅']:r['涨跌幅%']);}]]),
-                    '核心指数');
+  var pIdx=tblPanel('核心指数',tblOf(sec['核心指数'],[
+      ['指数',function(r){return r['指数']||r['名称'];}],
+      ['最新点位',function(r){return num(r['最新']==null?r['最新点位']:r['最新']);}],
+      ['涨跌幅%',function(r){return num(r['涨跌幅%']==null?r['涨跌幅']:r['涨跌幅%']);}]
+  ]));
+  function rankPanel(name,key){
+    return tblPanel(name,tblOf(sec[key],[
+        ['板块',function(r){return r['板块']||r['名称'];}],
+        ['涨跌幅%',function(r){return num(r['涨跌幅%']==null?r['涨跌幅']:r['涨跌幅%']);}],
+        ['家数',function(r){return num(r['家数']);}]
+    ]));
   }
-  /* 3~5 行业领涨 / 领跌 / 概念热点 */
-  function rankCard(title,rows,label){
-    if(!rows||!rows.length)return;
-    var bd=mkCard(host,title,'','日度');
-    if(!bd)return;
-    cardTable(bd,pickTbl(rows,[['板块',function(r){return r['板块']||r['名称'];}],
-                            ['涨跌幅%',function(r){return num(r['涨跌幅%']==null?r['涨跌幅']:r['涨跌幅%']);}],
-                            ['家数',function(r){return num(r['家数']);}]]),label);
-  }
-  rankCard('行业领涨 TOP5',sec['行业龙头TOP5'],'行业领涨TOP5');
-  rankCard('行业领跌 TOP5',sec['行业垫底TOP5'],'行业领跌TOP5');
-  rankCard('概念热点 TOP8',sec['概念龙头TOP8'],'概念热点TOP8');
-  /* 6 北向资金 / 港股通 */
-  var flow=sec['北向资金']||[];
-  if(flow.length){
-    var b6=mkCard(host,'北向资金 / 港股通','各通道当日成交净买额与相关指数表现。','日度');
-    if(b6)cardTable(b6,pickTbl(flow,[['通道',function(r){return r['通道']||r['名称'];}],
-                                   ['成交净买额(亿)',function(r){return num(r['成交净买额']==null?r['净买入额(亿)']:r['成交净买额']);}],
-                                   ['相关指数',function(r){return r['相关指数'];}],
-                                   ['指数涨跌幅%',function(r){return num(r['指数涨跌幅']);}]]),'北向资金');
-  }
-  /* 7 北向十大成交股 */
-  var h10=sec['北向十大成交股']||[];
-  if(h10.length){
-    var b7=mkCard(host,'北向 · 十大成交股','北向资金当日成交额最大的 10 只个股。','日度');
-    if(b7)cardTable(b7,pickTbl(h10,[['股票',function(r){return r['股票']||r['名称'];}],
-                               ['成交额(亿)',function(r){return num(r['成交额亿']==null?r['成交额(亿)']:r['成交额亿']);}],
-                               ['涨跌幅%',function(r){return num(r['涨跌幅%']==null?r['涨跌幅']:r['涨跌幅%']);}]]),'北向十大成交股');
-  }
-  /* 8 龙虎榜净买 TOP8 */
-  var lhb=sec['龙虎榜净买TOP']||[];
-  if(lhb.length){
-    var b8=mkCard(host,'龙虎榜 · 净买 TOP8','当日龙虎榜按净买额排序的前 8 只，含上榜原因。','日度');
-    if(b8)cardTable(b8,pickTbl(lhb,[['股票',function(r){return r['股票']||r['名称'];}],
-                               ['涨跌幅%',function(r){return num(r['涨跌幅%']==null?r['涨跌幅']:r['涨跌幅%']);}],
-                               ['净买额(亿)',function(r){return num(r['净买额亿']==null?r['净买入额(亿)']:r['净买额亿']);}],
-                               ['上榜原因',function(r){return r['原因'];}]]),'龙虎榜净买TOP8');
-  }
-  /* 9 转债概览 */
+  addCard('权益热点 · 市场温度与板块结构','涨跌家数与情绪判定 / 核心指数 / 行业与概念板块排行，页签切换。',
+          [pTemp,pIdx,rankPanel('行业领涨TOP5','行业龙头TOP5'),
+           rankPanel('行业领跌TOP5','行业垫底TOP5'),rankPanel('概念热点TOP8','概念龙头TOP8')]);
+
+  /* 卡2 · 资金流向与龙虎榜 */
+  var pFlow=tblPanel('北向资金·港股通',tblOf(sec['北向资金'],[
+      ['通道',function(r){return r['通道']||r['名称'];}],
+      ['成交净买额(亿)',function(r){return num(r['成交净买额']==null?r['净买入额(亿)']:r['成交净买额']);}],
+      ['相关指数',function(r){return r['相关指数'];}],
+      ['指数涨跌幅%',function(r){return num(r['指数涨跌幅']);}]
+  ]));
+  var pH10=tblPanel('北向十大成交股',tblOf(sec['北向十大成交股'],[
+      ['股票',function(r){return r['股票']||r['名称'];}],
+      ['成交额(亿)',function(r){return num(r['成交额亿']==null?r['成交额(亿)']:r['成交额亿']);}],
+      ['涨跌幅%',function(r){return num(r['涨跌幅%']==null?r['涨跌幅']:r['涨跌幅%']);}]
+  ]));
+  var pLhb=tblPanel('龙虎榜净买TOP8',tblOf(sec['龙虎榜净买TOP'],[
+      ['股票',function(r){return r['股票']||r['名称'];}],
+      ['涨跌幅%',function(r){return num(r['涨跌幅%']==null?r['涨跌幅']:r['涨跌幅%']);}],
+      ['净买额(亿)',function(r){return num(r['净买额亿']==null?r['净买入额(亿)']:r['净买额亿']);}],
+      ['上榜原因',function(r){return r['原因'];}]
+  ]));
+  addCard('权益热点 · 资金流向与龙虎榜','北向资金与港股通净买额 / 北向十大成交股 / 龙虎榜净买前列，页签切换。',
+          [pFlow,pH10,pLhb]);
+
+  /* 卡3 · 转债涨跌表现 */
   var ov=sec['转债概览']||{};
-  if(Object.keys(ov).length){
-    var b9=mkCard(host,'转债概览','当日有成交转债的涨跌分布。','日度');
-    if(b9)cardKpi(b9,[['有效只数',ov['有效只数']==null?ov['转债有效']:ov['有效只数'],''],
-                      ['上涨',ov['上涨'],''],['下跌',ov['下跌'],''],
-                      ['上涨占比%',ov['上涨占比%']==null?'—':(ov['上涨占比%']+'%'),''],
-                      ['平均涨跌幅%',ov['平均涨跌幅%'],'']]);
+  var pOv=Object.keys(ov).length?kpiPanel('转债概览',[
+      ['有效只数',ov['有效只数']==null?ov['转债有效']:ov['有效只数'],''],
+      ['上涨',ov['上涨'],''],['下跌',ov['下跌'],''],
+      ['上涨占比%',ov['上涨占比%']==null?'—':(ov['上涨占比%']+'%'),''],
+      ['平均涨跌幅%',ov['平均涨跌幅%'],'']]):null;
+  function cbPanel(name,key){
+    return tblPanel(name,tblOf(sec[key],[
+        ['转债',function(r){return r['转债']||r['名称'];}],
+        ['涨跌幅%',function(r){return num(r['涨跌幅%']==null?r['涨跌幅']:r['涨跌幅%']);}],
+        ['现价',function(r){return num(r['现价']==null?r['最新价']:r['现价']);}]
+    ]));
   }
-  /* 10~11 转债领涨 / 领跌 */
-  function cbRank(title,rows,label){
-    if(!rows||!rows.length)return;
-    var bd=mkCard(host,title,'','日度');
-    if(!bd)return;
-    cardTable(bd,pickTbl(rows,[['转债',function(r){return r['转债']||r['名称'];}],
-                          ['涨跌幅%',function(r){return num(r['涨跌幅%']==null?r['涨跌幅']:r['涨跌幅%']);}],
-                          ['现价',function(r){return num(r['现价']==null?r['最新价']:r['现价']);}]]),label);
-  }
-  cbRank('转债领涨 TOP8',sec['转债领涨TOP8'],'转债领涨TOP8');
-  cbRank('转债领跌 TOP5',sec['转债领跌TOP5'],'转债领跌TOP5');
+  addCard('权益热点 · 转债涨跌表现','当日有成交转债的涨跌分布与领涨领跌，页签切换。',
+          [pOv,cbPanel('转债领涨TOP8','转债领涨TOP8'),cbPanel('转债领跌TOP5','转债领跌TOP5')]);
 })();
 /* ---------- 导航 / 窗口 / 拖拽 ---------- */
-const TITLES={part1:['每日市场跟踪','多维市场数据（含估值指标） · 市场切分（评级/余额/平价/风格/期限） · 行情图表 · 修正溢价率明细 · 转债日报 · 月度投资人结构'],
+const TITLES={part1:['每日市场跟踪','多维市场数据（含估值指标与市场切分） · 行情图表 · 修正溢价率明细 · 转债日报 · 月度投资人结构'],
 part3:['择时策略','十因子体系 · 周频投票 / 日度打分（含十档·择券落地）/ CCB 模型检查'],
 part5:['基础策略','21 个经典基础策略 · 策略周报 / 转债策略跟踪表 / 全量回测 / 截面快照 · 转债次新券策略（总览 + 明细）'],
 part4:['研报复现','国泰二维 · 银河RSJ · 广发三视角 · 华福高估值 · 中金事件驱动'],
 part6:['条款看板','下修 / 赎回 条款跟踪 · 核心跟踪 / 历史公告统计 / 按年·月事件计数分布'],
-part7:['权益热点','市场温度 / 核心指数 / 行业领涨·领跌 / 概念热点 / 北向·港股通 / 北向十大 / 龙虎榜 / 转债概览·领涨·领跌 / 分行业转债梳理 / 产业链图谱']};
+part7:['权益热点','市场温度与板块结构 / 资金流向与龙虎榜 / 转债涨跌表现（卡内页签切换） · 分行业转债梳理 / 产业链图谱']};
 document.getElementById('modnav').addEventListener('click',e=>{
   const btn=e.target.closest('.module-button');if(!btn)return;
   document.querySelectorAll('#modnav .module-button').forEach(b=>b.classList.toggle('is-active',b===btn));
