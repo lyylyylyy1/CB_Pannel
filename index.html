@@ -419,9 +419,9 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
       <div class="cards" id="clauseSnapS"></div>
     </div>
 
-    <!-- ═══ 板块6 · 权益市场热点跟踪（三张主题卡，卡内页签切换）═══ -->
+    <!-- ═══ 板块6 · 权益市场热点跟踪（四张主题卡 + 转债正股涨跌关系）═══ -->
     <div class="part-banner" id="part7"><span class="no">06</span><h2>权益市场热点跟踪</h2><span class="en">EQUITY HOTSPOT</span></div>
-    <p class="part-intro">权益市场热点按主题收成三张卡，卡内页签切换：<b>市场温度与板块结构</b>（温度 / 核心指数 / 行业领涨·领跌 / 概念热点）、<b>资金流向与龙虎榜</b>（北向·港股通 / 北向十大成交股 / 龙虎榜净买）、<b>转债涨跌表现</b>（概览 / 领涨·领跌）；另有分行业转债梳理与产业链图谱。数据源当日缺失的页签自动隐藏。</p>
+    <p class="part-intro">权益市场热点按主题收成四张卡：<b>市场温度与板块结构</b>（温度 / 核心指数 / 行业领涨·领跌 / 概念热点）、<b>资金流向与龙虎榜</b>（北向·港股通 / 北向十大成交股 / 龙虎榜净买）、<b>转债涨跌表现</b>（概览 KPI 直接展示，领涨·领跌走页签）、<b>转债与正股涨跌关系</b>（八类明细页签）；另有分行业转债梳理与产业链图谱。数据源当日缺失的页签自动隐藏。</p>
     <div id="hotspot-box"></div>
     <!-- 分行业转债梳理 / 产业链图谱：去 iframe 嵌套，改原生卡片 -->
     <div id="indcb-box"></div>
@@ -433,7 +433,7 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
 <footer class="site-footer"><p>坚持做长期正确的事</p></footer>
 </main>
 <div id="tip"></div>
-<script src="data.js?v=20261120202611231357"></script>
+<script src="data.js?v=20261120202611231446"></script>
 <script>
 /* 数据块已拆到同目录 data.js（var D 挂 window），本 script 直接用 D */
 const M={red:'#d12920',navy:'#315b7d',orange:'#e97132',gold:'#c9821b',blue:'#5592dc',green:'#2f7d6d'};
@@ -1582,7 +1582,7 @@ function _mktSegSheets(){
   cardNote(bd,ch.note);
 })();
 
-/* ---------- 板块6 · 权益热点（三张主题卡，卡内页签切换，取快照真实字段名） ---------- */
+/* ---------- 板块6 · 权益热点（四张主题卡，取快照真实字段名） ---------- */
 (function(){
   var hs=D.hotspot, host=document.getElementById('hotspot-box');
   if(!hs||!host)return;
@@ -1652,13 +1652,13 @@ function _mktSegSheets(){
   addCard('权益热点 · 资金流向与龙虎榜','北向资金与港股通净买额 / 北向十大成交股 / 龙虎榜净买前列，页签切换。',
           [pFlow,pH10,pLhb]);
 
-  /* 卡3 · 转债涨跌表现 */
+  /* 卡3 · 转债涨跌表现：概览直接摆在卡顶（不进页签），领涨领跌才走页签 */
   var ov=sec['转债概览']||{};
-  var pOv=Object.keys(ov).length?kpiPanel('转债概览',[
+  var ovRows=Object.keys(ov).length?[
       ['有效只数',ov['有效只数']==null?ov['转债有效']:ov['有效只数'],''],
       ['上涨',ov['上涨'],''],['下跌',ov['下跌'],''],
       ['上涨占比%',ov['上涨占比%']==null?'—':(ov['上涨占比%']+'%'),''],
-      ['平均涨跌幅%',ov['平均涨跌幅%'],'']]):null;
+      ['平均涨跌幅%',ov['平均涨跌幅%'],'']]:null;
   function cbPanel(name,key){
     return tblPanel(name,tblOf(sec[key],[
         ['转债',function(r){return r['转债']||r['名称'];}],
@@ -1666,8 +1666,29 @@ function _mktSegSheets(){
         ['现价',function(r){return num(r['现价']==null?r['最新价']:r['现价']);}]
     ]));
   }
-  addCard('权益热点 · 转债涨跌表现','当日有成交转债的涨跌分布与领涨领跌，页签切换。',
-          [pOv,cbPanel('转债领涨TOP8','转债领涨TOP8'),cbPanel('转债领跌TOP5','转债领跌TOP5')]);
+  var cbPanels=[cbPanel('转债领涨TOP8','转债领涨TOP8'),
+                cbPanel('转债领跌TOP5','转债领跌TOP5')].filter(Boolean);
+  if(ovRows||cbPanels.length){
+    var b3=mkCard(host,'权益热点 · 转债涨跌表现',
+      '当日有成交转债的涨跌分布；概览直接展示，领涨/领跌在页签里切换。','日度');
+    if(b3){if(ovRows)cardKpi(b3,ovRows);if(cbPanels.length)cardTabs(b3,cbPanels);}
+  }
+})();
+
+/* ---------- 板块6 · 转债 vs 正股 涨跌关系（口径同 convertible_trend_stats.py，源：转股类债券.xlsx） ---------- */
+(function(){
+  var t=D.cb_trend, host=document.getElementById('hotspot-box');
+  if(!t||!host||!(t.tables||[]).length)return;
+  var cnt=t.counts||{};
+  var body=mkCard(host,'转债与正股涨跌关系',
+    '把存续转债按「转债涨幅 vs 正股涨幅」分八类看当日相对表现，页签切换明细。','日度');
+  if(!body)return;
+  if(t.kpis&&t.kpis.length)cardKpi(body,t.kpis);
+  cardTabs(body,t.tables.map(function(tb){
+    var n=cnt[tb.name]!=null?cnt[tb.name]:(tb.rows||[]).length;
+    return {name:tb.name+'（'+n+'）',render:function(b){cardTable(b,tb,tb.name);}};
+  }));
+  cardNote(body,(t.date?('数据日期 '+t.date+'：'):'')+(t.note||''));
 })();
 /* ---------- 导航 / 窗口 / 拖拽 ---------- */
 const TITLES={part1:['每日市场跟踪','多维市场数据（含估值指标与市场切分） · 行情图表 · 修正溢价率明细 · 转债日报 · 月度投资人结构'],
@@ -1675,7 +1696,7 @@ part3:['择时策略','十因子体系 · 周频投票 / 日度打分（含十�
 part5:['基础策略','21 个经典基础策略 · 策略周报 / 转债策略跟踪表 / 全量回测 / 截面快照 · 转债次新券策略（总览 + 明细）'],
 part4:['研报复现','国泰二维 · 银河RSJ · 广发三视角 · 华福高估值 · 中金事件驱动'],
 part6:['条款看板','下修 / 赎回 条款跟踪 · 核心跟踪 / 历史公告统计 / 按年·月事件计数分布'],
-part7:['权益热点','市场温度与板块结构 / 资金流向与龙虎榜 / 转债涨跌表现（卡内页签切换） · 分行业转债梳理 / 产业链图谱']};
+part7:['权益热点','市场温度与板块结构 / 资金流向与龙虎榜 / 转债涨跌表现（概览直显） / 转债与正股涨跌关系 · 分行业转债梳理 / 产业链图谱']};
 document.getElementById('modnav').addEventListener('click',e=>{
   const btn=e.target.closest('.module-button');if(!btn)return;
   document.querySelectorAll('#modnav .module-button').forEach(b=>b.classList.toggle('is-active',b===btn));
