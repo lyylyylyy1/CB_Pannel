@@ -433,7 +433,7 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
 <footer class="site-footer"><p>坚持做长期正确的事</p></footer>
 </main>
 <div id="tip"></div>
-<script src="data.js?v=20261120202611231222"></script>
+<script src="data.js?v=20261120202611231321"></script>
 <script>
 /* 数据块已拆到同目录 data.js（var D 挂 window），本 script 直接用 D */
 const M={red:'#d12920',navy:'#315b7d',orange:'#e97132',gold:'#c9821b',blue:'#5592dc',green:'#2f7d6d'};
@@ -1500,7 +1500,7 @@ function num(v){return v==null||v===''?null:Number(v);}
   var ms=D.mkt_seg, host=document.getElementById('mktseg-box');
   if(!ms||!host)return;
   var b=mkCard(host,'转债市场总览','在市转债只数 / 余额规模 / 剩余期限中位数，取转债日度数据库最新交易日。','日度');
-  if(b)cardKpi(b,ms.kpis);
+  if(b){cardKpi(b,ms.kpis);cardNote(b,ms.note);}
   (ms.tables||[]).forEach(function(t){
     var bd=mkCard(host,'市场切分 · '+t.name,'','日度');
     if(!bd)return;
