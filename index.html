@@ -350,11 +350,11 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
     <div class="part-banner" id="part5"><span class="no">02</span><h2>基础策略</h2><span class="en">BASIC STRATEGIES · 17 CLASSICS</span></div>
     <p class="part-intro">17 个经典可转债基础策略（低溢价 / 低价 / 双低 / 偏股·平衡·偏债 / 动量 / 高YTM / 定价偏离 / 隐波差 / 评级等权）：分位门槛按当日全域券确定，可买过滤后等权持有，每 20 个交易日调仓、单边 10bp 成本。各卡按「周报 → 回测汇总 + 截面快照」排列。</p>
     <section class="card" id="jc-weekly">
-      <div class="card-head"><div><h3>策略周报</h3><p class="note">18 组合周 / 月 / 季 / 年收益与 2018 年以来年化（基准：集思录转债等权 + 中证转债）</p></div><span class="freq-tag">周度<small>每周一</small></span><span class="filetag" id="jc-weekly-tag"></span></div>
+      <div class="card-head"><div><h3>策略周报</h3><p class="note">18 组合周 / 月 / 季 / 年收益与 2018 年以来年化（基准：集思录转债等权 + 中证转债）+ 最新截面入选券</p></div><span class="freq-tag">周度<small>每周一</small></span><span class="filetag" id="jc-weekly-tag"></span><span class="filetag" id="jc-snap-tag"></span></div>
       <div class="card-body" id="jc-weekly-box"></div>
     </section>
     <section class="card" id="jc-bt">
-      <div class="card-head"><div><h3>全量回测与截面快照</h3><p class="note">17 策略全区间总体指标与分年表现 + 最新截面入选券明细（等权 · 20 交易日调仓 · 单边 10bp）</p></div><span class="freq-tag">周度<small>同周报节奏</small></span><span class="filetag" id="jc-bt-tag"></span><span class="filetag" id="jc-snap-tag"></span></div>
+      <div class="card-head"><div><h3>全量回测</h3><p class="note">17 策略全区间总体指标与分年表现（等权 · 20 交易日调仓 · 单边 10bp）</p></div><span class="freq-tag">周度<small>同周报节奏</small></span><span class="filetag" id="jc-bt-tag"></span></div>
       <div class="card-body" id="jc-bt-box"></div>
     </section>
 
@@ -420,7 +420,7 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
 <footer class="site-footer"><p>坚持做长期正确的事</p></footer>
 </main>
 <div id="tip"></div>
-<script src="data.js?v=20261120202611231806"></script>
+<script src="data.js?v=20261120202611231844"></script>
 <script>
 /* 数据块已拆到同目录 data.js（var D 挂 window），本 script 直接用 D */
 const M={red:'#d12920',navy:'#315b7d',orange:'#e97132',gold:'#c9821b',blue:'#5592dc',green:'#2f7d6d'};
@@ -1341,13 +1341,14 @@ function renderSpBody(){
   const J=D.jichu||{};
   const weekly=J.weekly||{};
   document.getElementById('jc-weekly-tag').textContent=weekly.name||'未找到';
+  if(J.snap_date)document.getElementById('jc-snap-tag').textContent='截面日 '+J.snap_date;
   const el=document.getElementById('jc-weekly-box');
   const panels=[];
   const t=J.track;
   // 页签 1：排名
   if(J.weekly_rank&&J.weekly_rank.length){
-    panels.push({name:'排名',render:function(b){
-      b.innerHTML='<h4 class="sub">周收益率排名（%）</h4><div class="chart-host" style="height:380px" id="_wr"></div>';
+    panels.push({name:'收益率排名',render:function(b){
+      b.innerHTML='<h4 class="sub">周收益率排名（%）</h4><div class="chart-host" style="height:450px" id="_wr"></div>';
       const host=b.querySelector('#_wr');
       host.parentElement.querySelector('h4.sub').appendChild(chartDlBtn({kind:'hbar',title:'周收益率排名(%)',items:J.weekly_rank.map(i=>({name:i.name,value:i.value}))},'周收益率排名'));
       hbar(host,J.weekly_rank.map(i=>({...i,display:fmtPct(i.value),color:i.value>=0?M.red:M.green})),{sign:true});
@@ -1381,23 +1382,10 @@ function renderSpBody(){
       lineChart(host,J.weekly_nav.map((s,i)=>({name:s.name,pts:slicePts(s.pts),color:PALETTE[i%6]})),{area:false});
     }});
   }
-
-  if(!panels.length){el.innerHTML='<div class="miss">未找到策略周报</div>';return;}
-  cardTabs(el,panels);
-})();
-(function(){
-  const J=D.jichu||{};
-  const parts=[];
-  if(J.overall&&J.overall.table&&J.overall.table.rows&&J.overall.table.rows.length)
-    parts.push({name:'总体指标（全区间）',table:J.overall.table});
-  if(J.yearly&&J.yearly.table&&J.yearly.table.rows&&J.yearly.table.rows.length)
-    parts.push({name:'分年表现',table:J.yearly.table});
-  document.getElementById('jc-bt-tag').textContent=[J.overall&&J.overall.name,J.yearly&&J.yearly.name].filter(Boolean).join(' · ')||'未找到';
-  // 截面快照并入同一张卡
-  document.getElementById('jc-snap-tag').textContent=J.snap_date?('截面日 '+J.snap_date):'未找到';
+  // 页签 4：截面入选券（从全量回测卡移入策略周报卡）
   if(J.snap_sum||J.snap_picks&&J.snap_picks.length){
     let snapH=ccbStaleWarn();
-    parts.push({name:'截面入选券',render:function(b){
+    panels.push({name:'截面入选券',render:function(b){
       if(J.snap_sum){b.innerHTML=snapH+'<h4 class="sub">快照汇总（17 策略过滤与入选统计）</h4><div id="jc-snap-sum"></div>';table(document.getElementById('jc-snap-sum'),J.snap_sum,'快照汇总');}
       else b.innerHTML=snapH;
       if(J.snap_note){const n=document.createElement('div');n.className='signote';n.textContent=J.snap_note;b.appendChild(n);}
@@ -1407,6 +1395,27 @@ function renderSpBody(){
       }
     }});
   }
+
+  if(!panels.length){el.innerHTML='<div class="miss">未找到策略周报</div>';return;}
+  cardTabs(el,panels);
+})();
+(function(){
+  const J=D.jichu||{};
+  const parts=[];
+  if(J.overall&&J.overall.table&&J.overall.table.rows&&J.overall.table.rows.length)
+    parts.push({name:'总体指标（全区间）',table:J.overall.table});
+  if(J.yearly_strategy&&J.yearly_strategy.length)
+    parts.push({name:'分年表现',render:function(b){
+      var ss=J.yearly_strategy.map(function(s){return{name:s.name,pts:s.pts.map(function(p){return[Date.UTC(p[0],0,1),p[1]];}),color:''};});
+      cardTabs(b,ss.map(function(s,idx){
+        return{name:s.name,render:function(host){
+          host.innerHTML='<div class="chart-host" style="height:300px" id="_ys'+idx+'"></div>';
+          var c=host.querySelector('#_ys'+idx);
+          lineChart(c,[{name:s.name,pts:s.pts,color:PALETTE[idx%PALETTE.length]}],{area:false});
+        }});
+      }));
+    }});
+  document.getElementById('jc-bt-tag').textContent=[J.overall&&J.overall.name,J.yearly&&J.yearly.name].filter(Boolean).join(' · ')||'未找到';
   const bt=document.getElementById('jc-bt-box');
   if(parts.length)tabs(bt,parts,false);
   else bt.innerHTML='<div class="miss">未找到回测汇总指标</div>';
