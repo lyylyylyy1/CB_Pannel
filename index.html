@@ -426,7 +426,7 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
 <footer class="site-footer"><p>坚持做长期正确的事</p></footer>
 </main>
 <div id="tip"></div>
-<script src="data.js?v=20261120202611231621"></script>
+<script src="data.js?v=20261120202611231626"></script>
 <script>
 /* 数据块已拆到同目录 data.js（var D 挂 window），本 script 直接用 D */
 const M={red:'#d12920',navy:'#315b7d',orange:'#e97132',gold:'#c9821b',blue:'#5592dc',green:'#2f7d6d'};
@@ -1347,13 +1347,18 @@ function renderSpBody(){
   document.getElementById('jc-weekly-tag').textContent=weekly.name||'未找到';
   const el=document.getElementById('jc-weekly-box');
   const panels=[];
-  // 页签 1：本周收益排名
+  const t=J.track;
+  // 页签 1：策略排名与跟踪（合并原"本周收益排名"+"跟踪数据表"）
   if(J.weekly_rank&&J.weekly_rank.length){
-    panels.push({name:'本周收益排名',render:function(b){
-      b.innerHTML='<h4 class="sub">本周收益排名（%）</h4><div class="chart-host" style="height:280px" id="_wr"></div>';
+    panels.push({name:'策略排名与跟踪',render:function(b){
+      b.innerHTML='<h4 class="sub">周收益率排名（%）</h4><div class="chart-host" style="height:380px" id="_wr"></div>';
       const host=b.querySelector('#_wr');
-      host.parentElement.querySelector('h4.sub').appendChild(chartDlBtn({kind:'hbar',title:'本周收益排名(%)',items:J.weekly_rank.map(i=>({name:i.name,value:i.value}))},'本周收益排名'));
+      host.parentElement.querySelector('h4.sub').appendChild(chartDlBtn({kind:'hbar',title:'周收益率排名(%)',items:J.weekly_rank.map(i=>({name:i.name,value:i.value}))},'周收益率排名'));
       hbar(host,J.weekly_rank.map(i=>({...i,display:fmtPct(i.value),color:i.value>=0?M.red:M.green})),{sign:true});
+      if(t&&t.rows&&t.rows.length){
+        const h4b=document.createElement('h4');h4b.className='sub';h4b.textContent='跟踪数据（含风险指标）';b.appendChild(h4b);
+        const tb=document.createElement('div');b.appendChild(tb);table(tb,t);
+      }
     }});
   }
   // 页签 2：各组合净值
@@ -1369,21 +1374,7 @@ function renderSpBody(){
   if(weekly.sheets&&weekly.sheets.length){
     panels.push({name:'周报数据表',render:function(b){tabs(b,weekly.sheets,true);}});
   }
-  // 页签 4：跟踪数据表（含风险指标）
-  const t=J.track;
-  if(t&&t.rows&&t.rows.length){
-    panels.push({name:'跟踪数据表',render:function(b){
-      const j=t.cols.indexOf('周收益率%');
-      if(j>=0){
-        const h4=document.createElement('h4');h4.className='sub';h4.textContent='周收益率排名（%）';b.appendChild(h4);
-        h4.appendChild(chartDlBtn({kind:'hbar',title:'周收益率排名(%)',items:t.rows.map(r=>({name:r[0],value:r[j]}))},'周收益率排名'));
-        const hb=document.createElement('div');b.appendChild(hb);
-        hbar(hb,t.rows.map(r=>({name:r[0],value:r[j],display:fmtPct(r[j]),color:(+r[j]>=0)?M.red:M.green})),{sign:true});
-      }
-      const h4b=document.createElement('h4');h4b.className='sub';h4b.textContent='跟踪数据（含风险指标）';b.appendChild(h4b);
-      const tb=document.createElement('div');b.appendChild(tb);table(tb,t);
-    }});
-  }
+
   if(!panels.length){el.innerHTML='<div class="miss">未找到策略周报</div>';return;}
   cardTabs(el,panels);
 })();
