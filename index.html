@@ -324,22 +324,19 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
     <!-- ═══ 板块1 · 每日市场跟踪 ═══ -->
     <div class="part-banner" id="part1"><span class="no">01</span><h2>每日市场跟踪</h2><span class="en">DAILY MARKET TRACKING</span></div>
     <section class="card" id="daily-waifa">
-      <div class="card-head"><div><h3>多维市场数据</h3><p class="note">日度多维指标与结构切分：估值 / 溢价率 / 分位数等时序、日度明细，以及分评级·余额·平价·风格·期限的市场切分（都在下方页签里切换）；顶部三项为在市转债总览。</p></div><span class="freq-tag">日度<small>每个交易日</small></span><span class="filetag" id="waifa-tag"></span></div>
+      <div class="card-head"><div><h3>多维市场数据</h3><p class="note">日度多维指标与结构分域：估值 / 溢价率 / 分位数等时序、日度明细，以及分评级·余额·平价·风格·期限的市场分域（都在下方页签里切换）；顶部三项为在市转债总览。</p></div><span class="freq-tag">日度<small>每个交易日</small></span><span class="filetag" id="waifa-tag"></span><span class="filetag" id="prem-tag"></span></div>
       <div class="card-body">
         <div id="mktseg-kpi"></div>
         <div id="waifa-box"></div>
-
+        <div id="prem-box"></div>
       </div>
     </section>
-    <!-- 市场切分已并入上方「多维市场数据」卡：总览 KPI 在卡 body 首行，5 张分组表作为页签拼在外发数据页签之后 -->
+    <!-- 市场分域已并入上方「多维市场数据」卡：总览 KPI 在卡 body 首行，5 张分组表作为页签拼在外发数据页签之后 -->
     <section class="card" id="daily-charts">
       <div class="card-head"><div><h3>行情图表</h3></div><span class="freq-tag">日度<small>每个交易日</small></span><span class="filetag" id="charts-tag"></span></div>
       <div class="card-body" id="charts-box"></div>
     </section>
-    <section class="card" id="daily-prem">
-      <div class="card-head"><div><h3>修正溢价率明细</h3></div><span class="freq-tag">日度<small>每个交易日</small></span><span class="filetag" id="prem-tag"></span></div>
-      <div class="card-body" id="prem-box"></div>
-    </section>
+    <!-- 修正溢价率明细已并入上方「多维市场数据」卡：页签拼在外发 + 分域之后 -->
     <section class="card" id="daily-yh">
       <div class="card-head"><div><h3>转债日报</h3></div><span class="freq-tag">日度<small>每个交易日</small></span><span class="filetag" id="yh-tag"></span></div>
       <div class="card-body" id="yh-box"></div>
@@ -350,17 +347,13 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
 
     <!-- ═══ 板块2 · 基础策略 ═══ -->
     <div class="part-banner" id="part5"><span class="no">02</span><h2>基础策略</h2><span class="en">BASIC STRATEGIES · 21 CLASSICS</span></div>
-    <p class="part-intro">21 个经典可转债基础策略（低溢价 / 低价 / 双低 / 偏股·平衡·偏债 / 动量 / 高YTM / 定价偏离 / 隐波差 / 评级等权 / 30日动量 / 180日逆势 / Gamma凸性）：分位门槛按当日全域券确定，可买过滤后等权持有，每 20 个交易日调仓、单边 10bp 成本。各卡按「周报 → 策略跟踪 → 回测汇总 → 最新截面快照」排列。</p>
+    <p class="part-intro">17 个经典可转债基础策略（低溢价 / 低价 / 双低 / 偏股·平衡·偏债 / 动量 / 高YTM / 定价偏离 / 隐波差 / 评级等权）：分位门槛按当日全域券确定，可买过滤后等权持有，每 20 个交易日调仓、单边 10bp 成本。各卡按「周报 → 策略跟踪 → 回测汇总 → 最新截面快照」排列。</p>
     <section class="card" id="jc-weekly">
-      <div class="card-head"><div><h3>策略周报</h3><p class="note">21 组合周 / 月 / 季 / 年收益与 2018 年以来年化（基准：集思录转债等权）</p></div><span class="freq-tag">周度<small>每周一</small></span><span class="filetag" id="jc-weekly-tag"></span></div>
+      <div class="card-head"><div><h3>策略周报</h3><p class="note">18 组合周 / 月 / 季 / 年收益与 2018 年以来年化（基准：集思录转债等权）</p></div><span class="freq-tag">周度<small>每周一</small></span><span class="filetag" id="jc-weekly-tag"></span></div>
       <div class="card-body" id="jc-weekly-box"></div>
     </section>
-    <section class="card" id="jc-track">
-      <div class="card-head"><div><h3>转债策略跟踪表</h3><p class="note">21 策略 + 基准的周 / 月 / 年初以来收益与风险指标</p></div><span class="freq-tag">周度<small>同周报</small></span><span class="filetag" id="jc-track-tag"></span></div>
-      <div class="card-body" id="jc-track-box"></div>
-    </section>
     <section class="card" id="jc-bt">
-      <div class="card-head"><div><h3>全量回测 · 2018 年以来</h3><p class="note">21 策略全区间总体指标与分年表现（等权 · 20 交易日调仓 · 单边 10bp）</p></div><span class="freq-tag">周度<small>同周报节奏</small></span><span class="filetag" id="jc-bt-tag"></span></div>
+      <div class="card-head"><div><h3>全量回测 · 2018 年以来</h3><p class="note">17 策略全区间总体指标与分年表现（等权 · 20 交易日调仓 · 单边 10bp）</p></div><span class="freq-tag">周度<small>同周报节奏</small></span><span class="filetag" id="jc-bt-tag"></span></div>
       <div class="card-body" id="jc-bt-box"></div>
     </section>
     <section class="card" id="jc-snap">
@@ -433,7 +426,7 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
 <footer class="site-footer"><p>坚持做长期正确的事</p></footer>
 </main>
 <div id="tip"></div>
-<script src="data.js?v=20261120202611231450"></script>
+<script src="data.js?v=20261120202611231519"></script>
 <script>
 /* 数据块已拆到同目录 data.js（var D 挂 window），本 script 直接用 D */
 const M={red:'#d12920',navy:'#315b7d',orange:'#e97132',gold:'#c9821b',blue:'#5592dc',green:'#2f7d6d'};
@@ -981,7 +974,7 @@ function cleanJson(v){
 
 /* ---------- 板块1 · 每日市场跟踪 ---------- */
 function blockTabs(boxEl,sheets,emptyMsg){
-  boxEl.innerHTML='';                     // 先清空：同一容器重渲染（如外发大表懒加载后补上切分页签）不能叠出两条页签栏
+  boxEl.innerHTML='';                     // 先清空：同一容器重渲染（如外发大表懒加载后补上分域页签）不能叠出两条页签栏
   if(!sheets||!sheets.length){boxEl.innerHTML='<div class="miss">'+(emptyMsg||'数据未找到')+'</div>';return;}
   const bar=document.createElement('div');bar.className='tabs';
   bar.innerHTML=sheets.map((s,i)=>`<button data-i="${i}" class="${i?'':'on'}">${s.name}</button>`).join('');
@@ -1038,7 +1031,7 @@ function _lazyLoad(boxId,extFile,varName,onData){
 (function(){
   var w=D.daily_waifa||{},seg=_mktSegSheets();
   document.getElementById('waifa-tag').textContent=w.name||'未找到';
-  // 市场切分并入同一组页签（切分数据在主 data.js，外发大表即使懒加载也能拼在后面）
+  // 市场分域并入同一组页签（分域数据在主 data.js，外发大表即使懒加载也能拼在后面）
   function put(sh){blockTabs(document.getElementById('waifa-box'),(sh||[]).concat(seg),'工作簿无表格');}
   if(w.sheets&&w.sheets.length){put(w.sheets);}
   else{_lazyLoad('waifa-box','data_waifa.js','_extWaifa',put);}
@@ -1347,48 +1340,52 @@ function renderSpBody(){
   } else table(b,toTable(D.ccb_break),'CCB跌破统计');
 })();
 
-/* ---------- 板块3 · 基础策略 ---------- */
+/* ---------- 板块2 · 基础策略（策略周报 + 跟踪表合并为一张卡，四页签切换） ---------- */
 (function(){
   const J=D.jichu||{};
   const weekly=J.weekly||{};
   document.getElementById('jc-weekly-tag').textContent=weekly.name||'未找到';
   const el=document.getElementById('jc-weekly-box');
-  let h='';
-  if(J.weekly_rank&&J.weekly_rank.length)
-    h+=`<h4 class="sub" id="jc-wrank-h">本周收益排名（%）</h4><div id="jc-wrank"></div>`;
-  if(J.weekly_nav&&J.weekly_nav.length)
-    h+=`<h4 class="sub" id="jc-nav-h">各组合净值（2018 年以来 · 21 策略 + 集思录等权基准）</h4><div id="jc-nav" class="chart-host" style="height:300px"></div><div class="resize-handle" data-host="jc-nav" title="上下拖动调整高度"></div>`;
-  el.innerHTML=h||'<div class="miss">未找到策略周报</div>';
+  const panels=[];
+  // 页签 1：本周收益排名
   if(J.weekly_rank&&J.weekly_rank.length){
-    const hh=document.getElementById('jc-wrank-h');if(hh)hh.appendChild(chartDlBtn({kind:'hbar',title:'本周收益排名(%)',items:J.weekly_rank.map(i=>({name:i.name,value:i.value}))},'本周收益排名'));
-    hbar(document.getElementById('jc-wrank'),J.weekly_rank.map(i=>({...i,display:fmtPct(i.value),color:i.value>=0?M.red:M.green})),{sign:true});
+    panels.push({name:'本周收益排名',render:function(b){
+      b.innerHTML='<h4 class="sub">本周收益排名（%）</h4><div class="chart-host" style="height:280px" id="_wr"></div>';
+      const host=b.querySelector('#_wr');
+      host.parentElement.querySelector('h4.sub').appendChild(chartDlBtn({kind:'hbar',title:'本周收益排名(%)',items:J.weekly_rank.map(i=>({name:i.name,value:i.value}))},'本周收益排名'));
+      hbar(host,J.weekly_rank.map(i=>({...i,display:fmtPct(i.value),color:i.value>=0?M.red:M.green})),{sign:true});
+    }});
   }
-  if(weekly.sheets&&weekly.sheets.length){
-    const h4=document.createElement('h4');h4.className='sub';h4.textContent='周报数据表';el.appendChild(h4);
-    const tb=document.createElement('div');el.appendChild(tb);tabs(tb,weekly.sheets,true);
-  }
+  // 页签 2：各组合净值
   if(J.weekly_nav&&J.weekly_nav.length){
-    const hh=document.getElementById('jc-nav-h');if(hh)hh.appendChild(chartDlBtn({kind:'line',title:'各组合净值',series:J.weekly_nav},'各组合净值'));
-    lineChart(document.getElementById('jc-nav'),J.weekly_nav.map((s,i)=>({name:s.name,pts:slicePts(s.pts),color:PALETTE[i%6]})),{area:false});
+    panels.push({name:'各组合净值',render:function(b){
+      b.innerHTML='<h4 class="sub">各组合净值（2018 年以来 · 18 组合 = 17 策略 + 集思录等权基准）</h4><div class="chart-host" style="height:300px" id="_wn"></div><div class="resize-handle" data-host="_wn" title="上下拖动调整高度"></div>';
+      const host=b.querySelector('#_wn');
+      host.parentElement.querySelector('h4.sub').appendChild(chartDlBtn({kind:'line',title:'各组合净值',series:J.weekly_nav},'各组合净值'));
+      lineChart(host,J.weekly_nav.map((s,i)=>({name:s.name,pts:slicePts(s.pts),color:PALETTE[i%6]})),{area:false});
+    }});
   }
-})();
-(function(){
-  const J=D.jichu||{};
-  document.getElementById('jc-track-tag').textContent='最新跟踪数据';
-  const el=document.getElementById('jc-track-box');
-  el.innerHTML='';
+  // 页签 3：周报数据表
+  if(weekly.sheets&&weekly.sheets.length){
+    panels.push({name:'周报数据表',render:function(b){tabs(b,weekly.sheets,true);}});
+  }
+  // 页签 4：跟踪数据表（含风险指标）
   const t=J.track;
-  if(t&&t.rows){
-    const j=t.cols.indexOf('周收益率%');
-    if(j>=0){
-      const h4=document.createElement('h4');h4.className='sub';h4.textContent='周收益率排名（%）';el.appendChild(h4);
-      h4.appendChild(chartDlBtn({kind:'hbar',title:'周收益率排名(%)',items:t.rows.map(r=>({name:r[0],value:r[j]}))},'周收益率排名'));
-      const hb=document.createElement('div');el.appendChild(hb);
-      hbar(hb,t.rows.map(r=>({name:r[0],value:r[j],display:fmtPct(r[j]),color:(+r[j]>=0)?M.red:M.green})),{sign:true});
-    }
-    const h4=document.createElement('h4');h4.className='sub';h4.textContent='跟踪数据';el.appendChild(h4);
-    const tb=document.createElement('div');el.appendChild(tb);table(tb,t);
-  } else el.innerHTML='<div class="miss">未找到转债策略跟踪表</div>';
+  if(t&&t.rows&&t.rows.length){
+    panels.push({name:'跟踪数据表',render:function(b){
+      const j=t.cols.indexOf('周收益率%');
+      if(j>=0){
+        const h4=document.createElement('h4');h4.className='sub';h4.textContent='周收益率排名（%）';b.appendChild(h4);
+        h4.appendChild(chartDlBtn({kind:'hbar',title:'周收益率排名(%)',items:t.rows.map(r=>({name:r[0],value:r[j]}))},'周收益率排名'));
+        const hb=document.createElement('div');b.appendChild(hb);
+        hbar(hb,t.rows.map(r=>({name:r[0],value:r[j],display:fmtPct(r[j]),color:(+r[j]>=0)?M.red:M.green})),{sign:true});
+      }
+      const h4b=document.createElement('h4');h4b.className='sub';h4b.textContent='跟踪数据（含风险指标）';b.appendChild(h4b);
+      const tb=document.createElement('div');b.appendChild(tb);table(tb,t);
+    }});
+  }
+  if(!panels.length){el.innerHTML='<div class="miss">未找到策略周报</div>';return;}
+  cardTabs(el,panels);
 })();
 (function(){
   const J=D.jichu||{};
@@ -1408,7 +1405,7 @@ function renderSpBody(){
   const el=document.getElementById('jc-snap-box');
   if(!J.snap_sum&&!(J.snap_picks&&J.snap_picks.length)){el.innerHTML='<div class="miss">未找到截面快照（先跑 基础策略.py snapshot）</div>';return;}
   let h=ccbStaleWarn();
-  if(J.snap_sum)h+=`<h4 class="sub">快照汇总（21 策略过滤与入选统计）</h4><div id="jc-snap-sum"></div>`;
+  if(J.snap_sum)h+=`<h4 class="sub">快照汇总（17 策略过滤与入选统计）</h4><div id="jc-snap-sum"></div>`;
   el.innerHTML=h;
   if(J.snap_sum)table(document.getElementById('jc-snap-sum'),J.snap_sum,'快照汇总');
   if(J.snap_note){const n=document.createElement('div');n.className='signote';n.textContent=J.snap_note;el.appendChild(n);}
@@ -1514,12 +1511,12 @@ function pickTbl(rows,cols){
 }
 function num(v){return v==null||v===''?null:Number(v);}
 
-/* ---------- 板块1 · 市场切分 → 并入「多维市场数据」（总览 KPI + 5 个页签，不再纵向铺卡） ---------- */
+/* ---------- 板块1 · 市场分域 → 并入「多维市场数据」（总览 KPI + 5 个页签，不再纵向铺卡） ---------- */
 function _mktSegSheets(){
   var ms=D.mkt_seg;
   if(!ms)return [];
   return (ms.tables||[]).map(function(t){
-    return {name:'切分·'+t.name, table:{cols:t.cols,rows:t.rows},
+    return {name:'市场分域·'+t.name, table:{cols:t.cols,rows:t.rows},
             note:[ms.note,t.note].filter(Boolean).join(' ')};
   });
 }
@@ -1691,9 +1688,9 @@ function _mktSegSheets(){
   cardNote(body,t.note);
 })();
 /* ---------- 导航 / 窗口 / 拖拽 ---------- */
-const TITLES={part1:['每日市场跟踪','多维市场数据（含估值指标与市场切分） · 行情图表 · 修正溢价率明细 · 转债日报 · 月度投资人结构'],
+const TITLES={part1:['每日市场跟踪','多维市场数据（含估值指标与市场分域） · 行情图表 · 转债日报 · 月度投资人结构'],
 part3:['择时策略','十因子体系 · 周频投票 / 日度打分（含十档·择券落地）/ CCB 模型检查'],
-part5:['基础策略','21 个经典基础策略 · 策略周报 / 转债策略跟踪表 / 全量回测 / 截面快照 · 转债次新券策略（总览 + 明细）'],
+part5:['基础策略','17 个经典基础策略 · 策略周报（含跟踪表 / 回测 / 截面快照） · 转债次新券策略（总览 + 明细）'],
 part4:['研报复现','国泰二维 · 银河RSJ · 广发三视角 · 华福高估值 · 中金事件驱动'],
 part6:['条款看板','下修 / 赎回 条款跟踪 · 核心跟踪 / 历史公告统计 / 按年·月事件计数分布'],
 part7:['权益热点','市场温度与板块结构 / 资金流向与龙虎榜 / 转债涨跌表现（概览直显） / 转债与正股涨跌关系 · 分行业转债梳理 / 产业链图谱']};
