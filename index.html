@@ -433,7 +433,7 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
 <footer class="site-footer"><p>坚持做长期正确的事</p></footer>
 </main>
 <div id="tip"></div>
-<script src="data.js?v=20261120202611231218"></script>
+<script src="data.js?v=20261120202611231222"></script>
 <script>
 /* 数据块已拆到同目录 data.js（var D 挂 window），本 script 直接用 D */
 const M={red:'#d12920',navy:'#315b7d',orange:'#e97132',gold:'#c9821b',blue:'#5592dc',green:'#2f7d6d'};
@@ -1568,11 +1568,17 @@ function num(v){return v==null||v===''?null:Number(v);}
   if(!hs||!host)return;
   var sec=hs['板块']||{};
   var stamp=(hs['抓取时间']||'').slice(0,10);
+  var errs=Object.keys(hs['错误']||{});
+  var tip=document.createElement('p');
+  tip.className='g-sub-note';
+  tip.textContent='权益热点快照抓取时间：'+(stamp||'—')
+    +(errs.length?'（当日部分数据源不可用，对应卡片暂不展示：'+errs.join(' / ')+'）':'');
+  host.appendChild(tip);
 
   /* 1 市场温度 */
   var temp=sec['市场温度']||{};
   if(Object.keys(temp).length){
-    var b1=mkCard(host,'市场温度 & 情绪','涨跌家数 / 涨停跌停 / 情绪判定'+(stamp?'（抓取 '+stamp+'）':''),'日度');
+    var b1=mkCard(host,'市场温度 & 情绪','涨跌家数 / 涨停跌停 / 情绪判定','日度');
     if(b1)cardKpi(b1,[['上涨',temp['上涨'],''],['下跌',temp['下跌'],''],
                       ['涨停',temp['涨停'],''],['跌停',temp['跌停'],''],
                       ['上涨占比%',temp['上涨占比%']==null?'—':(temp['上涨占比%']+'%'),''],
