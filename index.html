@@ -433,7 +433,7 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
 <footer class="site-footer"><p>坚持做长期正确的事</p></footer>
 </main>
 <div id="tip"></div>
-<script src="data.js?v=20261120202611231446"></script>
+<script src="data.js?v=20261120202611231450"></script>
 <script>
 /* 数据块已拆到同目录 data.js（var D 挂 window），本 script 直接用 D */
 const M={red:'#d12920',navy:'#315b7d',orange:'#e97132',gold:'#c9821b',blue:'#5592dc',green:'#2f7d6d'};
@@ -1688,7 +1688,7 @@ function _mktSegSheets(){
     var n=cnt[tb.name]!=null?cnt[tb.name]:(tb.rows||[]).length;
     return {name:tb.name+'（'+n+'）',render:function(b){cardTable(b,tb,tb.name);}};
   }));
-  cardNote(body,(t.date?('数据日期 '+t.date+'：'):'')+(t.note||''));
+  cardNote(body,t.note);
 })();
 /* ---------- 导航 / 窗口 / 拖拽 ---------- */
 const TITLES={part1:['每日市场跟踪','多维市场数据（含估值指标与市场切分） · 行情图表 · 修正溢价率明细 · 转债日报 · 月度投资人结构'],
