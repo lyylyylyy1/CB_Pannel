@@ -426,7 +426,7 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
 <footer class="site-footer"><p>坚持做长期正确的事</p></footer>
 </main>
 <div id="tip"></div>
-<script src="data.js?v=20261124202611242245"></script>
+<script src="data.js?v=20261125202611252221"></script>
 <script>
 /* 数据块已拆到同目录 data.js（var D 挂 window），本 script 直接用 D */
 const M={red:'#d12920',navy:'#315b7d',orange:'#e97132',gold:'#c9821b',blue:'#5592dc',green:'#2f7d6d'};
@@ -840,6 +840,30 @@ function figgrid(el,figs,grp){
   };
 }
 
+/* 复现卡：选项卡式单图展示 */
+function figTabs(el,figs,grp){
+  if(!figs||!figs.length){el.innerHTML='<div class="miss">图未找到</div>';return;}
+  const bar=document.createElement('div');bar.className='tabs';
+  bar.innerHTML=figs.map((f,i)=>{
+    const nm=f.name||('图'+(i+1));
+    const short=grp&&nm.indexOf(grp)===0?nm.slice(grp.length).trim():nm;
+    return `<button data-i="${i}" class="${i?'':'on'}">${short||nm}</button>`;}).join('');
+  const body=document.createElement('div');body.style.marginTop='8px';
+  el.appendChild(bar);el.appendChild(body);
+  function render(i){
+    [...bar.children].forEach((b,j)=>b.classList.toggle('on',j===i));
+    const f=figs[i];
+    body.innerHTML=`<figure data-b64="${f.b64}" data-name="${f.name||'图片.png'}" title="点击在新标签页查看原图" style="border:1px solid var(--border);background:#fff;padding:10px;cursor:zoom-in;margin:0"><img src="${f.b64}" alt="${f.name||''}" style="width:100%;display:block"></figure>`;
+  }
+  body.onclick=e=>{const fg=e.target.closest('figure');if(!fg)return;
+    const b64=fg.dataset.b64;
+    openImgNewTab(b64, fg.dataset.name||('图片.png'));
+  };
+  bar.addEventListener('click',e=>{if(e.target.tagName!=='BUTTON')return;render(+e.target.dataset.i);});
+  render(0);
+}
+
+/* 复现卡：每日信号结构化展示 */
 function escS(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 /* CCB 未更新提醒：理论定价手工导入、可能滞后于行情。滞后时 CcbDev=0，
    定价偏离度组合在落后交易日全域为空。所有 CCB 相关卡片复用此函数。 */
