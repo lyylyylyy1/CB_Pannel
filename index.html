@@ -378,7 +378,6 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
     <section class="card"><div class="card-head"><div><h3>CCB 定价模型健康检查</h3><p class="note">CCB = 可转债理论定价模型：审计理论价对市价的覆盖与偏离、统计跌破情况——属模型健康度检查，与择时信号无关，单独列出</p></div><span class="freq-tag">日度<small>每个交易日</small></span></div>
       <div class="card-body" id="ccb"></div></section>
 
-    <!-- 研报复现板块已按 SHOW_REPLICAS=False 整体关闭 -->
 
 
     <!-- ═══ 板块5 · 条款看板（下修/赎回）═══ -->
@@ -841,30 +840,6 @@ function figgrid(el,figs,grp){
   };
 }
 
-/* 复现卡：选项卡式单图展示 */
-function figTabs(el,figs,grp){
-  if(!figs||!figs.length){el.innerHTML='<div class="miss">图未找到</div>';return;}
-  const bar=document.createElement('div');bar.className='tabs';
-  bar.innerHTML=figs.map((f,i)=>{
-    const nm=f.name||('图'+(i+1));
-    const short=grp&&nm.indexOf(grp)===0?nm.slice(grp.length).trim():nm;
-    return `<button data-i="${i}" class="${i?'':'on'}">${short||nm}</button>`;}).join('');
-  const body=document.createElement('div');body.style.marginTop='8px';
-  el.appendChild(bar);el.appendChild(body);
-  function render(i){
-    [...bar.children].forEach((b,j)=>b.classList.toggle('on',j===i));
-    const f=figs[i];
-    body.innerHTML=`<figure data-b64="${f.b64}" data-name="${f.name||'图片.png'}" title="点击在新标签页查看原图" style="border:1px solid var(--border);background:#fff;padding:10px;cursor:zoom-in;margin:0"><img src="${f.b64}" alt="${f.name||''}" style="width:100%;display:block"></figure>`;
-  }
-  body.onclick=e=>{const fg=e.target.closest('figure');if(!fg)return;
-    const b64=fg.dataset.b64;
-    openImgNewTab(b64, fg.dataset.name||('图片.png'));
-  };
-  bar.addEventListener('click',e=>{if(e.target.tagName!=='BUTTON')return;render(+e.target.dataset.i);});
-  render(0);
-}
-
-/* 复现卡：每日信号结构化展示 */
 function escS(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 /* CCB 未更新提醒：理论定价手工导入、可能滞后于行情。滞后时 CcbDev=0，
    定价偏离度组合在落后交易日全域为空。所有 CCB 相关卡片复用此函数。 */
@@ -873,73 +848,6 @@ function ccbStaleWarn(){
   if(!s) return '';
   const gap = s.gap_days != null ? escS(s.gap_days)+' 个交易日' : '若干交易日';
   return `<div class="signote" style="border-left:3px solid var(--orange);margin-bottom:12px">⚠️ <b>CCB 未更新</b>：理论定价仅到 ${escS(s.ccb_end)}（行情到 ${escS(s.close_end)}），落后 ${gap}；此期间定价偏离度组合无有效数据。</div>`;
-}
-function renderSignalTxt(el,txt,kind){
-  if(!txt){el.innerHTML='<div class="miss">信号文件未找到</div>';return;}
-  try{ if(kind==='hf')renderHfSig(el,txt);else renderGfSig(el,txt); }
-  catch(e){ const pre=document.createElement('pre');pre.textContent=txt;el.appendChild(pre); }
-}
-function renderGfSig(el,txt){
-  const lines=txt.split('\n');
-  const title=((lines[1]||'').trim())||'三因子日报';
-  const date=(txt.match(/信号日期[:：]\s*([\d-]+)/)||[])[1]||'';
-  const vm=txt.match(/【结论】\s*([^\s(（]+)/);
-  const verdict=vm?vm[1].trim():'';
-  const vdetail=(txt.match(/三因子得票[^\n]*/)||[''])[0].trim();
-  const hold=(txt.match(/当前仓位自[^\n]*/)||[''])[0].trim();
-  const secs=[];let cur=null,inTrace=false;const notes=[];
-  for(const L of lines){
-    const sm=L.match(/^\s*\[(\d)\]\s*(\S+)\s+(\S+)\s*$/);
-    if(sm){cur={n:sm[1],name:sm[2],sig:sm[3],det:[]};secs.push(cur);inTrace=false;continue;}
-    if(/最近\s*10\s*个交易日信号轨迹/.test(L)){inTrace=true;cur=null;continue;}
-    const t=L.trim();
-    if(/^口径[:：]/.test(t)){notes.push(t);inTrace=false;cur=null;continue;}
-    if(inTrace)continue;
-    if(cur&&t&&/^\s{4,}\S/.test(L))cur.det.push(t);
-  }
-  const badge=verdict?`<span class="sigbadge" style="background:${/满/.test(verdict)?M.green:M.red}">${escS(verdict)}</span>`:'';
-  el.innerHTML=`<div class="sighead"><span class="sigtitle">${escS(title)}</span><span class="sigdate">信号日期 ${date}</span>${badge}</div>
-  ${(vdetail||hold)?`<div class="signote" style="margin-top:0">${[vdetail,hold].filter(Boolean).map(escS).join('<br>')}</div>`:''}
-  ${secs.length?`<div class="sigfactors">${secs.map(s=>`<div class="sigfactor"><h5><span>${s.n} · ${escS(s.name)}</span><span class="sigmini" style="background:${/多|满/.test(s.sig)?M.green:M.red}">${escS(s.sig)}</span></h5><ul>${s.det.map(d=>`<li>${escS(d)}</li>`).join('')}</ul></div>`).join('')}</div>`:''}`;
-  const tm=txt.match(/最近\s*10\s*个交易日信号轨迹:?([\s\S]*?)\n={3,}/);
-  if(tm){
-    const rows=[];
-    for(const L of tm[1].split('\n')){
-      const m=L.match(/^\s*(\d{4}-\d{2}-\d{2})\s+(.+)$/);
-      if(m)rows.push([m[1],...m[2].trim().split(/\s+/)]);
-    }
-    if(rows.length){
-      const h=document.createElement('h4');h.className='sub';
-      h.textContent='最近 '+rows.length+' 个交易日信号轨迹';el.appendChild(h);
-      const tb=document.createElement('div');el.appendChild(tb);
-      table(tb,{cols:['日期','价量','估值','凸性','得票','结论'],rows,total:rows.length});
-    }
-  }
-  if(notes.length){const n=document.createElement('div');n.className='signote';n.textContent=notes.join('\n');el.appendChild(n);}
-}
-function renderHfSig(el,txt){
-  const lines=txt.split('\n');
-  const head=(lines[0]||'').trim().split(/\s{2,}/);
-  const title=(head[0]||'风向标择时').trim();
-  const date=(head.slice(1).join(' ')||'').trim();
-  const kv=[];const notes=[];let past=false;
-  for(let i=1;i<lines.length;i++){
-    const L=lines[i];const t=L.trim();
-    if(!t){past=true;continue;}
-    if(/^(规则|执行|口径)[:：]/.test(t)){notes.push(t);past=true;continue;}
-    const m=L.match(/^\s*(.+?)\s{2,}(.+)$/);
-    if(m&&!past)kv.push([m[1].trim(),m[2].trim()]);
-    else notes.push(t);
-  }
-  const pos=kv.find(x=>x[0]==='仓位');
-  const verdict=pos?pos[1]:'';
-  const badge=verdict?`<span class="sigbadge" style="background:${/满/.test(verdict)?M.green:M.red}">${escS(verdict)}</span>`:'';
-  const cards=kv.filter(x=>x[0]!=='仓位'&&x[0]!=='依据').map(x=>`<div class="summary-card"><div class="t">${escS(x[0])}</div><div class="v">${escS(x[1])}</div></div>`).join('');
-  const reason=kv.find(x=>x[0]==='依据');
-  el.innerHTML=`<div class="sighead"><span class="sigtitle">${escS(title)}</span><span class="sigdate">${escS(date)}</span>${badge}</div>
-  <div class="summary-grid">${cards}</div>
-  ${reason?`<div class="signote"><b>依据：</b>${escS(reason[1])}</div>`:''}
-  ${notes.length?`<div class="signote">${notes.map(escS).join('<br>')}</div>`:''}`;
 }
 function cmpFirst(cmp){const ks=Object.keys(cmp||{});if(!ks.length)return null;
   return cmp[ks.find(k=>/综合|策略/.test(k))||ks[0]];}
@@ -1409,61 +1317,6 @@ function renderSpBody(){
   else bt.innerHTML='<div class="miss">未找到回测汇总指标</div>';
 })();
 
-/* ---------- 板块4 · 研报复现 ---------- */
-(function(){
-  const box=document.getElementById('repbox');
-  if(!box)return;   // SHOW_REPLICAS=False 时板块已从 HTML 移除
-  const R=D.replicas||{};
-  const keys=Object.keys(R);
-  if(!keys.length){box.innerHTML='<div class="miss">研报复现目录未找到</div>';return;}
-  const wv=D.weathervane;
-  keys.forEach((k,idx)=>{
-    const r=R[k];
-    const card=document.createElement('section');card.className='card';card.id='rep-'+k;
-    let inner=`<div class="card-head"><div><h3>${r.title}</h3><p class="note">${r.desc||''}</p></div><span class="freq-tag">按需<small>手动复现</small></span></div><div class="card-body" id="repbody-${k}"></div>`;
-    card.innerHTML=inner;box.appendChild(card);
-    const el=document.getElementById('repbody-'+k);
-    if(k==='hf'&&wv){
-      const g=document.createElement('div');g.className='summary-grid';g.style.marginBottom='4px';
-      g.innerHTML=`<div class="summary-card"><div class="t">最新 f(100)</div><div class="v">${fmt(wv.latest.value,1)}</div><div class="s">${wv.latest.date}</div></div>
-      <div class="summary-card"><div class="t">一年分位</div><div class="v">${fmt((wv.latest.pct||0)*100,1)}%</div><div class="s">≥80% 高位区</div></div>
-      <div class="summary-card"><div class="t">当前信号</div><div class="v" style="color:${wv.latest.signal?M.red:M.green}">${wv.latest.signal?'满仓转债':'空仓'}</div></div>`;
-      el.appendChild(g);
-      const h1=document.createElement('h4');h1.className='sub';h1.textContent='风向标 f(100)';h1.style.margin='8px 0 0';el.appendChild(h1);
-      h1.appendChild(chartDlBtn({kind:'line',title:'风向标 f(100)',series:[{name:'f(100)',pts:wv.value}]},'风向标f100'));
-      const c1=document.createElement('div');c1.className='chart-host';c1.style.height='230px';el.appendChild(c1);
-      lineChart(c1,[{name:'f(100)',pts:slicePts(wv.value),color:M.red}],{area:true,legend:false});
-      const h2=document.createElement('h4');h2.className='sub';h2.textContent='风向标 一年分位';h2.style.margin='8px 0 0';el.appendChild(h2);
-      h2.appendChild(chartDlBtn({kind:'line',title:'风向标 一年分位',series:[{name:'一年分位',pts:wv.pct}]},'风向标一年分位'));
-      const c2=document.createElement('div');c2.className='chart-host';c2.style.height='170px';el.appendChild(c2);
-      lineChart(c2,[{name:'一年分位',pts:slicePts(wv.pct),color:M.gold}],{yPct:true,legend:false,hair:[{pts:wv.signal}]});
-    }
-    if(r.metrics){const h=document.createElement('h4');h.className='sub';h.textContent='回测绩效';el.appendChild(h);
-      const tb=document.createElement('div');el.appendChild(tb);table(tb,r.metrics);}
-    if(r.sheets){const h=document.createElement('h4');h.className='sub';h.textContent='结果表（'+r.sheets.map(s=>s.name).join(' · ')+'）';el.appendChild(h);
-      const tb=document.createElement('div');el.appendChild(tb);tabs(tb,r.sheets,true);}
-    if(r.nav){const h=document.createElement('h4');h.className='sub';h.textContent='策略净值';el.appendChild(h);
-      h.appendChild(chartDlBtn({kind:'line',title:'策略净值',series:r.nav},'策略净值'));
-      const cv=document.createElement('div');cv.className='chart-host';cv.style.height='240px';el.appendChild(cv);
-      lineChart(cv,r.nav.map((s,i)=>({name:s.name,pts:slicePts(s.pts),color:PALETTE[i%6]})),{area:true});}
-    if(r.signals){const h=document.createElement('h4');h.className='sub';h.textContent='近期信号（最新 '+((r.signals&&r.signals.rows)||[]).length+' 个交易日）';el.appendChild(h);
-      const tb=document.createElement('div');el.appendChild(tb);table(tb,r.signals);}
-    if(r.summary){const h=document.createElement('h4');h.className='sub';h.textContent='变体汇总';el.appendChild(h);
-      const tb=document.createElement('div');el.appendChild(tb);table(tb,r.summary);}
-    if(r.annual){const h=document.createElement('h4');h.className='sub';h.textContent='年度拆分';el.appendChild(h);
-      const tb=document.createElement('div');el.appendChild(tb);table(tb,r.annual);}
-    if(k==='hf'&&(r.picks_lowdouble||r.picks_wv)){
-      const h=document.createElement('h4');h.className='sub';h.textContent='择券名单（低溢价/双低 + 风向标择券）';el.appendChild(h);
-      const tb=document.createElement('div');el.appendChild(tb);
-      tabs(tb,[...(r.picks_lowdouble||[]).map(s=>({name:'低溢价/双低 · '+s.name,...s})),
-               ...(r.picks_wv||[]).map(s=>({name:'风向标 · '+s.name,...s}))],true);}
-    if(r.signal_txt){const h=document.createElement('h4');h.className='sub';h.textContent='每日信号';el.appendChild(h);
-      const wrap=document.createElement('div');el.appendChild(wrap);renderSignalTxt(wrap,r.signal_txt,k);}
-    if(r.figs&&r.figs.length){const h=document.createElement('h4');h.className='sub';h.textContent='图（选项卡切换 · 点击放大）';el.appendChild(h);
-      const fg=document.createElement('div');el.appendChild(fg);figTabs(fg,r.figs,r.title);}
-  });
-})();
-
 /* ---------- 卡片工厂：一表一卡（与其它板块同构，卡内不再并列/嵌套子页） ---------- */
 function esc1(v){return String(v==null?'':v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function escURL(u){try{return encodeURI(String(u||''));}catch(e){return '#';}}
@@ -1681,7 +1534,6 @@ function _mktSegSheets(){
 const TITLES={part1:['每日市场跟踪','多维市场数据（含估值指标与市场分域） · 行情图表 · 转债日报 · 转债投资人结构（月度）'],
 part3:['择时策略','十因子体系 · 周频投票 / 日度打分（含十档·择券落地）/ CCB 模型检查'],
 part5:['基础策略','17 个经典基础策略 · 策略周报（含跟踪表 / 回测 / 截面快照） · 转债次新券策略（总览 + 明细）'],
-part4:['研报复现','国泰二维 · 银河RSJ · 广发三视角 · 华福高估值 · 中金事件驱动'],
 part6:['条款看板','下修 / 赎回 条款跟踪 · 核心跟踪 / 历史公告统计 / 按年·月事件计数分布'],
 part7:['权益热点','市场温度与板块结构 / 资金流向与龙虎榜 / 转债涨跌表现（概览直显） / 转债与正股涨跌关系 · 分行业转债梳理 / 产业链图谱']};
 document.getElementById('modnav').addEventListener('click',e=>{
@@ -1695,7 +1547,7 @@ document.getElementById('modnav').addEventListener('click',e=>{
 });
 // 滚动联动：当前可见的板块高亮左侧导航，并同步标题
 (function(){
-  const parts=['part1','part5','part3','part4','part6','part7'].filter(id=>document.getElementById(id));
+  const parts=['part1','part5','part3','part6','part7'].filter(id=>document.getElementById(id));
   const btns=new Map([...document.querySelectorAll('#modnav .module-button')].map(b=>[b.dataset.target,b]));
   let ticking=false;
   const update=()=>{ticking=false;
