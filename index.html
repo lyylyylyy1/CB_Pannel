@@ -427,7 +427,7 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
 <footer class="site-footer"><p>坚持做长期正确的事</p></footer>
 </main>
 <div id="tip"></div>
-<script src="data.js?v=ee4b3fcd7f2ab6"></script>
+<script src="data.js?v=35bcfe8c67dea6"></script>
 <script>
 /* 数据块已拆到同目录 data.js（var D 挂 window），本 script 直接用 D */
 const M={red:'#d12920',navy:'#315b7d',orange:'#e97132',gold:'#c9821b',blue:'#5592dc',green:'#2f7d6d'};
@@ -463,7 +463,7 @@ showNotices(document.getElementById('quality-notices'));
     <div class="ws-badge">本周${bull?'看多':'看空'}</div>
     <div class="ws-main">
       <div class="ws-title">择时信号 · 周频十因子投票</div>
-      <div class="ws-line">${s.date||'—'} 投票：看多 <b>${s.votes}</b> / 10 票 → 建议仓位 <b>${escS(s.position||'—')}</b></div>
+      <div class="ws-line">${s.date||'—'} 投票：看多 <b>${s.votes}</b> / ${s.expected||10} 票；观察周末 ${escS(s.asof||s.date||'—')} 有效 ${s.valid??'待核'} 票 → 建议仓位 <b>${escS(s.position||'—')}</b></div>
       <div class="ws-sub">${bull?'满 5 票：下周满仓中证转债':'不足 5 票：下周防御，转配 10Y 国债'}</div>
     </div>
     <div class="ws-rule">${escS(s.rule||'')}</div>
@@ -803,7 +803,7 @@ function renderTable(el){
   const secSet=new Set(t.sec||[]),ncol=t.cols.length;
   const esc=z=>String(z!=null&&z!==''?z:'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   el.innerHTML=`<div class="twrap"><table><thead><tr>${t.cols.map(c=>`<th>${c===''?'':cellEsc(c)}</th>`).join('')}</tr></thead>
-  <tbody>${slice.map((r,ri)=>{const ab=s+ri;if(secSet.has(ab)){const lb=esc(r[0]);return `<tr><td colspan="${ncol}" style="background:#c0392b;color:#fff;font-weight:700;letter-spacing:1px;padding:6px 10px;text-align:center">${lb}</td></tr>`;}if((String(r[0]||'').trim()).startsWith('使用规则')){return `<tr><td colspan="${ncol}" style="background:var(--muted);color:var(--navy);font-size:12px;line-height:1.7;padding:8px 10px;text-align:left;white-space:normal">${esc(r[0])}</td></tr>`;}return `<tr>${r.map(v=>`<td>${cellEsc(v)}</td>`).join('')}</tr>`;}).join('')}</tbody></table></div>
+  <tbody>${slice.map((r,ri)=>{const ab=s+ri;if(secSet.has(ab)){const lb=esc(r[0]);return `<tr><td colspan="${ncol}" style="background:#c0392b;color:#fff;font-weight:700;letter-spacing:1px;padding:6px 10px;text-align:center">${lb}</td></tr>`;}if((String(r[0]||'').trim()).startsWith('使用规则')){return `<tr><td colspan="${ncol}" style="background:var(--muted);color:var(--navy);font-size:12px;line-height:1.7;padding:8px 10px;text-align:left;white-space:normal">${esc(r[0])}</td></tr>`;}const notes=(t.notes||{})[String(r[0]).slice(0,10)]||{};return `<tr>${r.map((v,ci)=>{const msg=notes[t.cols[ci]];return msg?`<td title="${esc(msg)}" tabindex="0" aria-label="${esc(v)}，${esc(msg)}">${cellEsc(v)}<sup>※</sup></td>`:`<td>${cellEsc(v)}</td>`;}).join('')}</tr>`;}).join('')}</tbody></table></div>
   <div class="pager">${modeBtn}<button class="pg-prev" ${el._page?'':'disabled'}>‹ 上一页</button>
   <span>第 ${el._page+1} / ${pages} 页</span>
   <button class="pg-next" ${el._page<pages-1?'':'disabled'}>下一页 ›</button>
