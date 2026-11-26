@@ -427,7 +427,7 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
 <footer class="site-footer"><p>坚持做长期正确的事</p></footer>
 </main>
 <div id="tip"></div>
-<script src="data.js?v=49295dc3d2daad"></script>
+<script src="data.js?v=0df336a0df6ab4"></script>
 <script>
 /* 数据块已拆到同目录 data.js（var D 挂 window），本 script 直接用 D */
 const M={red:'#d12920',navy:'#315b7d',orange:'#e97132',gold:'#c9821b',blue:'#5592dc',green:'#2f7d6d'};
@@ -809,6 +809,15 @@ function renderTable(el){
   <button class="pg-next" ${el._page<pages-1?'':'disabled'}>下一页 ›</button>
   ${el._dl?`<button class="pg-dl" title="导出为 CSV">⬇ 导出</button>`:''}
   <span class="info">共 ${n.toLocaleString()} 行${t.total&&t.total>n?`（文件共 ${t.total.toLocaleString()} 行，已截取）`:''}${mode==='f'?' · 公式视图':''}</span></div>`;
+  const marked=el.querySelectorAll('td[title][tabindex]');
+  if(marked.length){
+    const detail=document.createElement('p');detail.className='note';
+    detail.textContent='※ 表示该数值有计算说明，可悬停或点按查看。';el.appendChild(detail);
+    for(const cell of marked){
+      const show=()=>{detail.textContent=cell.title;};
+      cell.addEventListener('focus',show);cell.addEventListener('click',show);
+    }
+  }
   const mb=el.querySelector('.pg-mode');
   if(mb)mb.onclick=()=>{el._mode=el._mode==='f'?'v':'f';renderTable(el);};
   el.querySelector('.pg-prev').onclick=()=>{el._page--;renderTable(el);};
@@ -963,7 +972,7 @@ function _lazyLoad(boxId,extFile,varName,onData){
   var box=document.getElementById(boxId);if(!box)return;
   var done=false;
   function fire(){if(done)return;done=true;
-    var s=document.createElement('script');s.src=extFile;
+    var s=document.createElement('script');s.src=extFile+(document.querySelector('script[src*="data.js?v="]')?.src.split('?')[1]?'?'+document.querySelector('script[src*="data.js?v="]').src.split('?')[1]:'');
     s.onload=function(){onData(window[varName]||[]);window[varName]=null;};
     document.body.appendChild(s);}
   if('IntersectionObserver' in window){
