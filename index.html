@@ -426,10 +426,11 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
 
   </section>
 </div>
+<details class="site-footer"><summary>数据如何计算</summary><p>市场价格分位按当日有成交的券等权排序。估值分位还要求换手率低于100%且七项定价字段齐全，样本数可能较少。余额加权按当日正余额占比，市值加权按收盘价乘余额计权。双低等于收盘价加转股溢价率的百分数。</p><p>分品种估值以平价/纯债价值−1划分偏债、平衡、偏股，界限为−20%和20%。基础策略三个风格组合也采用这两条边界，两个端点均归平衡。日报的环比取上一交易日。完整逐列公式、窗口和缺值处理见同日估值工作簿的「计算口径」。</p></details>
 <footer class="site-footer"><p>坚持做长期正确的事</p></footer>
 </main>
 <div id="tip"></div>
-<script src="data.js?v=0df336a0df6ab4"></script>
+<script src="data.js?v=20261126202611262247"></script>
 <script>
 /* 数据块已拆到同目录 data.js（var D 挂 window），本 script 直接用 D */
 const M={red:'#d12920',navy:'#315b7d',orange:'#e97132',gold:'#c9821b',blue:'#5592dc',green:'#2f7d6d'};
@@ -1022,7 +1023,7 @@ function _lazyLoad(boxId,extFile,varName,onData){
 })();
 (function(){
   const y=D.daily_yh||{};
-  // 标题标签：从 YH 文件名取 8 位日期（如 YH转债日度信息260910更新 → 20260910）
+  // 标题标签：从当前长图文件名取日期
   const m=y.name&&/(\d{6})/.exec(y.name);
   document.getElementById('yh-tag').textContent=(m?('20'+m[1]):(y.name||'未找到'));
   const el=document.getElementById('yh-box');
