@@ -427,7 +427,7 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
 <footer class="site-footer"><p>坚持做长期正确的事</p></footer>
 </main>
 <div id="tip"></div>
-<script src="data.js?v=35bcfe8c67dea6"></script>
+<script src="data.js?v=49295dc3d2daad"></script>
 <script>
 /* 数据块已拆到同目录 data.js（var D 挂 window），本 script 直接用 D */
 const M={red:'#d12920',navy:'#315b7d',orange:'#e97132',gold:'#c9821b',blue:'#5592dc',green:'#2f7d6d'};
@@ -1624,6 +1624,11 @@ window.renderNav();
 /* ═══════════ 板块5 · 条款看板（下修/赎回）═══════════ */
 (function(){
   const CD=D.clause||{};
+  const clausePanel=document.getElementById('clauseTabs');
+  if(clausePanel && CD.来源文件){
+    const source=document.createElement('p');source.className='part-intro';
+    source.textContent='本页最近可核验的公告附件：'+CD.来源文件.join('、');clausePanel.before(source);
+  }
   /* 工具：cfmt(带小数位,null→—) / cnum(整数友好) */
   function _cesc(s){return s===null||s===undefined||s===''?'':escS(String(s));}
   function cfmt(v,dec){
