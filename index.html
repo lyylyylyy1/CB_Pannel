@@ -301,6 +301,7 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
     </div>
     <p class="update-stamp"><span aria-hidden="true">&#8635;</span> <span id="genmeta"></span></p>
     <div id="ccb-stamp"></div>
+    <div id="quality-notices" role="status" hidden></div>
   </div>
 </header>
 <div class="workspace">
@@ -426,7 +427,7 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
 <footer class="site-footer"><p>坚持做长期正确的事</p></footer>
 </main>
 <div id="tip"></div>
-<script src="data.js?v=20261125202611252221"></script>
+<script src="data.js?v=2984487358c4d6"></script>
 <script>
 /* 数据块已拆到同目录 data.js（var D 挂 window），本 script 直接用 D */
 const M={red:'#d12920',navy:'#315b7d',orange:'#e97132',gold:'#c9821b',blue:'#5592dc',green:'#2f7d6d'};
@@ -438,6 +439,15 @@ const dstr=ms=>new Date(ms).toLocaleDateString('zh',{month:'2-digit',day:'2-digi
 const dstrF=ms=>new Date(ms).toLocaleDateString('zh');
 document.getElementById('genmeta').textContent='周度 '+D.meta.周度截止+' · 日度 '+D.meta.日度截止+' · 数据更新至 '+D.meta.数据截止+' · 生成于 '+D.meta.生成时间;
 document.getElementById('ccb-stamp').innerHTML=ccbStaleWarn();
+const notices=D.meta.数据提示||[];
+function showNotices(host){
+  if(!notices.length)return;
+  const title=document.createElement('strong');title.textContent='数据提示';host.appendChild(title);
+  const list=document.createElement('ul');
+  notices.forEach(msg=>{const li=document.createElement('li');li.textContent=msg;list.appendChild(li);});
+  host.appendChild(list);host.hidden=false;
+}
+showNotices(document.getElementById('quality-notices'));
 
 /* ---------- 顶部横幅 · 本周多空信号 ---------- */
 (function(){
@@ -1312,11 +1322,12 @@ function renderSpBody(){
     }});
   }
   // 页签 4：截面入选券（从全量回测卡移入策略周报卡）
-  if(J.snap_sum||J.snap_picks&&J.snap_picks.length){
+  if(notices.length||J.snap_sum||J.snap_picks&&J.snap_picks.length){
     let snapH=ccbStaleWarn();
     panels.push({name:'截面入选券',render:function(b){
       if(J.snap_sum){b.innerHTML=snapH+'<h4 class="sub">快照汇总（17 策略过滤与入选统计）</h4><div id="jc-snap-sum"></div>';table(document.getElementById('jc-snap-sum'),J.snap_sum,'快照汇总');}
       else b.innerHTML=snapH;
+      if(notices.length){const box=document.createElement('div');b.prepend(box);showNotices(box);}
       if(J.snap_note){const n=document.createElement('div');n.className='signote';n.textContent=J.snap_note;b.appendChild(n);}
       if(J.snap_picks&&J.snap_picks.length){
         const h4=document.createElement('h4');h4.className='sub';h4.textContent='各策略入选券（'+J.snap_picks.length+' 个策略 · 可筛选）';h4.style.marginTop='12px';b.appendChild(h4);
