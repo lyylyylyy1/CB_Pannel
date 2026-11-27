@@ -423,7 +423,7 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
 
 </main>
 <div id="tip"></div>
-<script src="data.js?v=20261126202611271802"></script>
+<script src="data.js?v=20261126202611271954"></script>
 <script>
 /* 数据块已拆到同目录 data.js（var D 挂 window），本 script 直接用 D */
 const M={red:'#d12920',navy:'#315b7d',orange:'#e97132',gold:'#c9821b',blue:'#5592dc',green:'#2f7d6d'};
@@ -815,14 +815,23 @@ function renderTable(el){
   const stamp=t.asof||((t.cols[0]==='日期')?t.rows.reduce((d,r)=>/^20\d\d-\d\d-\d\d$/.test(r[0])&&r[0]>d?r[0]:d,''):'');
   el.innerHTML=`${stamp?'<small>数据截至 '+esc(stamp)+'</small>':''}<div class="twrap"><table style="${el._dl==='计算口径'?'white-space:normal;min-width:780px':''}"><thead><tr>${t.cols.filter(c=>!hidden.has(c)).map(c=>`<th>${c===''?'':cellEsc(c)}</th>`).join('')}</tr></thead>
   <tbody>${slice.map((r,ri)=>{const ab=s+ri;if(secSet.has(ab)){const lb=esc(r[0]);return `<tr><td colspan="${ncol}" style="background:#c0392b;color:#fff;font-weight:700;letter-spacing:1px;padding:6px 10px;text-align:center">${lb}</td></tr>`;}if((String(r[0]||'').trim()).startsWith('使用规则')){return `<tr><td colspan="${ncol}" style="background:var(--muted);color:var(--navy);font-size:12px;line-height:1.7;padding:8px 10px;text-align:left;white-space:normal">${esc(r[0])}</td></tr>`;}const notes=(t.notes||{})[String(r[0]).slice(0,10)]||{};return `<tr>${r.map((v,ci)=>{const col=t.cols[ci];if(hidden.has(col))return '';
-      const date=t.cols[0]==='日期'?r[0]:stamp;
-      const status=t.cols.flatMap((c,j)=>hidden.has(c)&&r[j]!=null?[c+' '+r[j]]:[]);
-      const record=t.observed?.[r[0]];
-      const sample=record?.[col]||record?.['*']||(/^修正溢价率-平价/.test(col)?t.curveSamples?.[r[0]]:null);
-      const coverage=t.coverage?.[r[0]];
-      const special=v==null||v===''||!!notes[col]||Boolean(coverage&&!coverage.includes('完整曲线'))||status.some(x=>/待补|不足|缺失|缺数说明 [^无—0]/.test(x));
-      const msg=[date,col+' '+(v??'源表缺值'),notes[col],sample,coverage,t.rules?.[col],t.rule,...status,(!notes[col]&&!sample&&!status.length&&!coverage&&!t.source&&el._dl!=='计算口径')?'未留存该项逐日计算明细。':''].filter(Boolean).join('\n').replace(/百分数/g,'%');
-      return `<td tabindex="0" data-info="${esc(msg)}" aria-label="${esc(msg)}">${el._dl==='计算口径'?`<span style="display:block;white-space:normal;min-width:6em;text-align:left">${esc(v)}</span>`:typeof v==='number'&&t.source?fmt(v,4):cellEsc(v)}${special?'<sup>※</sup>':''}</td>`;
+      const issues=[];
+      if((v==null||v==='') && el._dl!=='计算口径')issues.push('当日缺少该字段。');
+      if(notes[col])issues.push(notes[col]);
+      const covered=t.coverage?.[r[0]];
+      const counts=covered?.match(/(\d+)\/(\d+)/);
+      if(counts && +counts[1]<+counts[2])issues.push(covered);
+      const sample=t.observed?.[r[0]]?.[col];
+      const valid=sample?.match(/(\d+)\/(\d+)/);
+      if(valid && +valid[1]<+valid[2]&&!notes[col])issues.push(sample);
+      if(t.cols.includes('策略') && col==='策略'){
+        const get=c=>r[t.cols.indexOf(c)];
+        if(/待补|不足|仅按可用|缺失/.test(get('数据状态')))issues.push(get('缺数说明')||get('数据状态'));
+        if(+get('被排除总数')>0)issues.push('被排除 '+get('被排除总数')+' 只，其中黑名单 '+(get('黑名单剔除')||0)+' 只。');
+      }
+      const msg=issues.filter(Boolean).join('\n');
+      const attrs=msg?` tabindex="0" data-info="${esc(msg)}" aria-label="${esc(msg)}"`:'';
+      return `<td${attrs}>${el._dl==='计算口径'?`<span style="display:block;white-space:normal;min-width:6em;text-align:left">${esc(v)}</span>`:typeof v==='number'&&t.source?fmt(v,4):cellEsc(v)}${msg?'<sup>※</sup>':''}</td>`;
     }).join('')}</tr>`;}).join('')}</tbody></table></div>
   <div class="pager">${modeBtn}<button class="pg-prev" ${el._page?'':'disabled'}>‹ 上一页</button>
   <span>第 ${el._page+1} / ${pages} 页</span>
@@ -999,7 +1008,7 @@ function _lazyLoad(boxId,extFile,varName,onData){
   document.getElementById('waifa-tag').textContent=w.name||'未找到';
   const box=document.getElementById('waifa-box');
   const load=(file,key)=>new Promise((ok,fail)=>{
-    const script=document.createElement('script');script.src=file+'?v=20261126202611271802';
+    const script=document.createElement('script');script.src=file+'?v=20261126202611271954';
     script.onload=()=>ok(window[key]);script.onerror=fail;document.body.append(script);
   });
   function platform(name,data){
