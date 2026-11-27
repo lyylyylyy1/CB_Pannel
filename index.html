@@ -286,6 +286,10 @@ table{font-size:12px}
 img[width],img{max-width:100%;height:auto}
 input[type=number],input[type=text],input[type=search]{max-width:100%}
 }
+#quality-notices.signote{display:block;box-sizing:border-box;max-width:100%;height:auto;white-space:normal;overflow-wrap:anywhere;font-size:12px;line-height:1.65;padding:9px 13px;margin:6px 14px}
+#quality-notices[hidden]{display:none}#quality-notices ul{padding-left:1.4em;margin:4px 0;font-size:12px;line-height:1.6}
+.cell-note{position:fixed;z-index:9999;box-sizing:border-box;width:max-content;max-width:min(350px,92vw);padding:8px 11px;font:12px/1.55 system-ui;color:#304553;background:#fff;border:1px solid #c9d5db;border-radius:7px;box-shadow:0 3px 16px #18334224;pointer-events:none;overflow-wrap:anywhere;white-space:pre-line}
+.gallery-link{display:inline-block;font-size:12px;color:var(--navy);text-decoration:none;border:1px solid var(--border);border-radius:5px;padding:4px 10px}
 </style>
 </head>
 <body>
@@ -300,8 +304,7 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
       </div>
     </div>
     <p class="update-stamp"><span aria-hidden="true">&#8635;</span> <span id="genmeta"></span></p>
-    <div id="ccb-stamp"></div>
-    <div id="quality-notices" role="status" hidden></div>
+
   </div>
 </header>
 <div class="workspace">
@@ -329,13 +332,13 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
       <div class="card-body">
         <div id="mktseg-kpi"></div>
         <div id="waifa-box"></div>
-        <div id="prem-box"></div>
+
       </div>
     </section>
     <!-- 市场分域已并入上方「多维市场数据」卡：总览 KPI 在卡 body 首行，5 张分组表作为页签拼在外发数据页签之后 -->
     <section class="card" id="daily-charts">
       <div class="card-head"><div><h3>行情图表</h3></div><span class="freq-tag">日度<small>每个交易日</small></span><span class="filetag" id="charts-tag"></span></div>
-      <div class="card-body"><a href="valuation-charts.html">打开估值数据库图集 · 纯债溢价率及全部工作簿图表</a>
+      <div class="card-body"><a class="gallery-link" href="valuation-charts.html">查看完整图集 ↗</a>
         <iframe title="估值数据库图表" src="valuation-charts.html" loading="lazy" style="width:100%;height:570px;border:0;display:block"></iframe></div>
       <div class="card-body" id="charts-box"></div>
     </section>
@@ -344,30 +347,22 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
       <div class="card-head"><div><h3>转债日报</h3></div><span class="freq-tag">日度<small>每个交易日</small></span><span class="filetag" id="yh-tag"></span></div>
       <div class="card-body" id="yh-box"></div>
     </section>
-    <!-- 次新券一览：紧凑标题 + blockTabs -->
-    <section class="card" id="daily-newcb">
-      <div class="card-head"><div><h3>次新券一览</h3><p class="note" style="font-size:11px">上市≤365天 · 近3月/年内发行、估值、成交</p></div><span class="freq-tag">日度</span></div>
-      <div class="card-body" id="newcb-box"></div>
-    </section>
-    <!-- 转债投资人结构（月度）：独立卡，页签切换 -->
-    <section class="card" id="daily-holder">
-      <div class="card-head"><div><h3>转债投资人结构（月度）· 总览</h3><p class="note">上交所（面值）+ 深交所（市值）投资者持有结构</p></div><span class="freq-tag">月度</span></div>
-      <div class="card-body" id="holder-box"></div>
-    </section>
-
-
     <!-- ═══ 板块2 · 基础策略 ═══ -->
     <div class="part-banner" id="part5"><span class="no">02</span><h2>基础策略</h2><span class="en">BASIC STRATEGIES · 17 CLASSICS</span></div>
     <p class="part-intro">17 个经典可转债基础策略（低溢价 / 低价 / 双低 / 偏股·平衡·偏债 / 动量 / 高YTM / 定价偏离 / 隐波差 / 评级等权）：分位门槛按当日全域券确定，可买过滤后等权持有，每 20 个交易日调仓、单边 10bp 成本。各卡按「周报 → 回测汇总 + 截面快照」排列。</p>
     <section class="card" id="jc-weekly">
-      <div class="card-head"><div><h3>策略周报</h3><p class="note">18 组合周 / 月 / 季 / 年收益与 2018 年以来年化（基准：集思录转债等权 + 中证转债）+ 最新截面入选券</p></div><span class="freq-tag">周度<small>每周一</small></span><span class="filetag" id="jc-weekly-tag"></span><span class="filetag" id="jc-snap-tag"></span></div>
+      <div class="card-head"><div><h3>基础策略周报</h3><p class="note">18 组合周 / 月 / 季 / 年收益与 2018 年以来年化（基准：集思录转债等权 + 中证转债）+ 最新截面入选券</p></div><span class="freq-tag">周度<small>每周一</small></span><span class="filetag" id="jc-weekly-tag"></span><span class="filetag" id="jc-snap-tag"></span></div>
+          <div id="ccb-stamp"></div>
+    <div id="quality-notices" role="status" hidden></div>
       <div class="card-body" id="jc-weekly-box"></div>
     </section>
     <section class="card" id="jc-bt">
-      <div class="card-head"><div><h3>全量回测</h3><p class="note">17 策略全区间总体指标与分年表现（等权 · 20 交易日调仓 · 单边 10bp）</p></div><span class="freq-tag">周度<small>同周报节奏</small></span><span class="filetag" id="jc-bt-tag"></span></div>
+      <div class="card-head"><div><h3>基础策略历史表现</h3><p class="note">17 策略全区间总体指标与分年表现（等权 · 20 交易日调仓 · 单边 10bp）</p></div><span class="freq-tag">周度<small>同周报节奏</small></span><span class="filetag" id="jc-bt-tag"></span></div>
       <div class="card-body" id="jc-bt-box"></div>
     </section>
 
+    <section class="card"><div class="card-head"><div><h3>定价模型跟踪</h3><p class="note">CCB = 可转债理论定价模型：审计理论价对市价的覆盖与偏离、统计跌破情况。基础策略用偏离度选券，择时因子跟踪全市场偏离水平</p></div><span class="freq-tag">日度<small>每个交易日</small></span></div>
+      <div class="card-body" id="ccb"></div></section>
     <!-- ═══ 板块3 · 择时主系统 ═══ -->
     <div class="part-banner" id="part3"><span class="no">03</span><h2>择时策略</h2><span class="en">TIMING STRATEGY · ALL OUTPUTS</span></div>
     <p class="part-intro">运行逻辑：10 个因子监控转债市场状态 → 两条信号线生成仓位（周频投票 = 低频稳健，日度打分 = 高频精细，十档离散 = 日度打分的仓位实现版）→ 按信号落地到个券。下面各卡按「因子 → 信号 → 落地」顺序排列。</p>
@@ -378,8 +373,7 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
       <div class="card-body" id="vote"></div></section>
     <section class="card"><div class="card-head"><div><h3>日度打分与回测</h3><p class="note">高频信号线：10 因子 0~10 打分 → 日度综合分 → 仓位 → 回测；「十档仓位实现」「择券落地」是日度信号的落地环节，收在本卡页签里</p></div><span class="freq-tag">日度<small>每个交易日</small></span></div>
       <div class="card-body" id="daily"></div></section>
-    <section class="card"><div class="card-head"><div><h3>CCB 定价模型健康检查</h3><p class="note">CCB = 可转债理论定价模型：审计理论价对市价的覆盖与偏离、统计跌破情况——属模型健康度检查，与择时信号无关，单独列出</p></div><span class="freq-tag">日度<small>每个交易日</small></span></div>
-      <div class="card-body" id="ccb"></div></section>
+
 
 
 
@@ -426,11 +420,10 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
 
   </section>
 </div>
-<details class="site-footer"><summary>数据如何计算</summary><p>市场价格分位按当日有成交的券等权排序。估值分位还要求换手率低于100%且七项定价字段齐全，样本数可能较少。余额加权按当日正余额占比，市值加权按收盘价乘余额计权。双低等于收盘价加转股溢价率的百分数。</p><p>分品种估值以平价/纯债价值−1划分偏债、平衡、偏股，界限为−20%和20%。基础策略三个风格组合也采用这两条边界，两个端点均归平衡。日报的环比取上一交易日。完整逐列公式、窗口和缺值处理见同日估值工作簿的「计算口径」。</p></details>
-<footer class="site-footer"><p>坚持做长期正确的事</p></footer>
+
 </main>
 <div id="tip"></div>
-<script src="data.js?v=20261126202611271042"></script>
+<script src="data.js?v=20261126202611271802"></script>
 <script>
 /* 数据块已拆到同目录 data.js（var D 挂 window），本 script 直接用 D */
 const M={red:'#d12920',navy:'#315b7d',orange:'#e97132',gold:'#c9821b',blue:'#5592dc',green:'#2f7d6d'};
@@ -442,13 +435,13 @@ const dstr=ms=>new Date(ms).toLocaleDateString('zh',{month:'2-digit',day:'2-digi
 const dstrF=ms=>new Date(ms).toLocaleDateString('zh');
 document.getElementById('genmeta').textContent='周度 '+D.meta.周度截止+' · 日度 '+D.meta.日度截止+' · 数据更新至 '+D.meta.数据截止+' · 生成于 '+D.meta.生成时间;
 document.getElementById('ccb-stamp').innerHTML=ccbStaleWarn();
-const notices=D.meta.数据提示||[];
+const notices=(D.meta.数据提示||[]).filter(msg=>!(D.meta.ccb_stale && /定价偏离度组合.*CCB/.test(msg)));
 function showNotices(host){
   if(!notices.length)return;
   const title=document.createElement('strong');title.textContent='数据提示';host.appendChild(title);
   const list=document.createElement('ul');
   notices.forEach(msg=>{const li=document.createElement('li');li.textContent=msg;list.appendChild(li);});
-  host.appendChild(list);host.hidden=false;
+  host.className='signote';host.style.borderLeft='3px solid var(--orange)';host.appendChild(list);host.hidden=false;
 }
 showNotices(document.getElementById('quality-notices'));
 
@@ -606,7 +599,7 @@ function hbar(el,items,opts={}){
     return `<div style="display:flex;align-items:center;gap:8px;font-size:12px">
       <span style="width:130px;text-align:right;color:var(--muted-foreground);flex:none">${i.name}</span>
       <div style="flex:1;background:var(--muted);border-radius:4px;height:14px;position:relative">
-        <div style="position:absolute;${i.value<0?'right:50%':'left:50%'};width:${w/2}%;height:100%;background:${i.color||M.navy};border-radius:4px"></div>
+        <div style="position:absolute;${opts.positive?'left:0':i.value<0?'right:50%':'left:50%'};width:${opts.positive?w:w/2}%;height:100%;background:${i.color||M.navy};border-radius:4px"></div>
       </div>
       <b style="width:92px;flex:none" class="${opts.sign?cls(i.value):''}">${i.display??fmt(i.value)}</b></div>`;
   }).join('')+'</div>';
@@ -796,6 +789,19 @@ function chartDlBtn(c, name){
   b.onclick=function(){dlChart(this._c,this._n);};
   return b;
 }
+const cellNote=document.createElement('div');cellNote.className='cell-note';cellNote.hidden=true;
+document.body.append(cellNote);
+function showCell(e){
+  const cell=e.target.closest?.('td[data-info]');
+  if(!cell){cellNote.hidden=true;return;}
+  cellNote.textContent=cell.dataset.info;cellNote.hidden=false;
+  const rect=cell.getBoundingClientRect();
+  cellNote.style.left=Math.max(4,Math.min(rect.left,innerWidth-cellNote.offsetWidth-6))+'px';
+  cellNote.style.top=(rect.bottom+cellNote.offsetHeight+8<innerHeight?rect.bottom+4:Math.max(4,rect.top-cellNote.offsetHeight-4))+'px';
+}
+for(const ev of ['pointerover','focusin','click'])document.addEventListener(ev,showCell);
+document.addEventListener('scroll',()=>cellNote.hidden=true,true);
+document.addEventListener('keydown',e=>{if(e.key==='Escape')cellNote.hidden=true;});
 function renderTable(el){
   const t=el._t;const mode=el._mode||'v';
   const rows=(mode==='f'&&t.frows)?t.frows:t.rows;const n=rows.length;
@@ -805,22 +811,24 @@ function renderTable(el){
   const modeBtn=t.frows?`<button class="pg-mode">${mode==='f'?'公式':'值'}</button>`:'';
   const secSet=new Set(t.sec||[]),ncol=t.cols.length;
   const esc=z=>String(z!=null&&z!==''?z:'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  el.innerHTML=`<div class="twrap"><table><thead><tr>${t.cols.map(c=>`<th>${c===''?'':cellEsc(c)}</th>`).join('')}</tr></thead>
-  <tbody>${slice.map((r,ri)=>{const ab=s+ri;if(secSet.has(ab)){const lb=esc(r[0]);return `<tr><td colspan="${ncol}" style="background:#c0392b;color:#fff;font-weight:700;letter-spacing:1px;padding:6px 10px;text-align:center">${lb}</td></tr>`;}if((String(r[0]||'').trim()).startsWith('使用规则')){return `<tr><td colspan="${ncol}" style="background:var(--muted);color:var(--navy);font-size:12px;line-height:1.7;padding:8px 10px;text-align:left;white-space:normal">${esc(r[0])}</td></tr>`;}const notes=(t.notes||{})[String(r[0]).slice(0,10)]||{};return `<tr>${r.map((v,ci)=>{const msg=notes[t.cols[ci]];return msg?`<td title="${esc(msg)}" tabindex="0" aria-label="${esc(v)}，${esc(msg)}">${cellEsc(v)}<sup>※</sup></td>`:`<td>${cellEsc(v)}</td>`;}).join('')}</tr>`;}).join('')}</tbody></table></div>
+  const hidden=new Set(['数据状态','缺数说明','黑名单剔除','被排除总数']);
+  const stamp=t.asof||((t.cols[0]==='日期')?t.rows.reduce((d,r)=>/^20\d\d-\d\d-\d\d$/.test(r[0])&&r[0]>d?r[0]:d,''):'');
+  el.innerHTML=`${stamp?'<small>数据截至 '+esc(stamp)+'</small>':''}<div class="twrap"><table style="${el._dl==='计算口径'?'white-space:normal;min-width:780px':''}"><thead><tr>${t.cols.filter(c=>!hidden.has(c)).map(c=>`<th>${c===''?'':cellEsc(c)}</th>`).join('')}</tr></thead>
+  <tbody>${slice.map((r,ri)=>{const ab=s+ri;if(secSet.has(ab)){const lb=esc(r[0]);return `<tr><td colspan="${ncol}" style="background:#c0392b;color:#fff;font-weight:700;letter-spacing:1px;padding:6px 10px;text-align:center">${lb}</td></tr>`;}if((String(r[0]||'').trim()).startsWith('使用规则')){return `<tr><td colspan="${ncol}" style="background:var(--muted);color:var(--navy);font-size:12px;line-height:1.7;padding:8px 10px;text-align:left;white-space:normal">${esc(r[0])}</td></tr>`;}const notes=(t.notes||{})[String(r[0]).slice(0,10)]||{};return `<tr>${r.map((v,ci)=>{const col=t.cols[ci];if(hidden.has(col))return '';
+      const date=t.cols[0]==='日期'?r[0]:stamp;
+      const status=t.cols.flatMap((c,j)=>hidden.has(c)&&r[j]!=null?[c+' '+r[j]]:[]);
+      const record=t.observed?.[r[0]];
+      const sample=record?.[col]||record?.['*']||(/^修正溢价率-平价/.test(col)?t.curveSamples?.[r[0]]:null);
+      const coverage=t.coverage?.[r[0]];
+      const special=v==null||v===''||!!notes[col]||Boolean(coverage&&!coverage.includes('完整曲线'))||status.some(x=>/待补|不足|缺失|缺数说明 [^无—0]/.test(x));
+      const msg=[date,col+' '+(v??'源表缺值'),notes[col],sample,coverage,t.rules?.[col],t.rule,...status,(!notes[col]&&!sample&&!status.length&&!coverage&&!t.source&&el._dl!=='计算口径')?'未留存该项逐日计算明细。':''].filter(Boolean).join('\n').replace(/百分数/g,'%');
+      return `<td tabindex="0" data-info="${esc(msg)}" aria-label="${esc(msg)}">${el._dl==='计算口径'?`<span style="display:block;white-space:normal;min-width:6em;text-align:left">${esc(v)}</span>`:typeof v==='number'&&t.source?fmt(v,4):cellEsc(v)}${special?'<sup>※</sup>':''}</td>`;
+    }).join('')}</tr>`;}).join('')}</tbody></table></div>
   <div class="pager">${modeBtn}<button class="pg-prev" ${el._page?'':'disabled'}>‹ 上一页</button>
   <span>第 ${el._page+1} / ${pages} 页</span>
   <button class="pg-next" ${el._page<pages-1?'':'disabled'}>下一页 ›</button>
   ${el._dl?`<button class="pg-dl" title="导出为 CSV">⬇ 导出</button>`:''}
   <span class="info">共 ${n.toLocaleString()} 行${t.total&&t.total>n?`（文件共 ${t.total.toLocaleString()} 行，已截取）`:''}${mode==='f'?' · 公式视图':''}</span></div>`;
-  const marked=el.querySelectorAll('td[title][tabindex]');
-  if(marked.length){
-    const detail=document.createElement('p');detail.className='note';
-    detail.textContent='※ 表示该数值有计算说明，可悬停或点按查看。';el.appendChild(detail);
-    for(const cell of marked){
-      const show=()=>{detail.textContent=cell.title;};
-      cell.addEventListener('focus',show);cell.addEventListener('click',show);
-    }
-  }
   const mb=el.querySelector('.pg-mode');
   if(mb)mb.onclick=()=>{el._mode=el._mode==='f'?'v':'f';renderTable(el);};
   el.querySelector('.pg-prev').onclick=()=>{el._page--;renderTable(el);};
@@ -939,6 +947,7 @@ function blockTabs(boxEl,sheets,emptyMsg){
   boxEl.appendChild(bar);boxEl.appendChild(body);
   function render(i){
     [...bar.children].forEach((b,j)=>b.classList.toggle('on',j===i));
+    if(sheets[i].render){body.replaceChildren();sheets[i].render(body);return;}
     if(sheets[i].html){body.innerHTML=sheets[i].html;return;}
     const t=sheets[i].table;let h='';
     (t.imgs||[]).forEach(b64=>{if(b64)h+=`<figure data-b64="${b64}" data-name="${(sheets[i].name||'图片')}.png"><img src="${b64}" alt=""></figure>`;});
@@ -988,38 +997,58 @@ function _lazyLoad(boxId,extFile,varName,onData){
 (function(){
   var w=D.daily_waifa||{},seg=_mktSegSheets();
   document.getElementById('waifa-tag').textContent=w.name||'未找到';
-  // 市场分域并入同一组页签（分域数据在主 data.js，外发大表即使懒加载也能拼在后面）
-  function put(sh){blockTabs(document.getElementById('waifa-box'),(sh||[]).concat(seg),'工作簿无表格');}
-  if(w.sheets&&w.sheets.length){put(w.sheets);}
-  else{_lazyLoad('waifa-box','data_waifa.js','_extWaifa',put);}
+  const box=document.getElementById('waifa-box');
+  const load=(file,key)=>new Promise((ok,fail)=>{
+    const script=document.createElement('script');script.src=file+'?v=20261126202611271802';
+    script.onload=()=>ok(window[key]);script.onerror=fail;document.body.append(script);
+  });
+  function platform(name,data){
+    return {name,render(host){
+      if(!data){host.textContent='缺少来源数据';return;}
+      cardKpi(host,data.kpis||[]);const sub=document.createElement('div');host.append(sub);
+      blockTabs(sub,(data.tables||[]).map(t=>({name:t.name,table:t,note:t.note})));
+      cardNote(host,data.note);
+    }};
+  }
+  Promise.all([w.sheets||load('data_waifa.js','_extWaifa'),D.daily_prem?.sheets||load('data_prem.js','_extPrem')]).then(([tables,prem])=>{
+    const coverage=Object.fromEntries((prem.find(x=>x.name==='曲线覆盖')?.table.rows||[]).map(r=>[r[0],'曲线覆盖 '+r[1]+'/'+r[2]+' 档 · '+r[3]]));
+    const remarks=prem.find(x=>x.name==='数值标注')?.table.rows||[];
+    const curves=prem.filter(x=>x.name.startsWith('修正溢价率-')).reverse();
+    for(const b of curves){
+      const t=b.table;t.curveSamples=tables.find(x=>x.name==='修正溢价率-新模型')?.table.curveSamples;t.coverage=coverage;t.asof=t.rows[0]?.[0];
+      for(const [sheet,date,col,msg] of remarks){if(sheet===b.name){t.notes??={};(t.notes[date]??={})[col]=msg;}}
+      if(b.name.includes('8关键点')){
+        const keep=t.cols.map((c,i)=>i).filter(i=>i===0||/^修正溢价率-平价(70|80|90|100|110|120|130|140)$/.test(t.cols[i]));
+        b.table={...t,cols:keep.map(i=>t.cols[i]),rows:t.rows.map(r=>keep.map(i=>r[i])),frows:null};
+      }
+    }
+    blockTabs(box,[...tables,{name:'修正溢价率明细',render:el=>blockTabs(el,curves)},...seg,platform('次新券一览',D.newcb),{name:'转债与正股涨跌关系',render:renderTrend},platform('转债投资人结构（月度）',D.holder)]);
+  }).catch(()=>{box.textContent='市场数据加载失败，请刷新重试。';});
 })();
 (function(){
   const c=D.daily_charts||{};
   document.getElementById('charts-tag').textContent=c.date?('数据日期 '+c.date):'未找到';
   const el=document.getElementById('charts-box');
-  const mc=D.mkt_charts||[];
-  let h='';
-  if(mc.length)
-    h='<div class="figgrid">'+mc.map((c,i)=>`<div style="border:1px solid var(--border);background:#fff;padding:8px 10px 6px"><div style="font-size:12.5px;font-weight:700;color:var(--navy);margin:2px 0 4px">${c.title} <button class="chart-dl" title="下载本图数据CSV" onclick="dlChart(this._c,this._n)">⬇ 数据</button></div><div id="mktchart${i}" class="chart-host" style="height:250px"></div></div>`).join('')+'</div>';
-  el.innerHTML=h;
-  mc.forEach((c,i)=>{const host=el.querySelector('#mktchart'+i);const card=host?host.parentElement:null;const cb=card?card.querySelector('.chart-dl'):null;if(cb){cb._c=c;cb._n=String(c.title||'行情图');}});
-  mc.forEach((c,i)=>lineChart(document.getElementById('mktchart'+i),
-    c.series.map((s,si)=>({name:s.name,pts:slicePts(s.pts),color:PALETTE[si%6],dash:s.dash,bar:s.bar})),
-    {yPct:!!c.yPct,area:false}));
-  if(c.figs&&c.figs.length){
-    const h4=document.createElement('h4');h4.className='sub';
-    h4.textContent=(mc.length?'其余行情图表（图片形式）':'行情图表');
-    el.appendChild(h4);
-    const fg=document.createElement('div');el.appendChild(fg);
-    figgrid(fg,c.figs,'');
+  const frame=document.querySelector('iframe[title="估值数据库图表"]');
+  function grid(charts){
+    el.innerHTML='<div class="figgrid"></div>';
+    const grid=el.firstChild;
+    charts.forEach((c,i)=>{
+      const title=c.sheet+' · '+c.series.map(s=>s.name).join(' / ');
+      const card=document.createElement('section');grid.append(card);
+      const heading=document.createElement('h4');heading.textContent=title;card.append(heading);
+      const stamp=document.createElement('small');stamp.textContent='数据截至 '+c.dates.at(-1);card.append(stamp);
+      const host=document.createElement('div');host.className='chart-host';host.style.height='245px';card.append(host);
+      const series=c.series.map((s,k)=>({name:s.name+(s.unit?'（'+s.unit+'）':''),color:PALETTE[k%6],pts:c.dates.map((d,j)=>[Date.parse(d),s.values[j]])}));
+      heading.append(chartDlBtn({series},title));
+      lineChart(host,series,{area:false});
+    });
+    document.getElementById('charts-tag').textContent='各图截止日见图题下方';
   }
-  if(!mc.length&&!(c.figs&&c.figs.length))el.innerHTML='<div class="miss">未找到行情图表</div>';
-})();
-(function(){
-  var p=D.daily_prem||{};
-  document.getElementById('prem-tag').textContent=p.name||'未找到';
-  if(p.sheets&&p.sheets.length){blockTabs(document.getElementById('prem-box'),p.sheets,'无表格');}
-  else{_lazyLoad('prem-box','data_prem.js','_extPrem',function(sh){blockTabs(document.getElementById('prem-box'),sh,'无表格');});}
+  window.addEventListener('message',e=>{
+    if(e.source===frame.contentWindow && e.origin===location.origin && e.data?.type==='valuation-catalog')grid(e.data.charts);
+  });
+  frame.addEventListener('load',()=>frame.contentWindow.postMessage('valuation-catalog?',location.protocol==='file:'?'*':location.origin));
 })();
 (function(){
   const y=D.daily_yh||{};
@@ -1100,7 +1129,7 @@ function _lazyLoad(boxId,extFile,varName,onData){
   html+=`<div style="font-size:11.5px;color:var(--muted-foreground);margin:10px 0 0;line-height:1.6">因子名单固定（经济分桶10因子，来历见「十因子体系」卡的筛选记录）：管线先校验主表里这10个因子齐全，然后每周最后一个交易日取各自最新分值，&gt;5 记1票；满5票下周满仓转债，不足5票买10Y国债。</div>`;
   if(v['历史票数分布']){
     const hd=v['历史票数分布'];
-    const items=Object.keys(hd).sort().map(k=>({name:k+' 票',value:hd[k],display:fmt(hd[k],0),color:M.navy}));
+    const items=Object.keys(hd).sort((a,b)=>Number(a)-Number(b)).map(k=>({name:k+' 票',value:hd[k],display:fmt(hd[k],0),color:M.navy}));
     html+=`<h4 class="sub" id="votepie-h">历史看多票数分布</h4><div id="votepie"></div>`;
   }
   html+=`<div class="grid2 s" style="margin-top:12px"><div><h4 class="sub">回测对比（周频口径）</h4><div id="votecmp"></div></div>
@@ -1109,10 +1138,10 @@ function _lazyLoad(boxId,extFile,varName,onData){
   setTimeout(()=>{
     const hd=v['历史票数分布'];
     if(hd){
-      const items=Object.keys(hd).sort().map(k=>({name:k+' 票',value:hd[k],display:fmt(hd[k],0),color:M.navy}));
+      const items=Object.keys(hd).sort((a,b)=>Number(a)-Number(b)).map(k=>({name:k+' 票',value:hd[k],display:fmt(hd[k],0),color:M.navy}));
       const hh=document.getElementById('votepie-h');
       if(hh)hh.appendChild(chartDlBtn({kind:'hbar',title:'历史看多票数分布',items:items.map(x=>({name:x.name,value:x.value}))},'历史看多票数分布'));
-      hbar(document.getElementById('votepie'),items);
+      hbar(document.getElementById('votepie'),items,{positive:true});
     }
     cmpTable(document.getElementById('votecmp'),v['回测对比']);
     table(document.getElementById('voteyr'),D.vote_year,'周频分年表现');
@@ -1275,15 +1304,14 @@ function renderSpBody(){
 }
 (function(){
   const el=document.getElementById('ccb');
-  el.innerHTML=ccbStaleWarn()+`<h4 class="sub">全市场 CCB 偏离度</h4><div class="chart-host" style="height:210px" id="ccbdev"></div>
-  <h4 class="sub" style="margin-top:14px">CCB 偏离因子审计</h4><div id="ccb1"></div>
-  <h4 class="sub" style="margin-top:14px">CCB 跌破统计</h4><div id="ccb2"></div>`;
-  // 每日全市场 CcbDev 时间序列（中位/均值两条线）
-  if(D.ccb_break&&D.ccb_break.series&&D.ccb_break.series.length){
-    lineChart(document.getElementById('ccbdev'),D.ccb_break.series.slice(0,2),{legend:true,h:210});
-  }
-  table(document.getElementById('ccb1'),D.ccb_audit||toTable(D.ccb_audit),'CCB偏离因子审计');
-  const b=document.getElementById('ccb2');
+  cardTabs(el,[{name:'CCB',render:host=>cardTabs(host,[
+    {name:'全市场 CCB 偏离度',render:panel=>{
+      const graph=document.createElement('div');graph.className='chart-host';graph.style.height='210px';panel.append(graph);
+      if(D.ccb_break?.series?.length)lineChart(graph,D.ccb_break.series.slice(0,2),{legend:true,h:210});
+      else panel.textContent='缺少偏离度序列';
+    }},
+    {name:'CCB 偏离因子审计',render:panel=>table(panel,D.ccb_audit,'CCB偏离因子审计')},
+    {name:'CCB 跌破统计',render:b=>{
   if(D.ccb_break&&D.ccb_break.kv){
     let h='<div id="ccb2kv"></div>';
     if(D.ccb_break.years&&D.ccb_break.years.rows.length)h+=`<h4 class="sub" style="margin-top:10px">分年跌破</h4><div id="ccb2yr"></div>`;
@@ -1295,6 +1323,7 @@ function renderSpBody(){
     if(D.ccb_break.spans&&D.ccb_break.spans.rows.length)table(document.getElementById('ccb2sp'),D.ccb_break.spans,'CCB连续跌破时段');
     if(D.ccb_break.worst&&D.ccb_break.worst.rows.length)table(document.getElementById('ccb2w'),D.ccb_break.worst,'CCB最低10日');
   } else table(b,toTable(D.ccb_break),'CCB跌破统计');
+    }}])}]);
 })();
 
 /* ---------- 板块2 · 基础策略（策略周报卡，三页签：含排名跟踪 / 净值 / 数据表） ---------- */
@@ -1320,7 +1349,9 @@ function renderSpBody(){
     const hasSheets=weekly.sheets&&weekly.sheets.length;
     if(hasSheets){
       panels.push({name:'跟踪数据',render:function(b){
-        tabs(b,weekly.sheets,true);
+        const overview=weekly.sheets.filter(x=>x.name.startsWith('周报总览'));
+        if(overview.length===1 && weekly.sheets.length===1)table(b,overview[0].table,'周报总览');
+        else tabs(b,weekly.sheets,true);
       }});
     }
   }
@@ -1335,11 +1366,11 @@ function renderSpBody(){
   }
   // 页签 4：截面入选券（从全量回测卡移入策略周报卡）
   if(notices.length||J.snap_sum||J.snap_picks&&J.snap_picks.length){
-    let snapH=ccbStaleWarn();
+    let snapH='';
     panels.push({name:'截面入选券',render:function(b){
       if(J.snap_sum){b.innerHTML=snapH+'<h4 class="sub">快照汇总（17 策略过滤与入选统计）</h4><div id="jc-snap-sum"></div>';table(document.getElementById('jc-snap-sum'),J.snap_sum,'快照汇总');}
       else b.innerHTML=snapH;
-      if(notices.length){const box=document.createElement('div');b.prepend(box);showNotices(box);}
+
       if(J.snap_note){const n=document.createElement('div');n.className='signote';n.textContent=J.snap_note;b.appendChild(n);}
       if(J.snap_picks&&J.snap_picks.length){
         const h4=document.createElement('h4');h4.className='sub';h4.textContent='各策略入选券（'+J.snap_picks.length+' 个策略 · 可筛选）';h4.style.marginTop='12px';b.appendChild(h4);
@@ -1418,30 +1449,6 @@ function _mktSegSheets(){
   var ms=D.mkt_seg, el=document.getElementById('mktseg-kpi');
   if(!ms||!el)return;
   if(ms.kpis&&ms.kpis.length)cardKpi(el,ms.kpis);   // 在市只数 / 余额规模 / 剩余期限中位数
-})();
-
-/* ---------- 投资人结构（月度）：独立卡 + blockTabs ---------- */
-(function(){
-  var hd=D.holder, host=document.getElementById('holder-box');
-  if(!hd||!host)return;
-  if(hd.kpis&&hd.kpis.length)cardKpi(host,hd.kpis);
-  if(hd.tables&&hd.tables.length){
-    blockTabs(host,hd.tables.map(function(t){return{name:t.name,table:{cols:t.cols,rows:t.rows},note:t.note||''};}),'数据未找到');
-  }
-  if(hd.note)cardNote(host,hd.note);
-})();
-
-/* ---------- 转债次新券策略：独立卡 + blockTabs ---------- */
-(function(){
-  var nc=D.newcb, host=document.getElementById('newcb-box');
-  if(!nc||!host)return;
-  if(nc.kpis&&nc.kpis.length)cardKpi(host,nc.kpis);
-  if(nc.tables&&nc.tables.length){
-    blockTabs(host,nc.tables.map(function(t){return{name:t.name,table:{cols:t.cols,rows:t.rows},note:t.note||''};}),'数据未找到');
-  } else {
-    host.innerHTML='<div class="miss">数据未找到</div>';
-  }
-  if(nc.note)cardNote(host,nc.note);
 })();
 
 /* ---------- 分行业转债梳理（原生页签，替代 iframe） ---------- */
@@ -1563,26 +1570,24 @@ function _mktSegSheets(){
 })();
 
 /* ---------- 板块6 · 转债 vs 正股 涨跌关系（口径同 convertible_trend_stats.py，源：转股类债券.xlsx） ---------- */
-(function(){
-  var t=D.cb_trend, host=document.getElementById('hotspot-box');
-  if(!t||!host||!(t.tables||[]).length)return;
-  var cnt=t.counts||{};
-  var body=mkCard(host,'转债与正股涨跌关系',
-    '把存续转债按「转债涨幅 vs 正股涨幅」分八类看当日相对表现，页签切换明细。','日度');
-  if(!body)return;
+function renderTrend(body){
+  const t=D.cb_trend;
+  if(!t?.tables?.length){body.textContent='缺少涨跌关系明细';return;}
+  const cnt=t.counts||{};
+  const date=document.createElement('small');date.textContent='数据截至 '+(t.date||'待核');body.append(date);
   if(t.kpis&&t.kpis.length)cardKpi(body,t.kpis);
   cardTabs(body,t.tables.map(function(tb){
     var n=cnt[tb.name]!=null?cnt[tb.name]:(tb.rows||[]).length;
     return {name:tb.name+'（'+n+'）',render:function(b){cardTable(b,tb,tb.name);}};
   }));
   cardNote(body,t.note);
-})();
+}
 /* ---------- 导航 / 窗口 / 拖拽 ---------- */
 const TITLES={part1:['每日市场跟踪','多维市场数据（含估值指标与市场分域） · 行情图表 · 转债日报 · 转债投资人结构（月度）'],
-part3:['择时策略','十因子体系 · 周频投票 / 日度打分（含十档·择券落地）/ CCB 模型检查'],
-part5:['基础策略','17 个经典基础策略 · 策略周报（含跟踪表 / 回测 / 截面快照） · 转债次新券策略（总览 + 明细）'],
+part3:['择时策略','十因子体系 · 周频投票 / 日度打分（含十档·择券落地）'],
+part5:['基础策略','17 个经典基础策略 · 基础策略周报（含跟踪表 / 回测 / 截面快照） · 定价模型跟踪'],
 part6:['条款看板','下修 / 赎回 条款跟踪 · 核心跟踪 / 历史公告统计 / 按年·月事件计数分布'],
-part7:['权益热点','市场温度与板块结构 / 资金流向与龙虎榜 / 转债涨跌表现（概览直显） / 转债与正股涨跌关系 · 分行业转债梳理 / 产业链图谱']};
+part7:['权益热点','市场温度与板块结构 / 资金流向与龙虎榜 / 转债涨跌表现（概览直显） · 分行业转债梳理 / 产业链图谱']};
 document.getElementById('modnav').addEventListener('click',e=>{
   const btn=e.target.closest('.module-button');if(!btn)return;
   document.querySelectorAll('#modnav .module-button').forEach(b=>b.classList.toggle('is-active',b===btn));
@@ -1845,6 +1850,24 @@ window.renderNav();
     if(inp&&!el.classList.contains('open'))inp.value='';
   });
 })();
+
+function sectionDates(){
+  const J=D.jichu||{},M=D.meta||{},files=D.clause?.来源文件||[];
+  const dateFrom=s=>(String(s||'').match(/20\d{2}[-年]?\d{2}[-月]?\d{2}/g)||[]).at(-1);
+  const audit=Object.fromEntries(D.ccb_audit?.rows||[]);
+  const dates={'jc-weekly-box':'周报期末 '+(dateFrom(J.weekly?.name)||'待核')+' · 选券 '+(J.snap_date||'待核'),
+    vote:D.vote?.最新投票周末,daily:D.daily?.最新交易日,ccb:audit['CCB理论价数据终点'],
+    factors:D.vote?.最近观察周末,'yh-box':document.getElementById('yh-tag').textContent,
+    'waifa-box':dateFrom(D.daily_waifa?.name),'jc-bt-box':J.overall?.asof};
+  for(const section of document.querySelectorAll('section.card')){
+    const head=section.querySelector('.card-head');if(!head)continue;
+    const id=Object.keys(dates).find(k=>section.querySelector('#'+k));
+    const tag=Array.from(head.querySelectorAll('.filetag')).map(n=>dateFrom(n.textContent)).filter(Boolean).pop();
+    const info=document.createElement('small');info.className='note';info.textContent=id&&dates[id]?'数据日期 '+dates[id]:tag?'来源日期 '+tag:'截止日期见来源，未单列';
+    if(section.id!=='daily-charts')head.append(info);
+  }
+}
+sectionDates();
 </script>
 </body>
 </html>
