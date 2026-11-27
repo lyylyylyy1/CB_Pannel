@@ -423,7 +423,7 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
 
 </main>
 <div id="tip"></div>
-<script src="data.js?v=20261126202611271954"></script>
+<script src="data.js?v=20261126202611271958"></script>
 <script>
 /* 数据块已拆到同目录 data.js（var D 挂 window），本 script 直接用 D */
 const M={red:'#d12920',navy:'#315b7d',orange:'#e97132',gold:'#c9821b',blue:'#5592dc',green:'#2f7d6d'};
@@ -1008,7 +1008,7 @@ function _lazyLoad(boxId,extFile,varName,onData){
   document.getElementById('waifa-tag').textContent=w.name||'未找到';
   const box=document.getElementById('waifa-box');
   const load=(file,key)=>new Promise((ok,fail)=>{
-    const script=document.createElement('script');script.src=file+'?v=20261126202611271954';
+    const script=document.createElement('script');script.src=file+'?v=20261126202611271958';
     script.onload=()=>ok(window[key]);script.onerror=fail;document.body.append(script);
   });
   function platform(name,data){
