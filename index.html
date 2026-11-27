@@ -423,7 +423,7 @@ input[type=number],input[type=text],input[type=search]{max-width:100%}
 
 </main>
 <div id="tip"></div>
-<script src="data.js?v=20261126202611271958"></script>
+<script src="data.js?v=20261126202611272007"></script>
 <script>
 /* 数据块已拆到同目录 data.js（var D 挂 window），本 script 直接用 D */
 const M={red:'#d12920',navy:'#315b7d',orange:'#e97132',gold:'#c9821b',blue:'#5592dc',green:'#2f7d6d'};
@@ -821,7 +821,16 @@ function renderTable(el){
       const covered=t.coverage?.[r[0]];
       const counts=covered?.match(/(\d+)\/(\d+)/);
       if(counts && +counts[1]<+counts[2])issues.push(covered);
-      const sample=t.observed?.[r[0]]?.[col];
+      const observed=t.observed?.[r[0]];
+      let sample=ci>0?(observed?.[col]||observed?.['*']):null;
+      if(ci>0 && /^修正溢价率-平价|^斜率/.test(col))sample=t.curveSamples?.[r[0]]||sample;
+      const countAt=c=>r[t.cols.indexOf(c)];
+      if(ci>0 && !col.includes('券数')){
+        const count=col.startsWith('隐波')||col.includes('日波动')?countAt('共同有效券数'):
+          col.startsWith('YTM')&&!col.includes('年')&&!/201[0-9]|202[0-9]/.test(col)?countAt('Wind YTM有效券数'):null;
+        if(count!=null && count!=='')sample='当日有效样本 '+count+' 只。';
+        if(col.includes('比例') && countAt('转债市场个数')!=null)sample='当日市场 '+countAt('转债市场个数')+' 只，开始计数 '+countAt('开始计数个数')+' 只。';
+      }
       const valid=sample?.match(/(\d+)\/(\d+)/);
       if(valid && +valid[1]<+valid[2]&&!notes[col])issues.push(sample);
       if(t.cols.includes('策略') && col==='策略'){
@@ -829,9 +838,9 @@ function renderTable(el){
         if(/待补|不足|仅按可用|缺失/.test(get('数据状态')))issues.push(get('缺数说明')||get('数据状态'));
         if(+get('被排除总数')>0)issues.push('被排除 '+get('被排除总数')+' 只，其中黑名单 '+(get('黑名单剔除')||0)+' 只。');
       }
-      const msg=issues.filter(Boolean).join('\n');
+      const msg=[...new Set([...issues,notes[col]?null:sample].filter(Boolean))].join('\n');
       const attrs=msg?` tabindex="0" data-info="${esc(msg)}" aria-label="${esc(msg)}"`:'';
-      return `<td${attrs}>${el._dl==='计算口径'?`<span style="display:block;white-space:normal;min-width:6em;text-align:left">${esc(v)}</span>`:typeof v==='number'&&t.source?fmt(v,4):cellEsc(v)}${msg?'<sup>※</sup>':''}</td>`;
+      return `<td${attrs}>${el._dl==='计算口径'?`<span style="display:block;white-space:normal;min-width:6em;text-align:left">${esc(v)}</span>`:typeof v==='number'&&t.source?fmt(v,4):cellEsc(v)}${issues.length?'<sup>※</sup>':''}</td>`;
     }).join('')}</tr>`;}).join('')}</tbody></table></div>
   <div class="pager">${modeBtn}<button class="pg-prev" ${el._page?'':'disabled'}>‹ 上一页</button>
   <span>第 ${el._page+1} / ${pages} 页</span>
@@ -1008,7 +1017,7 @@ function _lazyLoad(boxId,extFile,varName,onData){
   document.getElementById('waifa-tag').textContent=w.name||'未找到';
   const box=document.getElementById('waifa-box');
   const load=(file,key)=>new Promise((ok,fail)=>{
-    const script=document.createElement('script');script.src=file+'?v=20261126202611271958';
+    const script=document.createElement('script');script.src=file+'?v=20261126202611272007';
     script.onload=()=>ok(window[key]);script.onerror=fail;document.body.append(script);
   });
   function platform(name,data){
